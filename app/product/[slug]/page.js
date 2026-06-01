@@ -9,6 +9,8 @@ import ProductSidebar from '../../../components/Product/ProductSidebar';
 import ProductTabs from '../../../components/Product/ProductTabs';
 import ProductCard from '../../../components/Shared/ProductCard';
 import FAQ from '../../../components/FAQ/FAQ';
+import EmptyState from '../../../components/Shared/EmptyState';
+import { FiPackage } from 'react-icons/fi';
 import { useRecentlyViewed } from '../../../context/RecentlyViewedContext';
 import { getProductById, getRelatedProduct } from '../../../lib/api';
 import { readProductSeed, writeProductSeed } from '../../../lib/productSeedCache';
@@ -321,39 +323,41 @@ export default function ProductDetailsPage() {
             : 'Product');
 
     return (
-        <div className="bg-white min-h-screen pb-12">
-            <div className="border-b border-brand-purple/10 bg-gradient-to-r from-brand-purple/5 to-transparent py-4 md:py-6 mb-6 md:mb-10">
-                <div className="max-w-7xl mx-auto px-4 md:px-6">
-                    <div className="text-[11px] md:text-sm text-gray-500 flex items-center gap-2 font-medium">
-                        <Link href="/" className="hover:text-brand-purple cursor-pointer transition-colors">Home</Link>
-                        <span>/</span>
-                        {fromCategory && productData?.category?.name && (
-                            <>
-                                <Link
-                                    href={`/category/${productData.category.slug}`}
-                                    className="hover:text-brand-purple cursor-pointer transition-colors capitalize"
-                                >
-                                    {productData.category.name}
-                                </Link>
-                                <span>/</span>
-                            </>
-                        )}
-                        <span className="text-brand-purple font-bold capitalize truncate">{productName}</span>
-                    </div>
-                </div>
+        <div className="bg-card-bg min-h-screen pb-20 md:pb-10">
+            <div className="max-w-site mx-auto px-4 md:px-6 pt-4 md:pt-6 pb-4">
+                <nav className="text-[11px] md:text-sm text-gray-500 flex items-center gap-2 font-medium min-w-0" aria-label="Breadcrumb">
+                    <Link href="/" className="hover:text-brand-primary cursor-pointer transition-colors shrink-0">Home</Link>
+                    <span className="shrink-0">/</span>
+                    {fromCategory && productData?.category?.name && (
+                        <>
+                            <Link
+                                href={`/category/${productData.category.slug}`}
+                                className="hover:text-brand-primary cursor-pointer transition-colors capitalize truncate"
+                            >
+                                {productData.category.name}
+                            </Link>
+                            <span className="shrink-0">/</span>
+                        </>
+                    )}
+                    <span className="text-gray-900 font-semibold capitalize truncate">{productName}</span>
+                </nav>
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
+            <div className="max-w-site mx-auto px-4 md:px-6">
 
                 {isInitialLoading ? (
                     <div className="py-20 flex flex-col items-center justify-center">
-                        <div className="w-10 h-10 border-4 border-brand-purple/20 border-t-brand-purple rounded-full animate-spin mb-4"></div>
+                        <div className="w-10 h-10 border-4 border-brand-primary/20 border-t-brand-primary rounded-full animate-spin mb-4"></div>
                         <p className="text-sm text-gray-500">Loading product details…</p>
                     </div>
                 ) : error || !productData ? (
-                    <div className="py-20 text-center">
-                        <p className="text-sm text-red-500">{error || 'Product not found.'}</p>
-                    </div>
+                    <EmptyState
+                        icon={FiPackage}
+                        title="Product not found"
+                        description={error || 'This product may have been removed or the link is incorrect.'}
+                        actionHref="/"
+                        actionLabel="Back to shop"
+                    />
                 ) : (
                     <>
                         <div className="w-full">
@@ -387,11 +391,12 @@ export default function ProductDetailsPage() {
 
                         {/* Related Products Section */}
                         {relatedProducts.length > 0 && (
-                            <div className="mt-16 md:mt-24 pt-12 border-t border-gray-200">
-                                <h2 className="text-2xl md:text-3xl font-extrabold text-gray-800 mb-8 text-center md:text-left">
+                            <div className="mt-12 md:mt-16 pt-10 border-t border-gray-200">
+                                <h2 className="flex items-center gap-3 text-xl md:text-2xl font-extrabold text-gray-900 mb-6 md:mb-8">
+                                    <span className="w-1 h-7 bg-brand-primary rounded-full shrink-0" aria-hidden />
                                     Related Products
                                 </h2>
-                                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-5">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
                                     {relatedProducts.map(product => (
                                         <ProductCard key={product.id} product={product} />
                                     ))}

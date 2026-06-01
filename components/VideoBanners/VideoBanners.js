@@ -6,8 +6,8 @@ export default function VideoBanners({ banner }) {
 
     return (
         <section className="py-6 md:py-10 bg-white">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
-                <div className="relative rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-shadow bg-black w-full aspect-video md:aspect-[21/9] lg:aspect-[4/1] group">
+            <div className="max-w-site mx-auto px-4 md:px-6">
+                <div className="relative rounded-lg overflow-hidden shadow-md border border-gray-900 bg-black w-full aspect-video md:aspect-[21/9] lg:aspect-[4/1] group">
                     <video
                         src={banner.videoUrl}
                         autoPlay

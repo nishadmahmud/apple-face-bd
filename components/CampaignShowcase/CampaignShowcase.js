@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import ProductCard from '../Shared/ProductCard';
 import VideoBanners from '../VideoBanners/VideoBanners';
+import SectionHeader from '../Shared/SectionHeader';
 
 export default function CampaignShowcase({ splitBanners = [], products = [], videoBanner = null, title = "Featured Campaigns" }) {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -41,15 +42,12 @@ export default function CampaignShowcase({ splitBanners = [], products = [], vid
 
     return (
         <section className="bg-white py-10 md:py-16 w-full">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
+            <div className="max-w-site mx-auto px-4 md:px-6">
                 
-                {/* Title */}
-                <div className="flex items-center justify-between mb-6 md:mb-10">
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-900 tracking-tight uppercase">
-                        {title}
-                        <div className="h-1.5 w-16 sm:w-24 bg-brand-primary mt-2 sm:mt-3 rounded-full"></div>
-                    </h2>
-                </div>
+                <SectionHeader
+                    title={title?.split(' ').slice(0, -1).join(' ') || 'Top Digital'}
+                    highlight={title?.split(' ').slice(-1)[0] || 'Trends'}
+                />
 
                 {/* Banner Row */}
                 {splitBanners && splitBanners.length > 0 && (

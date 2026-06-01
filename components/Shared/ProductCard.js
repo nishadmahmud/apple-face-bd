@@ -4,11 +4,12 @@ import { useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { FiShoppingCart, FiHeart, FiX } from 'react-icons/fi';
+import { FiShoppingCart, FiHeart } from 'react-icons/fi';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { getProductById } from '../../lib/api';
 import { readProductSeed, writeProductSeed } from '../../lib/productSeedCache';
+import ProductVariantModal from './ProductVariantModal';
 
 export default function ProductCard({ product, variant = 'default' }) {
     const isCompact = variant === 'compact';
@@ -50,6 +51,13 @@ export default function ProductCard({ product, variant = 'default' }) {
         return /off$/i.test(normalized) ? normalized : `${normalized} Off`;
     })();
 
+    const savingsAmount = useMemo(() => {
+        if (!product.oldPrice) return 0;
+        const current = parseMoneyToNumber(product.price);
+        const old = parseMoneyToNumber(product.oldPrice);
+        return old > current ? old - current : 0;
+    }, [product.oldPrice, product.price]);
+
     const imeis = useMemo(() => {
         if (Array.isArray(runtimeImeis) && runtimeImeis.length > 0) return runtimeImeis;
         if (Array.isArray(product?.rawImeis) && product.rawImeis.length > 0) return product.rawImeis;
@@ -72,6 +80,16 @@ export default function ProductCard({ product, variant = 'default' }) {
         });
         return Array.from(colorMap.values());
     }, [variantSource]);
+
+    const allColorsForModal = useMemo(() => {
+        const colorMap = new Map();
+        imeis.forEach((i) => {
+            if (i?.color && !colorMap.has(i.color)) {
+                colorMap.set(i.color, { name: i.color, hex: i.color_code || '#e5e7eb' });
+            }
+        });
+        return Array.from(colorMap.values());
+    }, [imeis]);
     const [selectedColor, setSelectedColor] = useState(null);
     const [selectedStorage, setSelectedStorage] = useState(null);
     const [selectedRegion, setSelectedRegion] = useState(null);
@@ -228,7 +246,6 @@ export default function ProductCard({ product, variant = 'default' }) {
     };
 
     const handleActionClick = async (e, action) => {
-        // Always block card navigation first because buttons live inside the card Link.
         e.preventDefault();
         e.stopPropagation();
 
@@ -248,7 +265,7 @@ export default function ProductCard({ product, variant = 'default' }) {
         handleAddToCart(e, true, null);
     };
 
-    const handleVariantConfirm = () => {
+    const handleVariantConfirm = (action) => {
         if (!matchedImei) return;
         const variants = buildVariantPayload();
         const selectedImage = modalDisplayImage || product.imageUrl || '/no-image.svg';
@@ -259,9 +276,9 @@ export default function ProductCard({ product, variant = 'default' }) {
             imageUrl: selectedImage,
             images: mergedImages
         };
-        addToCart(cartProduct, 1, variants, pendingAction !== 'buy');
+        addToCart(cartProduct, 1, variants, action !== 'buy');
         setShowVariantModal(false);
-        if (pendingAction === 'buy') router.push('/checkout');
+        if (action === 'buy') router.push('/checkout');
     };
 
     const loadVariantsIfNeeded = async () => {
@@ -304,200 +321,185 @@ export default function ProductCard({ product, variant = 'default' }) {
         }
     };
 
+    const actionBtnH = isCompact ? 'h-8' : 'h-9';
+    const iconSize = isCompact ? 'w-[14px] h-[14px]' : 'w-4 h-4';
+
+    const wishlistButton = (className = '') => (
+        <button
+            type="button"
+            className={`${actionBtnH} flex items-center justify-center rounded-lg border-2 transition-all duration-200 ${className} ${
+                isWishlisted
+                    ? 'border-brand-primary bg-brand-primary text-white'
+                    : 'border-brand-primary/50 text-brand-primary bg-brand-primary/5 hover:bg-brand-primary/10'
+            }`}
+            onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleWishlist(product);
+            }}
+            aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+        >
+            <FiHeart className={`${iconSize} ${isWishlisted ? 'fill-current' : ''}`} />
+        </button>
+    );
+
+    const cartButton = (className = '') => (
+        <button
+            type="button"
+            className={`${actionBtnH} flex items-center justify-center gap-1.5 rounded-lg border-2 font-bold text-[10px] sm:text-xs transition-all duration-200 ${className} ${
+                isOutOfStock
+                    ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : isInCart
+                      ? 'border-brand-primary bg-brand-primary text-white'
+                      : 'border-brand-primary bg-brand-primary text-white hover:opacity-90'
+            }`}
+            onClick={(e) => handleActionClick(e, 'cart')}
+            aria-label={isOutOfStock ? 'Out of stock' : isInCart ? 'In cart' : 'Add to cart'}
+            disabled={isOutOfStock || isResolvingVariants}
+        >
+            <FiShoppingCart className={`${iconSize} shrink-0`} />
+            <span className="truncate sm:hidden">{isInCart ? 'In Cart' : 'Add to Cart'}</span>
+            <span className="truncate hidden sm:inline">{isInCart ? 'In Cart' : 'Cart'}</span>
+        </button>
+    );
+
+    const buyNowButton = (className = '') => (
+        <button
+            type="button"
+            className={`${actionBtnH} rounded-lg font-bold text-xs transition-all duration-200 border-2 flex items-center justify-center ${className} ${
+                isOutOfStock
+                    ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'border-[#0a0a0a] bg-[#0a0a0a] text-white hover:border-brand-primary hover:bg-brand-primary'
+            }`}
+            onClick={(e) => handleActionClick(e, 'buy')}
+            disabled={isOutOfStock || isResolvingVariants}
+        >
+            <span className="truncate">
+                {isOutOfStock ? 'Out of Stock' : isResolvingVariants ? 'Loading...' : 'Buy Now'}
+            </span>
+        </button>
+    );
+
     return (
         <>
             <Link
                 href={`/product/${slug}`}
                 onClick={cacheProductSeed}
-                className="bg-white rounded-2xl flex flex-col text-left hover:-translate-y-1 transition-all duration-400 group overflow-hidden relative h-full w-full border border-gray-200 hover:border-brand-primary/40 hover:shadow-[0_8px_30px_rgba(0,0,0,0.08)]"
+                className="group/card bg-white rounded-lg flex flex-col text-left transition-all duration-300 overflow-hidden relative h-full w-full border border-brand-primary/20 hover:border-brand-primary hover:shadow-md"
             >
-                {/* Image Area */}
-                <div className={`w-full ${isCompact ? 'aspect-[16/11] md:aspect-[16/10]' : 'aspect-square'} relative flex items-center justify-center bg-card-bg rounded-t-2xl overflow-hidden`}>
-                {/* Category/Brand tag */}
-                {productBrand && (
-                    <span className="absolute top-3 left-3 z-10 text-[10px] font-semibold text-gray-500 bg-white/80 backdrop-blur-sm px-2 py-0.5 rounded-md">
-                        {productBrand}
-                    </span>
-                )}
+                <span className="absolute left-0 top-0 bottom-0 w-1 bg-transparent group-hover/card:bg-brand-primary transition-colors z-20 pointer-events-none rounded-l-lg" />
 
-                {/* Discount badge */}
-                {discountBadgeText && (
-                    <span className="absolute top-3 right-3 z-10 text-[10px] md:text-xs font-bold text-red-600 bg-red-50 border border-red-100 px-2.5 md:px-3 py-1 rounded-lg shadow-sm">
-                        {discountBadgeText}
-                    </span>
-                )}
-
-                {(product.isNew || product.badge === 'New Arrival') && !product.discount && (
-                    <span className="absolute top-3 right-3 z-10 text-[10px] font-bold text-white bg-brand-primary px-2 py-0.5 rounded-md">
-                        New
-                    </span>
-                )}
-
-                <Image
-                    src={product.imageUrl || '/no-image.svg'}
-                    alt={product.name}
-                    fill
-                    unoptimized
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-                </div>
-
-            {/* Content Area — tighter horizontal padding on mobile so action row fits */}
-                <div className="flex flex-col flex-1 p-2.5 sm:p-3 md:p-4 min-w-0">
-                <h3 className={`text-gray-900 font-bold ${isCompact ? 'text-[12px] md:text-[14px]' : 'text-[13px] md:text-[15px]'} leading-snug line-clamp-2 mb-1.5 md:mb-2 group-hover:text-brand-primary transition-colors`}>
-                    {product.name}
-                </h3>
-
-                {/* Price Row */}
-                <div className={`flex items-baseline gap-2 ${isCompact ? 'mb-2 md:mb-3' : 'mb-3'} mt-auto`}>
-                    <span className={`text-gray-900 font-extrabold ${isCompact ? 'text-[14px] md:text-[16px]' : 'text-[15px] md:text-[17px]'}`}>
-                        {formatPrice(product.price)}
-                    </span>
-                    {product.oldPrice && (
-                        <span className="text-gray-400 text-[11px] md:text-[12px] font-medium line-through">
-                            {formatPrice(product.oldPrice)}
+                {/* Image */}
+                <div
+                    className={`w-full relative flex items-center justify-center bg-card-bg overflow-hidden ${
+                        isCompact ? 'aspect-[16/11]' : 'aspect-square'
+                    }`}
+                >
+                    {productBrand && (
+                        <span className="absolute top-2 left-2 z-10 text-[9px] font-bold uppercase tracking-wide text-white bg-[#0a0a0a]/85 px-2 py-0.5 rounded">
+                            {productBrand}
                         </span>
+                    )}
+
+                    {discountBadgeText && (
+                        <span className="absolute top-2 right-2 z-10 text-[9px] md:text-[10px] font-bold text-white bg-brand-primary px-2 py-0.5 rounded shadow-sm">
+                            {discountBadgeText}
+                        </span>
+                    )}
+
+                    {(product.isNew || product.badge === 'New Arrival') && !product.discount && (
+                        <span className="absolute top-2 right-2 z-10 text-[9px] font-bold text-white bg-brand-primary px-2 py-0.5 rounded">
+                            New
+                        </span>
+                    )}
+
+                    <div className="relative w-full h-full p-3 sm:p-4">
+                        <Image
+                            src={product.imageUrl || '/no-image.svg'}
+                            alt={product.name}
+                            fill
+                            unoptimized
+                            className="object-contain group-hover/card:scale-[1.03] transition-transform duration-300"
+                        />
+                    </div>
+
+                    {isOutOfStock && (
+                        <div className="absolute inset-0 z-10 bg-white/60 flex items-center justify-center">
+                            <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-white bg-brand-primary px-3 py-1.5 rounded-full">
+                                Out of stock
+                            </span>
+                        </div>
                     )}
                 </div>
 
-                    {/* Mobile: cart + wishlist top (50/50 rectangles), Buy full width below. sm+: single row pills. */}
-                    <div className="flex flex-col gap-2 min-w-0 sm:flex-row sm:items-stretch sm:gap-2">
-                        <div className="flex w-full min-w-0 gap-1.5 order-1 sm:order-2 sm:w-auto sm:shrink-0 sm:justify-end sm:gap-2">
-                            <button
-                                type="button"
-                                className={`flex-1 basis-0 h-8 min-h-0 rounded-md border-2 flex items-center justify-center transition-all duration-300 sm:h-10 sm:flex-none sm:w-10 sm:min-h-0 sm:rounded-full ${isWishlisted ? 'border-orange-400 bg-orange-400 text-white' : 'border-orange-300 text-orange-400 hover:bg-orange-50 active:opacity-90'}`}
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    toggleWishlist(product);
-                                }}
-                                aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+                {/* Body */}
+                <div className={`flex flex-col flex-1 min-w-0 ${isCompact ? 'p-2' : 'p-2.5 sm:p-3'}`}>
+                    <h3
+                        className={`text-gray-900 font-bold leading-snug line-clamp-2 ${
+                            isCompact ? 'text-[11px] md:text-[13px] mb-1' : 'text-[12px] md:text-[14px] mb-1.5'
+                        }`}
+                    >
+                        {product.name}
+                    </h3>
+
+                    <div className={`mt-auto ${isCompact ? 'mb-1.5' : 'mb-2'}`}>
+                        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                            <span
+                                className={`font-extrabold text-brand-primary ${
+                                    isCompact ? 'text-[13px] md:text-[15px]' : 'text-[14px] md:text-[16px]'
+                                }`}
                             >
-                                <FiHeart className={`w-[15px] h-[15px] sm:w-4 sm:h-4 ${isWishlisted ? 'fill-current' : ''}`} />
-                            </button>
-                            <button
-                                type="button"
-                                className={`flex-1 basis-0 h-8 min-h-0 rounded-md border-2 flex items-center justify-center transition-all duration-300 sm:h-10 sm:flex-none sm:w-10 sm:min-h-0 sm:rounded-full ${isOutOfStock ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed' : isInCart ? 'border-brand-primary bg-brand-primary text-white' : 'border-brand-primary text-brand-primary hover:bg-brand-primary hover:text-white active:opacity-90'}`}
-                                onClick={(e) => handleActionClick(e, 'cart')}
-                                aria-label={isOutOfStock ? 'Out of stock' : isInCart ? 'In cart' : 'Add to cart'}
-                                disabled={isOutOfStock || isResolvingVariants}
-                            >
-                                <FiShoppingCart className="w-[15px] h-[15px] sm:w-4 sm:h-4" />
-                            </button>
-                        </div>
-                        <button
-                            type="button"
-                            className={`order-2 w-full sm:order-1 sm:flex-1 sm:min-w-0 ${isCompact ? 'h-8 sm:h-9 md:h-10' : 'h-9 sm:h-9 md:h-10'} rounded-full border-2 flex items-center justify-center transition-all duration-300 px-2 ${isOutOfStock ? 'border-gray-200 bg-gray-100 cursor-not-allowed' : 'border-brand-primary hover:bg-brand-primary group/buy'}`}
-                            onClick={(e) => handleActionClick(e, 'buy')}
-                            aria-label={isOutOfStock ? 'Out of stock' : 'Buy now'}
-                            disabled={isOutOfStock || isResolvingVariants}
-                        >
-                            <span className={`${isOutOfStock || isResolvingVariants ? 'text-gray-400' : 'text-brand-primary group-hover/buy:text-white'} font-bold text-center leading-tight ${isCompact ? 'text-[10px] sm:text-[11px] md:text-[12px]' : 'text-[10px] sm:text-[12px] md:text-[13px]'} tracking-tight max-sm:whitespace-normal max-sm:line-clamp-2 sm:whitespace-nowrap`}>
-                                {isOutOfStock ? 'Out of Stock' : isResolvingVariants ? 'Loading...' : 'Buy Now'}
+                                {formatPrice(product.price)}
                             </span>
-                        </button>
+                            {product.oldPrice && (
+                                <span className="text-gray-400 text-[10px] md:text-[11px] font-medium line-through">
+                                    {formatPrice(product.oldPrice)}
+                                </span>
+                            )}
+                        </div>
+                        {savingsAmount > 0 && (
+                            <p className="text-[10px] text-brand-primary/80 font-semibold mt-0.5">
+                                Save Tk {savingsAmount.toLocaleString('en-IN')}
+                            </p>
+                        )}
+                    </div>
+
+                    {/* Actions — mobile: cart+wishlist row, buy below; desktop: all one row */}
+                    <div className="flex flex-col sm:flex-row gap-1.5 min-w-0 pt-0.5 border-t border-brand-primary/15">
+                        <div className="flex gap-1.5 min-w-0 sm:contents">
+                            {wishlistButton(isCompact ? 'w-8 shrink-0 px-0 sm:w-9' : 'w-9 shrink-0 px-0')}
+                            {cartButton('flex-1 min-w-0 sm:flex-1')}
+                        </div>
+                        {buyNowButton('w-full sm:flex-1 sm:min-w-0')}
                     </div>
                 </div>
             </Link>
 
-            {showVariantModal && hasVariants && (
-                <div className="fixed inset-0 z-[110] bg-black/50 flex items-center justify-center p-4" onClick={() => setShowVariantModal(false)}>
-                    <div className="w-full max-w-md bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden" onClick={(e) => e.stopPropagation()}>
-                        <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                            <h3 className="text-base font-extrabold text-gray-900">Choose Variant</h3>
-                            <button onClick={() => setShowVariantModal(false)} className="p-1.5 rounded-md hover:bg-gray-100 text-gray-500" aria-label="Close">
-                                <FiX size={16} />
-                            </button>
-                        </div>
-                        <div className="p-4 space-y-3">
-                            <div className="flex items-center gap-3">
-                                <div className="relative w-14 h-14 rounded-lg overflow-hidden border border-gray-200 bg-gray-50 shrink-0">
-                                    <Image
-                                        src={modalDisplayImage}
-                                        alt={product.name}
-                                        fill
-                                        unoptimized
-                                        className="object-contain p-1"
-                                    />
-                                </div>
-                                <div className="min-w-0">
-                                    <p className="text-sm font-bold text-gray-800 line-clamp-2">{product.name}</p>
-                                    <p className="text-sm font-extrabold text-gray-900 mt-1">
-                                        Tk {selectedVariantPrice.toLocaleString('en-IN')}
-                                    </p>
-                                </div>
-                            </div>
-                            {allColors.length > 0 && (
-                                <div>
-                                    <p className="text-xs font-bold text-gray-500 mb-2">Color</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {allColors.map((color) => (
-                                            <button
-                                                key={color.name}
-                                                onClick={() => setSelectedColor(color.name)}
-                                                className={`px-2.5 py-1.5 rounded-lg border text-xs font-semibold ${effectiveColor === color.name ? 'border-brand-primary text-brand-primary bg-brand-primary/5' : 'border-gray-200 text-gray-600'}`}
-                                            >
-                                                {color.name}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                            {availableStorages.length > 0 && (
-                                <div>
-                                    <p className="text-xs font-bold text-gray-500 mb-2">Storage</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {availableStorages.map((size) => (
-                                            <button
-                                                key={size}
-                                                onClick={() => setSelectedStorage(size)}
-                                                className={`px-2.5 py-1.5 rounded-lg border text-xs font-semibold ${effectiveStorage === size ? 'border-brand-primary text-brand-primary bg-brand-primary/5' : 'border-gray-200 text-gray-600'}`}
-                                            >
-                                                {size}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                            {availableRegions.length > 0 && (
-                                <div>
-                                    <p className="text-xs font-bold text-gray-500 mb-2">Region</p>
-                                    <div className="flex flex-wrap gap-2">
-                                        {availableRegions.map((region) => (
-                                            <button
-                                                key={region}
-                                                onClick={() => setSelectedRegion(region)}
-                                                className={`px-2.5 py-1.5 rounded-lg border text-xs font-semibold ${effectiveRegion === region ? 'border-brand-primary text-brand-primary bg-brand-primary/5' : 'border-gray-200 text-gray-600'}`}
-                                            >
-                                                {region}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                            <div className="bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-sm">
-                                <p className="text-gray-500 font-medium">Selected</p>
-                                <p className="text-gray-900 font-bold mt-0.5">
-                                    {[matchedImei?.storage, matchedImei?.color, matchedImei?.region].filter(Boolean).join(' / ') || 'No variant selected'}
-                                </p>
-                            </div>
-                            <button
-                                type="button"
-                                disabled={!matchedImei || Number(matchedImei?.in_stock) !== 1}
-                                onClick={handleVariantConfirm}
-                                className={`w-full py-2.5 rounded-xl text-sm font-bold transition-colors ${!matchedImei || Number(matchedImei?.in_stock) !== 1 ? 'bg-gray-200 text-gray-400 cursor-not-allowed' : 'bg-brand-primary text-white hover:opacity-90'}`}
-                            >
-                            {isResolvingVariants ? 'Loading variants...' : pendingAction === 'buy' ? 'Buy Now' : 'Add to Cart'}
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            <ProductVariantModal
+                open={showVariantModal && hasVariants}
+                onClose={() => setShowVariantModal(false)}
+                product={product}
+                modalDisplayImage={modalDisplayImage}
+                selectedVariantPrice={selectedVariantPrice}
+                allColors={allColorsForModal.length > 0 ? allColorsForModal : allColors}
+                variantSource={imeis}
+                effectiveColor={effectiveColor}
+                effectiveStorage={effectiveStorage}
+                effectiveRegion={effectiveRegion}
+                onSelectColor={setSelectedColor}
+                onSelectStorage={setSelectedStorage}
+                onSelectRegion={setSelectedRegion}
+                matchedImei={matchedImei}
+                isResolvingVariants={isResolvingVariants}
+                onConfirmCart={() => handleVariantConfirm('cart')}
+                onConfirmBuy={() => handleVariantConfirm('buy')}
+            />
+
             {isResolvingVariants && !showVariantModal && (
-                <div className="fixed inset-0 z-[110] bg-black/35 flex items-center justify-center p-4">
+                <div className="fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
                     <div className="w-full max-w-sm bg-white rounded-2xl border border-gray-200 shadow-2xl p-5">
                         <div className="flex items-center gap-3">
-                            <div className="w-5 h-5 rounded-full border-2 border-brand-primary/30 border-t-brand-primary animate-spin"></div>
+                            <div className="w-5 h-5 rounded-full border-2 border-brand-primary/30 border-t-brand-primary animate-spin" />
                             <p className="text-sm font-semibold text-gray-700">Loading variants...</p>
                         </div>
                     </div>

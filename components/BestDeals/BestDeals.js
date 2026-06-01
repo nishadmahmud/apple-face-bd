@@ -1,25 +1,21 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import SectionHeader from '../Shared/SectionHeader';
 
 export default function BestDeals({ deals = [] }) {
     const displayDeals = Array.isArray(deals) ? deals : [];
 
     return (
         <section className="bg-gray-50/50 py-10 md:py-16 border-b border-gray-100">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
-                <div className="mb-8 md:mb-10">
-                    <h2 className="text-xl md:text-[28px] font-extrabold tracking-tight">
-                        <span className="text-gray-800">Top </span>
-                        <span className="text-brand-primary">Offers</span>
-                    </h2>
-                    <p className="text-sm md:text-base text-gray-500 mt-1 hidden sm:block">
-                        Unbeatable offers hand-picked for you. Grab them before they are gone.
-                    </p>
-                </div>
+            <div className="max-w-site mx-auto px-4 md:px-6">
+                <SectionHeader title="Top" highlight="Deals" href="/special-offers" linkLabel="All Offers" />
+                <p className="text-sm text-gray-500 -mt-4 mb-8 hidden sm:block">
+                    Hand-picked offers from Apple Face BD — grab them before they&apos;re gone.
+                </p>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                     {displayDeals.length > 0 ? displayDeals.map((deal, idx) => (
-                        <div key={deal.id || idx} className="group bg-white rounded-2xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-400 flex flex-row items-stretch border border-gray-200">
+                        <div key={deal.id || idx} className="group bg-white rounded-xl overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-400 flex flex-row items-stretch border border-gray-200 hover:ring-1 hover:ring-brand-primary/20">
                             <div className="w-2/5 md:w-2/5 relative flex-shrink-0 bg-card-bg border-r border-gray-100 p-3 md:p-6 flex items-center justify-center">
                                 <div className="relative w-full aspect-square">
                                     <Image src={deal.imageUrl || '/no-image.svg'} alt={deal.title} fill unoptimized className="object-cover object-center group-hover:scale-105 transition-transform duration-500 mix-blend-multiply" />
@@ -39,7 +35,7 @@ export default function BestDeals({ deals = [] }) {
 
                                 <div className="flex flex-wrap items-center justify-between gap-2 border-t border-gray-100 pt-3 md:pt-4 mt-auto">
                                     {deal.savings && <span className="bg-brand-primary/10 text-brand-primary text-[10px] md:text-xs font-bold px-2 md:px-3 py-1 rounded-md tracking-wide uppercase">{deal.savings}</span>}
-                                    <Link href={deal.link || '/'} className="flex items-center gap-1.5 text-xs md:text-sm font-bold text-gray-900 hover:text-brand-primary transition-all ml-auto whitespace-nowrap">Shop Now
+                                    <Link href={deal.link || '/'} className="flex items-center gap-1.5 text-xs md:text-sm font-bold text-white bg-gray-900 hover:bg-brand-primary px-4 py-2 rounded-lg transition-all ml-auto whitespace-nowrap">Shop Now
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3 h-3 md:w-4 md:h-4">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                                         </svg>

@@ -5,7 +5,7 @@ import { FiArrowRight, FiPhoneCall } from 'react-icons/fi';
 export default function CTABanner() {
     return (
         <section className="bg-white py-12 md:py-24 border-b border-gray-100">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
+            <div className="max-w-site mx-auto px-4 md:px-6">
                 <div className="relative rounded-3xl overflow-hidden bg-brand-blue shadow-2xl flex flex-col md:flex-row">
 
                     {/* Left: Content */}

@@ -29,7 +29,7 @@ export default function CategoryIndexPage() {
 
     return (
         <div className="bg-gray-50 min-h-screen py-12 md:py-20">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
+            <div className="max-w-site mx-auto px-4 md:px-6">
 
                 {/* Header Section */}
                 <div className="text-center mb-12 md:mb-20">

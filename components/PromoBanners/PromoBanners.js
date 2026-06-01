@@ -8,13 +8,13 @@ export default function PromoBanners({ banners = [] }) {
 
     return (
         <section className="bg-white py-6 md:py-10">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
+            <div className="max-w-site mx-auto px-4 md:px-6">
                 <div className="flex md:grid md:grid-cols-3 gap-3 md:gap-5 overflow-x-auto md:overflow-visible no-scrollbar snap-x snap-mandatory">
                     {displayBanners.map((banner, idx) => (
                         <Link
                             href={banner.link || "/"}
                             key={banner.id || idx}
-                            className="relative flex-none w-[75vw] sm:w-[45vw] md:w-full overflow-hidden rounded-xl bg-gray-50 group block h-[130px] sm:h-[160px] md:h-[200px] border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-400 snap-center"
+                            className="relative flex-none w-[75vw] sm:w-[45vw] md:w-full overflow-hidden rounded-lg bg-gray-100 group block h-[130px] sm:h-[160px] md:h-[200px] border border-gray-200 hover:ring-1 hover:ring-brand-primary/30 transition-all duration-400 snap-center"
                         >
                             <Image
                                 src={banner.image || banner.image_path || banner.image_url || "/no-image.svg"}

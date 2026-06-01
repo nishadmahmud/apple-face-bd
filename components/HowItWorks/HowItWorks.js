@@ -10,7 +10,7 @@ export default function HowItWorks() {
 
     return (
         <section className="bg-white py-10 md:py-24 border-b border-gray-100">
-            <div className="max-w-7xl mx-auto px-3 md:px-6">
+            <div className="max-w-site mx-auto px-3 md:px-6">
                 <div className="text-center mb-8 md:mb-16">
                     <h2 className="text-xl md:text-4xl font-extrabold text-gray-900 mb-2 md:mb-4 tracking-tight">
                         How <span className="text-brand-purple">Apple Face BD BD</span> Works

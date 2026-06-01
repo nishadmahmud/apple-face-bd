@@ -54,7 +54,7 @@ export default function ProductSidebar({ product, pricingInfo, selectedCarePlans
             <button
                 type="button"
                 onClick={() => setShowDeliveryModal(true)}
-                className="bg-white border text-left border-gray-200 rounded-xl p-4 flex gap-4 items-center shadow-sm hover:border-brand-purple/40 transition-colors"
+                className="bg-white border text-left border-gray-200 rounded-lg p-4 flex gap-4 items-center shadow-sm hover:border-brand-primary/30 transition-colors"
             >
                 <div className="bg-blue-50 text-blue-500 p-3 rounded-full shrink-0">
                     <BsTruck size={20} />
@@ -68,15 +68,15 @@ export default function ProductSidebar({ product, pricingInfo, selectedCarePlans
             <button
                 type="button"
                 onClick={() => onOpenEmiModal?.()}
-                className="bg-white border text-left border-gray-200 rounded-xl p-4 flex gap-4 items-center shadow-sm hover:border-brand-purple/40 transition-colors cursor-pointer w-full"
+                className="bg-white border text-left border-gray-200 rounded-lg p-4 flex gap-4 items-center shadow-sm hover:border-brand-primary/30 transition-colors cursor-pointer w-full"
             >
-                <div className="bg-purple-50 text-brand-purple p-3 rounded-full shrink-0">
+                <div className="bg-red-50 text-brand-primary p-3 rounded-full shrink-0">
                     <BsCreditCard size={20} />
                 </div>
                 <div>
                     <h4 className="text-sm font-extrabold text-[#1a3b34]">EMI Availability</h4>
                     <p className="text-[12px] text-gray-500">EMI starts from ৳ {emiMonthlyStart.toLocaleString('en-IN')}/month</p>
-                    <p className="text-[11px] text-brand-purple mt-1 font-semibold">Click to view all EMI options</p>
+                    <p className="text-[11px] text-brand-primary mt-1 font-semibold">Click to view all EMI options</p>
                 </div>
             </button>
 
@@ -84,7 +84,7 @@ export default function ProductSidebar({ product, pricingInfo, selectedCarePlans
                 href={`https://wa.me/${SITE_INFO.whatsappNumberIntl}?text=${encodeURIComponent(`Hi, I want details about ${product?.name || 'this product'}`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-white border text-left border-gray-200 rounded-xl p-4 flex gap-4 items-center shadow-sm hover:border-brand-purple/40 transition-colors"
+                className="bg-white border text-left border-gray-200 rounded-lg p-4 flex gap-4 items-center shadow-sm hover:border-brand-primary/30 transition-colors"
             >
                 <div className="bg-green-50 text-green-600 p-3 rounded-full shrink-0">
                     <FiMessageCircle size={20} />
@@ -96,10 +96,10 @@ export default function ProductSidebar({ product, pricingInfo, selectedCarePlans
             </a>
 
             <a
-                href="https://www.facebook.com/CellTech69"
+                href={SITE_INFO.messengerUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-white border text-left border-gray-200 rounded-xl p-4 flex gap-4 items-center shadow-sm hover:border-brand-purple/40 transition-colors"
+                className="bg-white border text-left border-gray-200 rounded-lg p-4 flex gap-4 items-center shadow-sm hover:border-brand-primary/30 transition-colors"
             >
                 <div className="bg-blue-50 text-blue-600 p-3 rounded-full shrink-0">
                     <FiMessageCircle size={20} />
@@ -113,7 +113,7 @@ export default function ProductSidebar({ product, pricingInfo, selectedCarePlans
             {/* Apple Face BD Care+ - Commented out for now
             <div className="border border-gray-200 rounded-xl overflow-hidden">
                 <div className="bg-black text-white px-4 py-3 flex items-center gap-2">
-                    <FiShield className="text-brand-purple" size={16} />
+                    <FiShield className="text-brand-primary" size={16} />
                     <span className="font-bold text-sm">Apple Face BD Care+</span>
                 </div>
                 <div className="p-3 space-y-2 bg-white">
@@ -122,7 +122,7 @@ export default function ProductSidebar({ product, pricingInfo, selectedCarePlans
                         return (
                             <label
                                 key={plan.id}
-                                className={`cursor-pointer border rounded-lg p-3 flex items-start gap-2 transition-all ${active ? 'border-brand-purple bg-brand-purple/5' : 'border-gray-200 hover:border-gray-300'}`}
+                                className={`cursor-pointer border rounded-lg p-3 flex items-start gap-2 transition-all ${active ? 'border-brand-primary bg-brand-primary/5' : 'border-gray-200 hover:border-gray-300'}`}
                             >
                                 <input
                                     type="checkbox"
@@ -143,7 +143,7 @@ export default function ProductSidebar({ product, pricingInfo, selectedCarePlans
 
                     <p className="text-[11px] text-gray-500 flex items-center gap-1 pt-1">
                         <FiCheckCircle className="text-green-600" />
-                        I agree to Apple Face BD BD&apos;s <a href="/terms" target="_blank" className="underline hover:text-brand-purple">terms & conditions</a>
+                        I agree to Apple Face BD&apos;s <a href="/terms" target="_blank" className="underline hover:text-brand-primary">terms & conditions</a>
                     </p>
                 </div>
             </div>
@@ -151,10 +151,10 @@ export default function ProductSidebar({ product, pricingInfo, selectedCarePlans
 
             {showDeliveryModal && (
                 <div className="fixed inset-0 z-[9999] bg-black/40 backdrop-blur-[1px] flex items-center justify-center p-4">
-                    <div className="w-full max-w-lg bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden">
-                        <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                            <h3 className="text-lg font-black text-gray-900">Estimated Delivery</h3>
-                            <button onClick={() => setShowDeliveryModal(false)} className="p-2 rounded-md hover:bg-gray-100 text-gray-500">
+                    <div className="w-full max-w-lg bg-white rounded-lg border border-gray-200 shadow-2xl overflow-hidden">
+                        <div className="px-4 py-3 bg-[#0a0a0a] text-white flex items-center justify-between">
+                            <h3 className="text-lg font-black">Estimated Delivery</h3>
+                            <button onClick={() => setShowDeliveryModal(false)} className="p-2 rounded-md hover:bg-white/10 text-white/80">
                                 <FiX size={18} />
                             </button>
                         </div>

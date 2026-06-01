@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { searchProducts, getProductById } from '../../lib/api';
 import { useCompare } from '../../context/CompareContext';
 import { FiSearch, FiTrash2, FiX } from 'react-icons/fi';
+import PageHero from '../../components/Shared/PageHero';
 
 const MAX_SLOTS = 3;
 const EMPTY_SLOT = { id: null, name: '', image: '/no-image.svg', brand: '', price: null, displayPrice: '', oldPrice: null, specs: [] };
@@ -135,12 +136,18 @@ export default function ComparePage() {
   );
 
   return (
-    <div className="bg-white min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 pt-4 pb-8 md:pt-6 md:pb-12">
-        <h1 className="text-2xl md:text-4xl font-extrabold text-gray-900 mb-5 md:mb-7">Compare Selected Product</h1>
+    <div className="bg-card-bg min-h-screen pb-20 md:pb-10">
+      <PageHero
+        eyebrow="Shop"
+        title="Compare"
+        highlight="Products"
+        description="Find and select up to three products to see differences and similarities side by side."
+        className="!py-10 md:!py-12"
+      />
 
-        <div className="border border-gray-200 rounded-lg overflow-hidden mb-8">
-          <div className="p-4 md:p-5 bg-gray-50 border-b border-gray-200">
+      <div className="max-w-site mx-auto px-4 md:px-6 lg:px-8 -mt-2 pb-8 md:pb-12">
+        <div className="border border-gray-200 rounded-lg overflow-hidden mb-8 bg-white">
+          <div className="p-4 md:p-5 bg-card-bg border-b border-gray-200">
             <h2 className="text-2xl font-black text-gray-900 mb-2">Compare Products</h2>
             <p className="text-gray-600 text-lg leading-snug">Find and select products to see the differences and similarities between them</p>
             <button
@@ -196,7 +203,7 @@ export default function ComparePage() {
               )}
               {slot.id ? (
                 <div className="border border-gray-100 rounded-xl p-3 bg-white">
-                  <div className="relative h-28 bg-gray-50 rounded-lg overflow-hidden mb-2">
+                  <div className="relative h-28 bg-card-bg rounded-lg overflow-hidden mb-2">
                     <Image src={slot.image} alt={slot.name} fill className="object-contain" unoptimized />
                   </div>
                   <p className="text-xs text-gray-500 uppercase font-semibold">{slot.brand || 'Brand'}</p>
@@ -228,7 +235,7 @@ export default function ComparePage() {
             <div className="overflow-x-auto">
               <div className="min-w-[640px]">
                 <div
-                  className="grid bg-gray-50 text-sm font-bold text-gray-800"
+                  className="grid bg-card-bg text-sm font-bold text-gray-800"
                   style={{ gridTemplateColumns: `minmax(180px,1.1fr) repeat(${filledSlots.length}, minmax(220px,1fr))` }}
                 >
                   <div className="p-3 md:p-4 border-r border-gray-100">Attribute</div>

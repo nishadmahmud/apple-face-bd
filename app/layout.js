@@ -18,22 +18,26 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Apple Face BD BD | Premium Tech & Gadgets",
-  description: "Apple Face BD BD is your ultimate destination for authentic smartphones, laptops, custom PCs, gaming gear, and tech accessories in Bangladesh.",
+  title: "Apple Face BD | Premium Tech & Gadgets",
+  description: "Apple Face BD is your destination for authentic smartphones, laptops, gaming gear, and tech accessories in Bangladesh.",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/apple-face-logo-square.png", type: "image/png", sizes: "512x512" },
+    ],
+    apple: "/apple-face-logo-square.png",
   },
   openGraph: {
-    title: "Apple Face BD BD | Premium Tech & Gadgets",
-    description: "Your ultimate destination for smartphones, laptops, custom PCs, gaming gear, and tech accessories in Bangladesh.",
-    url: "https://celltechbd.com", 
-    siteName: "Apple Face BD BD",
+    title: "Apple Face BD | Premium Tech & Gadgets",
+    description: "Authentic smartphones, laptops, gaming gear, and tech accessories in Bangladesh.",
+    url: "https://applefacebd.com",
+    siteName: "Apple Face BD",
     images: [
       {
-        url: "/CELL LOGO-01~2.jpg.jpeg",
-        width: 1200,
-        height: 630,
-        alt: "Apple Face BD BD Showcase",
+        url: "/apple-face-logo-square.png",
+        width: 512,
+        height: 512,
+        alt: "Apple Face BD",
       },
     ],
     locale: "en_US",
@@ -41,9 +45,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Apple Face BD BD | Premium Tech & Gadgets",
-    description: "Your ultimate destination for smartphones, laptops, custom PCs, gaming gear, and tech accessories.",
-    images: ["/CELL LOGO-01~2.jpg.jpeg"],
+    title: "Apple Face BD | Premium Tech & Gadgets",
+    description: "Authentic smartphones, laptops, gaming gear, and tech accessories in Bangladesh.",
+    images: ["/apple-face-logo-square.png"],
   },
 };
 

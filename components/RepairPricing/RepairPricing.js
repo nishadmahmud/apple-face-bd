@@ -33,7 +33,7 @@ export default function RepairPricing() {
 
     return (
         <section className="bg-gray-50 py-16 md:py-28 border-b border-gray-100">
-            <div className="max-w-6xl mx-auto px-4 md:px-6">
+            <div className="max-w-site mx-auto px-4 md:px-6">
                 <div className="text-center mb-12 md:mb-20">
                     <span className="text-brand-purple uppercase tracking-[0.2em] text-xs font-bold mb-4 block">Transparent Service</span>
                     <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 tracking-tight">

@@ -106,7 +106,7 @@ export default function BlogTips({ posts = [] }) {
 
     return (
         <section className="bg-white py-10 md:py-20 border-b border-gray-100">
-            <div className="max-w-7xl mx-auto px-3 md:px-6">
+            <div className="max-w-site mx-auto px-3 md:px-6">
                 <div className="flex items-end justify-between mb-6 md:mb-12 gap-4">
                     <div>
                         <h2 className="text-xl md:text-4xl font-extrabold text-gray-900 mb-1 md:mb-3 tracking-tight">

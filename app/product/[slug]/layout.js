@@ -17,7 +17,7 @@ export async function generateMetadata(props) {
 
     if (!productId || !Number.isFinite(productId) || productId <= 0) {
         return {
-            title: 'Product Not Found | Apple Face BD BD',
+            title: 'Product Not Found | Apple Face BD',
         };
     }
 
@@ -27,14 +27,14 @@ export async function generateMetadata(props) {
 
         if (!product || !product.id) {
             return {
-                title: 'Product Not Found | Apple Face BD BD',
+                title: 'Product Not Found | Apple Face BD',
             };
         }
 
-        const title = `${product.name} - Apple Face BD BD`;
+        const title = `${product.name} - Apple Face BD`;
         const description = product.description
             ? product.description.replace(/<[^>]+>/g, '').substring(0, 150) + '...'
-            : `Buy ${product.name} at the best price in Bangladesh from Apple Face BD BD.`;
+            : `Buy ${product.name} at the best price in Bangladesh from Apple Face BD.`;
 
         const images =
             (Array.isArray(product.images) && product.images.length > 0 && product.images) ||
@@ -70,7 +70,7 @@ export async function generateMetadata(props) {
     } catch (error) {
         console.error('Failed to generate metadata for product:', error);
         return {
-            title: 'Product Details | Apple Face BD BD',
+            title: 'Product Details | Apple Face BD',
         };
     }
 }

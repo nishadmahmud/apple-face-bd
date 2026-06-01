@@ -90,10 +90,10 @@ export default function Hero({ slides = [] }) {
     };
 
     return (
-        <section className="w-full bg-white pt-4 md:pt-6 pb-6 md:pb-8 px-4 md:px-6 overflow-hidden">
-            <div className="max-w-7xl mx-auto">
+        <section className="w-full bg-white pt-3 md:pt-4 pb-6 md:pb-8 overflow-hidden border-b border-gray-100">
+            <div className="max-w-site mx-auto px-0 md:px-4 lg:px-8">
                 <div
-                    className="w-full relative overflow-hidden rounded-xl h-[220px] sm:h-[340px] md:h-[480px] bg-gray-50 group border border-gray-100 shadow-sm touch-pan-y"
+                    className="w-full relative overflow-hidden rounded-none md:rounded-lg h-[220px] sm:h-[340px] md:h-[460px] bg-gray-900 group touch-pan-y"
                     onTouchStart={slideCount > 1 ? handleTouchStart : undefined}
                     onTouchMove={slideCount > 1 ? handleTouchMove : undefined}
                     onTouchEnd={slideCount > 1 ? handleTouchEnd : undefined}
@@ -131,7 +131,7 @@ export default function Hero({ slides = [] }) {
                             <button
                                 type="button"
                                 onClick={() => handleManualNav(goPrev)}
-                                className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/95 text-gray-800 border border-gray-200 shadow-md items-center justify-center hover:bg-white hover:text-brand-primary transition-colors"
+                                className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/70 text-white border border-white/20 shadow-md items-center justify-center hover:bg-brand-primary transition-colors"
                                 aria-label="Previous slide"
                             >
                                 <FiChevronLeft size={22} />
@@ -139,7 +139,7 @@ export default function Hero({ slides = [] }) {
                             <button
                                 type="button"
                                 onClick={() => handleManualNav(goNext)}
-                                className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-white/95 text-gray-800 border border-gray-200 shadow-md items-center justify-center hover:bg-white hover:text-brand-primary transition-colors"
+                                className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 z-30 w-11 h-11 rounded-full bg-black/70 text-white border border-white/20 shadow-md items-center justify-center hover:bg-brand-primary transition-colors"
                                 aria-label="Next slide"
                             >
                                 <FiChevronRight size={22} />

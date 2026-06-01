@@ -8,6 +8,7 @@ import { useCompare } from '../../context/CompareContext';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { getEmiBanksForCalculator } from '../../lib/bankEmiData';
+import VariantOptionChip from '../Shared/VariantOptionChip';
 
 const EMI_BANKS_LIST = getEmiBanksForCalculator();
 const EMI_MONTHS = [3, 6, 9, 12, 18, 24, 30, 36];
@@ -367,16 +368,16 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
     }, [product.specifications]);
     const renderQuickActions = (isMobile = false) => (
         <div className={`flex ${isMobile ? 'items-center justify-between gap-3 mt-3' : 'items-start justify-between gap-4'}`}>
-            <span className={`font-bold rounded-md uppercase tracking-wider ${isMobile ? 'text-[10px] px-2 py-1' : 'text-[10px] px-2 py-1'} ${isInStock ? 'bg-brand-purple/10 text-brand-purple' : 'bg-red-50 text-red-600'}`}>
+            <span className={`font-bold rounded-md uppercase tracking-wider ${isMobile ? 'text-[10px] px-2 py-1' : 'text-[10px] px-2 py-1'} ${isInStock ? 'bg-brand-primary/10 text-brand-primary' : 'bg-red-50 text-red-600'}`}>
                 Availability: {isInStock ? 'In Stock' : 'Out of Stock'}
             </span>
             <div className="flex items-center gap-2">
                 <button
                     onClick={() => toggleCompare(compareProduct)}
-                    className={`cursor-pointer flex flex-col items-center gap-0.5 transition-colors ${compared ? 'text-brand-purple' : 'hover:text-brand-purple text-gray-400'}`}
+                    className={`cursor-pointer flex flex-col items-center gap-0.5 transition-colors ${compared ? 'text-brand-primary' : 'hover:text-brand-primary text-gray-400'}`}
                     aria-label={compared ? 'Remove from compare' : 'Add to compare'}
                 >
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${compared ? 'bg-brand-purple/10 text-brand-purple' : 'bg-purple-50 text-brand-purple'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${compared ? 'bg-brand-primary/10 text-brand-primary' : 'bg-brand-primary/5 text-brand-primary'}`}>
                         <FiLayers size={14} />
                     </div>
                     <span className="text-[8px] font-bold uppercase">{compared ? 'Compared' : 'Compare'}</span>
@@ -426,13 +427,12 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
     const renderVariantSelectors = (displayClass) => {
         if (!hasVariants) return null;
         return (
-            <div className={`bg-white border border-gray-100 rounded-2xl p-4 md:p-5 shadow-sm space-y-4 md:space-y-5 ${displayClass}`}>
-                {/* Variant Summary */}
+            <div className={`bg-white border border-gray-200 rounded-lg p-4 md:p-5 shadow-sm space-y-4 md:space-y-5 ${displayClass}`}>
                 <div className="flex flex-col gap-1 text-[13px] mb-2 pb-4 border-b border-gray-100">
                     {(selectedStorage || selectedColor || selectedRegion) && (
                         <p>
                             <span className="font-semibold text-gray-400">Variant: </span>
-                            <span className="font-bold text-brand-purple">{[selectedStorage, selectedColor, selectedRegion].filter(Boolean).join(' / ')}</span>
+                            <span className="font-bold text-brand-primary">{[selectedStorage, selectedColor, selectedRegion].filter(Boolean).join(' / ')}</span>
                         </p>
                     )}
                 </div>
@@ -440,29 +440,18 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                 {allColors.length > 0 && (
                     <div>
                         <h3 className="text-sm font-bold text-gray-900 mb-3">
-                            Color: <span className="font-medium text-brand-purple">{selectedColor || ''}</span>
+                            Color: <span className="font-medium text-brand-primary">{selectedColor || ''}</span>
                         </h3>
                         <div className="flex flex-wrap gap-2">
-                            {allColors.map((color) => {
-                                const isSelected = selectedColor === color.name;
-                                const isWhite = color.hex?.toLowerCase() === '#ffffff' || color.hex?.toLowerCase() === '#fff';
-                                return (
-                                    <button
-                                        key={color.name}
-                                        onClick={() => handleColorSelect(color.name)}
-                                        className={`cursor-pointer flex items-center gap-2 px-3 py-2 rounded-xl border-2 transition-all duration-200 ${isSelected ? 'border-brand-purple bg-brand-purple/5 shadow-md shadow-brand-purple/10' : 'border-gray-200 hover:border-gray-300 hover:shadow-sm'}`}
-                                        title={color.name}
-                                    >
-                                        <span
-                                            className={`w-4 h-4 rounded-full shadow-inner ${isWhite ? 'border border-gray-300' : ''}`}
-                                            style={{ backgroundColor: color.hex }}
-                                        />
-                                        <span className={`text-xs font-medium ${isSelected ? 'text-brand-purple' : 'text-gray-600'}`}>
-                                            {color.name}
-                                        </span>
-                                    </button>
-                                );
-                            })}
+                            {allColors.map((color) => (
+                                <VariantOptionChip
+                                    key={color.name}
+                                    label={color.name}
+                                    swatchHex={color.hex}
+                                    selected={selectedColor === color.name}
+                                    onClick={() => handleColorSelect(color.name)}
+                                />
+                            ))}
                         </div>
                     </div>
                 )}
@@ -470,23 +459,18 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                 {allStorages.length > 0 && (
                     <div>
                         <h3 className="text-sm font-bold text-gray-900 mb-3">
-                            Storage: <span className="font-medium text-brand-purple">{selectedStorage || ''}</span>
+                            Storage: <span className="font-medium text-brand-primary">{selectedStorage || ''}</span>
                         </h3>
                         <div className="flex flex-wrap gap-2">
-                            {allStorages.map((size) => {
-                                const isAvailable = availableStorages.includes(size);
-                                const isSelected = selectedStorage === size;
-                                return (
-                                    <button
-                                        key={size}
-                                        onClick={() => isAvailable && setSelectedStorage(size)}
-                                        disabled={!isAvailable}
-                                        className={`cursor-pointer px-3.5 py-2 rounded-xl text-xs font-semibold border-2 transition-all duration-200 ${isSelected ? 'border-brand-purple bg-brand-purple text-white shadow-md shadow-brand-purple/20' : isAvailable ? 'border-gray-200 text-gray-600 hover:border-brand-purple/50 hover:shadow-sm' : 'border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50 line-through'}`}
-                                    >
-                                        {size}
-                                    </button>
-                                );
-                            })}
+                            {allStorages.map((size) => (
+                                <VariantOptionChip
+                                    key={size}
+                                    label={size}
+                                    selected={selectedStorage === size}
+                                    disabled={!availableStorages.includes(size)}
+                                    onClick={() => setSelectedStorage(size)}
+                                />
+                            ))}
                         </div>
                     </div>
                 )}
@@ -494,23 +478,18 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                 {allRegions.length > 0 && (
                     <div>
                         <h3 className="text-sm font-bold text-gray-900 mb-3">
-                            Region: <span className="font-medium text-brand-purple">{selectedRegion || ''}</span>
+                            Region: <span className="font-medium text-brand-primary">{selectedRegion || ''}</span>
                         </h3>
                         <div className="flex flex-wrap gap-2">
-                            {allRegions.map((region) => {
-                                const isAvailable = availableRegions.includes(region);
-                                const isSelected = selectedRegion === region;
-                                return (
-                                    <button
-                                        key={region}
-                                        onClick={() => isAvailable && setSelectedRegion(region)}
-                                        disabled={!isAvailable}
-                                        className={`cursor-pointer px-3.5 py-2 rounded-xl text-xs font-semibold border-2 transition-all duration-200 ${isSelected ? 'border-brand-purple text-brand-purple bg-brand-purple/5 shadow-md shadow-brand-purple/10' : isAvailable ? 'border-gray-200 text-gray-600 hover:border-brand-purple/50 hover:shadow-sm' : 'border-gray-100 text-gray-300 cursor-not-allowed bg-gray-50 line-through'}`}
-                                    >
-                                        {region}
-                                    </button>
-                                );
-                            })}
+                            {allRegions.map((region) => (
+                                <VariantOptionChip
+                                    key={region}
+                                    label={region}
+                                    selected={selectedRegion === region}
+                                    disabled={!availableRegions.includes(region)}
+                                    onClick={() => setSelectedRegion(region)}
+                                />
+                            ))}
                         </div>
                     </div>
                 )}
@@ -520,10 +499,15 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
 
     return (
         <>
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)_minmax(0,1fr)] gap-6 lg:gap-8 items-start relative">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)_minmax(0,0.95fr)] gap-6 lg:gap-8 items-start relative">
 
-            {/* ========== LEFT COLUMN: Info & Pricing ========== */}
-            <div className="flex flex-col gap-5 w-full order-2 lg:order-1 lg:sticky lg:top-24">
+            {/* ========== COLUMN 1 (desktop): Gallery ========== */}
+            <div className="w-full min-w-0 order-1 lg:order-1 lg:sticky lg:top-24">
+                {galleryWithSync}
+            </div>
+
+            {/* ========== COLUMN 2 (desktop): Product info & pricing ========== */}
+            <div className="flex flex-col gap-5 w-full order-2 lg:order-2 lg:sticky lg:top-24">
 
                 {/* Title & Brand */}
                 <div>
@@ -571,44 +555,39 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                 {/* Cart Actions */}
                 <div className="flex flex-col gap-2.5 mt-1">
                     <div className="flex flex-row items-stretch gap-2 h-12">
-                        <div className="flex items-center justify-between border-2 border-gray-200 rounded-xl py-1 px-1 w-[100px] shrink-0 bg-white">
+                        <div className="flex items-center justify-between border-2 border-gray-200 rounded-lg py-1 px-1 w-[100px] shrink-0 bg-white">
                             <button
                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                                className="cursor-pointer w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-purple hover:bg-gray-100 rounded-lg transition-colors"
+                                className="cursor-pointer w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-primary hover:bg-gray-100 rounded-lg transition-colors"
                             >
                                 <FiMinus size={14} />
                             </button>
                             <span className="font-bold text-gray-900 w-6 text-center text-sm">{quantity}</span>
                             <button
                                 onClick={() => setQuantity(quantity + 1)}
-                                className="cursor-pointer w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-purple hover:bg-gray-100 rounded-lg transition-colors"
+                                className="cursor-pointer w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-primary hover:bg-gray-100 rounded-lg transition-colors"
                             >
                                 <FiPlus size={14} />
                             </button>
                         </div>
                         <button
                             onClick={handleAddToCart}
-                            className="cursor-pointer flex-1 bg-white border-2 border-brand-purple text-brand-purple font-bold px-3 rounded-xl hover:bg-brand-purple/5 transition-colors text-sm whitespace-nowrap"
+                            className="cursor-pointer flex-1 bg-white border-2 border-brand-primary text-brand-primary font-bold px-3 rounded-lg hover:bg-brand-primary/5 transition-colors text-sm whitespace-nowrap"
                         >
                             Add to Cart
                         </button>
                     </div>
                     <button
                         onClick={handleBuyNow}
-                        className="cursor-pointer w-full bg-brand-purple text-white font-extrabold tracking-wide py-3.5 px-4 rounded-xl hover:opacity-90 shadow-lg shadow-brand-purple/30 transition-all text-sm"
+                        className="cursor-pointer w-full bg-brand-primary text-white font-extrabold tracking-wide py-3.5 px-4 rounded-lg hover:opacity-90 transition-all text-sm"
                     >
                         Buy Now
                     </button>
                 </div>
             </div>
 
-            {/* ========== CENTER COLUMN: Gallery ========== */}
-            <div className="w-full min-w-0 order-1 lg:order-2 lg:sticky lg:top-24">
-                {galleryWithSync}
-            </div>
-
-            {/* ========== RIGHT COLUMN: Actions, Variants & Sidebar ========== */}
-            <div className="flex flex-col gap-5 w-full order-3 lg:sticky lg:top-24">
+            {/* ========== COLUMN 3 (desktop): Contact & support ========== */}
+            <div className="flex flex-col gap-5 w-full order-3 lg:order-3 lg:sticky lg:top-24">
 
                 {/* Quick Actions */}
                 <div className="hidden lg:block">
@@ -617,7 +596,7 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
 
                 {/* Sidebar */}
                 {sidebarComponent && (
-                    <div className="rounded-2xl bg-white border border-gray-100 shadow-sm p-5">
+                    <div className="rounded-lg bg-white border border-gray-200 shadow-sm p-5">
                         {isValidElement(sidebarComponent)
                             ? cloneElement(sidebarComponent, { onOpenEmiModal: () => setShowEmiModal(true) })
                             : sidebarComponent}
@@ -629,22 +608,22 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
         {/* ========== EMI Modal (outside grid, fixed overlay) ========== */}
         {showEmiModal && (
             <div className="fixed inset-0 z-[9999] bg-black/40 backdrop-blur-[1px] flex items-center justify-center p-4">
-                <div className="w-full max-w-5xl bg-white rounded-2xl border border-gray-200 shadow-2xl overflow-hidden h-[78vh]">
-                    <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-                        <h3 className="text-lg font-black text-gray-900">EMI Options</h3>
+                <div className="w-full max-w-5xl bg-white rounded-lg border border-gray-200 shadow-2xl overflow-hidden h-[78vh]">
+                    <div className="px-4 py-3 bg-[#0a0a0a] text-white flex items-center justify-between">
+                        <h3 className="text-lg font-black">EMI Options</h3>
                         <button
                             type="button"
                             onClick={() => {
                                 setShowEmiModal(false);
                                 setEmiBankSearch('');
                             }}
-                            className="p-2 rounded-md hover:bg-gray-100 text-gray-500"
+                            className="p-2 rounded-md hover:bg-white/10 text-white/80 hover:text-white"
                         >
                             <FiX size={18} />
                         </button>
                     </div>
 
-                    <div className="p-3 h-[calc(78vh-56px)] overflow-hidden">
+                    <div className="p-3 h-[calc(78vh-52px)] overflow-hidden">
                         <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-3 items-stretch h-full">
                             <div className="hidden md:flex border border-gray-200 rounded-xl overflow-hidden bg-gray-50/40 h-full flex-col min-h-0">
                                 <div className="px-3 py-2.5 border-b border-gray-200 bg-gray-100 space-y-2">
@@ -656,7 +635,7 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                                             value={emiBankSearch}
                                             onChange={(e) => setEmiBankSearch(e.target.value)}
                                             placeholder="Search banks..."
-                                            className="w-full pl-8 pr-2 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
+                                            className="w-full pl-8 pr-2 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
                                         />
                                     </div>
                                 </div>
@@ -670,7 +649,7 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                                                 key={bank.bank}
                                                 type="button"
                                                 onClick={() => setSelectedEmiBankName(bank.bank)}
-                                                className={`w-full text-left px-3 py-2.5 border-b border-gray-200 flex items-center gap-2.5 transition-colors ${active ? 'bg-brand-purple/10' : 'hover:bg-gray-100'}`}
+                                                className={`w-full text-left px-3 py-2.5 border-b border-gray-200 flex items-center gap-2.5 transition-colors ${active ? 'bg-brand-primary/10' : 'hover:bg-gray-100'}`}
                                             >
                                                 {bank.logo ? (
                                                     // eslint-disable-next-line @next/next/no-img-element
@@ -695,7 +674,7 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                                             value={emiBankSearch}
                                             onChange={(e) => setEmiBankSearch(e.target.value)}
                                             placeholder="Search banks..."
-                                            className="w-full pl-8 pr-2 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-brand-purple focus:ring-1 focus:ring-brand-purple"
+                                            className="w-full pl-8 pr-2 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20"
                                         />
                                     </div>
                                     <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
@@ -708,7 +687,7 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                                                     key={bank.bank}
                                                     type="button"
                                                     onClick={() => setSelectedEmiBankName(bank.bank)}
-                                                    className={`shrink-0 px-3 py-2 rounded-lg border text-sm font-semibold flex items-center gap-2 ${active ? 'border-brand-purple bg-brand-purple/10 text-brand-purple' : 'border-gray-200 text-gray-700 bg-white'}`}
+                                                    className={`shrink-0 px-3 py-2 rounded-lg border text-sm font-semibold flex items-center gap-2 ${active ? 'border-brand-primary bg-brand-primary/10 text-brand-primary' : 'border-gray-200 text-gray-700 bg-white'}`}
                                                 >
                                                     {bank.logo ? (
                                                         // eslint-disable-next-line @next/next/no-img-element
@@ -725,7 +704,7 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
 
                                 <div>
                                     <p className="text-sm font-semibold text-gray-500 mb-1">Amount</p>
-                                    <div className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-2xl font-black text-brand-purple bg-gray-50">
+                                    <div className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-2xl font-black text-brand-primary bg-gray-50">
                                         {`৳ ${selectedBasePrice.toLocaleString('en-IN')}`}
                                     </div>
                                 </div>
@@ -739,7 +718,7 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                                                 type="button"
                                                 disabled={!available}
                                                 onClick={() => available && setSelectedEmiMonths(month)}
-                                                className={`px-3 py-1.5 text-xs font-semibold rounded-lg border ${selectedEmiMonths === month ? 'border-brand-purple bg-brand-purple/10 text-brand-purple' : 'border-gray-200 text-gray-600'} ${!available ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
+                                                className={`px-3 py-1.5 text-xs font-semibold rounded-lg border ${selectedEmiMonths === month ? 'border-brand-primary bg-brand-primary/10 text-brand-primary' : 'border-gray-200 text-gray-600'} ${!available ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer'}`}
                                             >
                                                 {month}M
                                             </button>
@@ -758,14 +737,14 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                                             key={plan.months}
                                             type="button"
                                             onClick={() => setSelectedEmiMonths(plan.months)}
-                                            className={`w-full text-left grid grid-cols-3 border-b border-gray-100 last:border-b-0 ${selectedEmiMonths === plan.months ? 'bg-brand-purple/5' : ''}`}
+                                            className={`w-full text-left grid grid-cols-3 border-b border-gray-100 last:border-b-0 ${selectedEmiMonths === plan.months ? 'bg-brand-primary/5' : ''}`}
                                         >
                                             <div className="px-3 py-2.5 text-xl font-bold text-gray-800">{plan.months}</div>
                                             <div className="px-3 py-2.5">
                                                 <p className="text-xl font-black text-gray-800">৳ {plan.monthly.toLocaleString('en-IN')}</p>
                                                 <p className="text-xs text-gray-500">(Charge {plan.rate}%)</p>
                                             </div>
-                                            <div className="px-3 py-2.5 text-right text-xl font-black text-brand-purple">
+                                            <div className="px-3 py-2.5 text-right text-xl font-black text-brand-primary">
                                                 {plan.total.toLocaleString('en-IN')}
                                             </div>
                                         </button>

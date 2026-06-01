@@ -252,38 +252,23 @@ export default async function Home() {
     <>
       <Hero slides={heroSlides} />
       <ShopCategories categories={categories} />
-      <PromoBanners banners={homeBanners} />
-      <FlashSale products={flashSaleProducts} />
-
-      {videoBanners[0] && <VideoBanners banner={videoBanners[0]} />}
-      
       <NewArrivals products={newArrivals} />
-      
-      {/* Scattered Wide Banners */}
-      {wideBanners[0] && <WidePromoBanner banner={wideBanners[0]} />}
-      
+      <FlashSale products={flashSaleProducts} />
+      <PromoBanners banners={homeBanners} />
       <FeaturedProducts products={featuredProducts} />
-      
-      {wideBanners[1] && <WidePromoBanner banner={wideBanners[1]} />}
-
-      {/* NEW SECTION: Campaign Showcase */}
-      <CampaignShowcase 
-          title="Top Digital Trends"
-          splitBanners={homeBanners.slice(1, 3)} 
-          products={featuredProducts} 
-          videoBanner={videoBanners[1]}
-      />
-      
+      {wideBanners[0] && <WidePromoBanner banner={wideBanners[0]} />}
       <BrandProductSection brands={topBrands} />
       <BestDeals deals={bestDealsCards} />
-
-      {wideBanners[2] && <WidePromoBanner banner={wideBanners[2]} />}
-      
+      <CampaignShowcase
+        title="Top Digital Trends"
+        splitBanners={homeBanners.slice(1, 3)}
+        products={featuredProducts}
+        videoBanner={videoBanners[1]}
+      />
+      {videoBanners[0] && <VideoBanners banner={videoBanners[0]} />}
+      {wideBanners[1] && <WidePromoBanner banner={wideBanners[1]} />}
       <BlogTips posts={blogPosts} />
       <Testimonials />
-
-      {videoBanners[2] && <VideoBanners banner={videoBanners[2]} />}
-
       <FAQ />
       <HomeSEOContent />
     </>

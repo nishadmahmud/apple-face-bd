@@ -77,7 +77,7 @@ export default function ProductGallery({
                     onClick={openLightbox}
                     onMouseMove={handleMainMouseMove}
                     onMouseLeave={handleMainMouseLeave}
-                    className="group w-full aspect-square relative bg-[#f5f5f5] rounded-2xl border border-gray-100 overflow-hidden flex items-center justify-center p-4 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-purple"
+                    className="group w-full aspect-square relative bg-card-bg rounded-lg border border-gray-200 overflow-hidden flex items-center justify-center p-4 cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-primary"
                     aria-label="View product image fullscreen"
                 >
                     {showArrows && (
@@ -96,7 +96,7 @@ export default function ProductGallery({
                                         goPrev();
                                     }
                                 }}
-                                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 text-gray-700 border border-gray-200 shadow-sm hover:bg-white hover:text-brand-purple transition-colors flex items-center justify-center"
+                                className="absolute left-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 text-gray-700 border border-gray-200 shadow-sm hover:bg-white hover:text-brand-primary transition-colors flex items-center justify-center"
                                 aria-label="Previous image"
                             >
                                 <FiChevronLeft size={24} />
@@ -115,7 +115,7 @@ export default function ProductGallery({
                                         goNext();
                                     }
                                 }}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 text-gray-700 border border-gray-200 shadow-sm hover:bg-white hover:text-brand-purple transition-colors flex items-center justify-center"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/90 text-gray-700 border border-gray-200 shadow-sm hover:bg-white hover:text-brand-primary transition-colors flex items-center justify-center"
                                 aria-label="Next image"
                             >
                                 <FiChevronRight size={24} />
@@ -150,9 +150,9 @@ export default function ProductGallery({
                             key={`${img}-${idx}`}
                             type="button"
                             onClick={() => onSelectedIndexChange?.(idx)}
-                            className={`relative w-20 h-20 shrink-0 rounded-xl border-2 overflow-hidden bg-[#f5f5f5] transition-all ${
+                            className={`relative w-20 h-20 shrink-0 rounded-lg border-2 overflow-hidden bg-card-bg transition-all ${
                                 safeIndex === idx
-                                    ? 'border-brand-purple'
+                                    ? 'border-brand-primary'
                                     : 'border-transparent hover:border-gray-300'
                             }`}
                         >
@@ -242,7 +242,7 @@ export default function ProductGallery({
                                             type="button"
                                             onClick={() => onSelectedIndexChange?.(idx)}
                                             className={`relative w-16 h-16 shrink-0 rounded-lg border-2 overflow-hidden bg-white/5 ${
-                                                safeIndex === idx ? 'border-brand-purple' : 'border-white/25'
+                                                safeIndex === idx ? 'border-brand-primary' : 'border-white/25'
                                             }`}
                                         >
                                             <Image

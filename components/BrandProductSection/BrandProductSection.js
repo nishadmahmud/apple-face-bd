@@ -113,7 +113,7 @@ export default function BrandProductSection({ brands = [] }) {
 
     return (
         <section className="bg-white py-10 md:py-16">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
+            <div className="max-w-site mx-auto px-4 md:px-6">
                 
                 {/* Header */}
                 <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 md:mb-10 gap-4">
@@ -133,7 +133,7 @@ export default function BrandProductSection({ brands = [] }) {
                             </button>
                             <button 
                                 onClick={() => scroll('right')}
-                                className="w-9 h-9 rounded-full bg-brand-primary text-white flex items-center justify-center hover:bg-green-600 transition-colors"
+                                className="w-9 h-9 rounded-full bg-gray-900 text-white flex items-center justify-center hover:bg-brand-primary transition-colors"
                             >
                                 <FiChevronRight size={18} />
                             </button>
@@ -185,15 +185,15 @@ export default function BrandProductSection({ brands = [] }) {
                 {/* Product Grid */}
                 <div className="relative min-h-[300px]">
                     {loading ? (
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 animate-pulse">
-                            {[1, 2, 3, 4].map((n) => (
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5 animate-pulse">
+                            {[1, 2, 3, 4, 5].map((n) => (
                                 <div key={n} className="bg-gray-100 rounded-2xl h-[300px] md:h-[380px]" />
                             ))}
                         </div>
                     ) : (
-                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4 transition-all duration-500">
+                        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5 transition-all duration-500">
                             {products.length > 0 ? (
-                                products.slice(0, 8).map((product) => (
+                                products.slice(0, 10).map((product) => (
                                     <ProductCard key={product.id} product={product} />
                                 ))
                             ) : (

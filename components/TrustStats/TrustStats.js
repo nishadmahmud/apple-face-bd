@@ -10,7 +10,7 @@ export default function TrustStats() {
 
     return (
         <section className="bg-white py-6 md:py-8 border-b border-gray-50">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
+            <div className="max-w-site mx-auto px-4 md:px-6">
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 divide-x-0 lg:divide-x divide-gray-100">
                     {stats.map((stat, idx) => (
                         <div key={idx} className="flex items-center gap-3 md:gap-4 px-2 md:px-6 justify-center lg:justify-start group">

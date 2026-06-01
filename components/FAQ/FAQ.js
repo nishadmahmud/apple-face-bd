@@ -6,36 +6,36 @@ import { FiPlus, FiMinus, FiHelpCircle } from 'react-icons/fi';
 export default function FAQ() {
     const faqs = [
         { 
-            question: "What is Apple Face BD BD?", 
-            answer: "Apple Face BD BD is a multi-brand tech hub and retail chain in Bangladesh that sells genuine smartphones, laptops, gadgets, and home appliances from leading global brands." 
+            question: "What is Apple Face BD?", 
+            answer: "Apple Face BD is a multi-brand tech hub and retail chain in Bangladesh that sells genuine smartphones, laptops, gadgets, and home appliances from leading global brands." 
         },
         { 
             question: "Do you sell other smartphones besides iPhone?", 
-            answer: "Yes, Apple Face BD BD sells all top Android phones from brands like Samsung, Xiaomi, OnePlus, Realme, Oppo, Vivo, and more—from budget to flagship level." 
+            answer: "Yes, Apple Face BD sells all top Android phones from brands like Samsung, Xiaomi, OnePlus, Realme, Oppo, Vivo, and more—from budget to flagship level." 
         },
         { 
-            question: "Does Apple Face BD BD sell original products?", 
-            answer: "Yes, Apple Face BD BD focuses on genuine, brand-new devices and checks every product to ensure authenticity before delivery." 
+            question: "Does Apple Face BD sell original products?", 
+            answer: "Yes, Apple Face BD focuses on genuine, brand-new devices and checks every product to ensure authenticity before delivery." 
         },
         { 
-            question: "Can I buy laptops and MacBooks from Apple Face BD BD?", 
-            answer: "Apple Face BD BD is a leading laptop shop and MacBook shop in Bangladesh with models from HP, Dell, Asus, Acer, Lenovo, MSI, and Apple MacBook Air/Pro." 
+            question: "Can I buy laptops and MacBooks from Apple Face BD?", 
+            answer: "Apple Face BD is a leading laptop shop and MacBook shop in Bangladesh with models from HP, Dell, Asus, Acer, Lenovo, MSI, and Apple MacBook Air/Pro." 
         },
         { 
-            question: "Does Apple Face BD BD sell home appliances?", 
-            answer: "Yes, through Apple Face BD BD outlets and our website, you can buy smart TVs, refrigerators, ACs, ovens, washing machines, and many other home appliances." 
+            question: "Does Apple Face BD sell home appliances?", 
+            answer: "Yes, through Apple Face BD outlets and our website, you can buy smart TVs, refrigerators, ACs, ovens, washing machines, and many other home appliances." 
         },
         { 
             question: "Do you offer used or pre-owned devices?", 
-            answer: "Apple Face BD BD has a dedicated \"Used Device\" section where you can buy pre-owned phones and gadgets that are checked before sale." 
+            answer: "Apple Face BD has a dedicated \"Used Device\" section where you can buy pre-owned phones and gadgets that are checked before sale." 
         },
         { 
             question: "Do you offer official brand warranties?", 
-            answer: "Most products at Apple Face BD BD include official brand warranty or store warranty; warranty type and duration are clearly mentioned on each product page." 
+            answer: "Most products at Apple Face BD include official brand warranty or store warranty; warranty type and duration are clearly mentioned on each product page." 
         },
         { 
-            question: "Is Apple Face BD BD available both online and offline?", 
-            answer: "Yes, Apple Face BD BD has an online store and multiple physical outlets in locations like Bashundhara City, Jamuna Future Park, Mirpur, and Uttara in Dhaka." 
+            question: "Is Apple Face BD available both online and offline?", 
+            answer: "Yes, Apple Face BD has an online store and multiple physical outlets in locations like Bashundhara City, Jamuna Future Park, Mirpur, and Uttara in Dhaka." 
         }
     ];
 
@@ -47,7 +47,7 @@ export default function FAQ() {
 
     return (
         <section className="bg-white py-14 md:py-24 border-b border-gray-50 overflow-hidden">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
+            <div className="max-w-site mx-auto px-4 md:px-6">
                 
                 <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
                     
@@ -102,9 +102,9 @@ export default function FAQ() {
                                             {/* Spacer to match the index number alignment */}
                                             <div className="w-10 md:w-14 flex-shrink-0" />
                                             <p className="text-[15px] md:text-base text-gray-500 leading-relaxed max-w-2xl">
-                                                {faq.answer.split(/(Apple Face BD BD)/g).map((part, i) => (
+                                                {faq.answer.split(/(Apple Face BD)/g).map((part, i) => (
                                                     <span key={i} className={
-                                                        part === "Apple Face BD BD"
+                                                        part === "Apple Face BD"
                                                         ? "text-brand-primary font-bold"
                                                         : ""
                                                     }>

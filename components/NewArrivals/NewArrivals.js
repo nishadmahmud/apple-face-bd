@@ -3,6 +3,7 @@
 import { useState, useRef } from 'react';
 import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 import ProductCard from '../Shared/ProductCard';
+import SectionHeader from '../Shared/SectionHeader';
 
 export default function NewArrivals({ products = [] }) {
     const [activeBrand, setActiveBrand] = useState('All');
@@ -36,14 +37,10 @@ export default function NewArrivals({ products = [] }) {
 
     return (
         <section className="bg-white py-10 md:py-16 border-b border-gray-50">
-            <div className="max-w-7xl mx-auto px-4 md:px-6">
-                <div className="flex items-center justify-between mb-6 md:mb-8">
-                    <h2 className="text-xl md:text-[28px] font-extrabold tracking-tight">
-                        <span className="text-gray-800">Latest </span>
-                        <span className="text-brand-primary">Products</span>
-                    </h2>
-
-                    <div className="hidden md:flex gap-2">
+            <div className="max-w-site mx-auto px-4 md:px-6">
+                <div className="flex items-end justify-between gap-4 mb-2">
+                    <SectionHeader title="Latest" highlight="Arrivals" className="mb-0" />
+                    <div className="hidden md:flex gap-2 pb-1">
                         <button
                             onClick={scrollLeft}
                             className="w-9 h-9 rounded-full flex items-center justify-center transition-colors border-2 border-gray-200 text-gray-600 hover:border-brand-primary hover:text-brand-primary"
@@ -52,7 +49,7 @@ export default function NewArrivals({ products = [] }) {
                         </button>
                         <button
                             onClick={scrollRight}
-                            className="w-9 h-9 rounded-full flex items-center justify-center transition-colors bg-brand-primary text-white hover:bg-green-600"
+                            className="w-9 h-9 rounded-full flex items-center justify-center transition-colors bg-gray-900 text-white hover:bg-brand-primary"
                         >
                             <FiChevronRight size={18} />
                         </button>
@@ -65,7 +62,7 @@ export default function NewArrivals({ products = [] }) {
                             <button
                                 key={idx}
                                 onClick={() => handleBrandChange(brand)}
-                                className={`px-5 py-2 rounded-full text-xs md:text-sm font-bold whitespace-nowrap transition-all ${activeBrand === brand ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}
+                                className={`px-5 py-2 rounded-full text-xs md:text-sm font-bold whitespace-nowrap transition-all border ${activeBrand === brand ? 'bg-brand-primary text-white border-brand-primary' : 'bg-white text-gray-700 border-gray-300 hover:border-gray-900'}`}
                             >
                                 {brand}
                             </button>

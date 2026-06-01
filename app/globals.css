@@ -1,15 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-primary: #39B24A;
+  --max-width-site: 96rem;
+  --color-brand-primary: #E31E24;
   --color-brand-secondary: #4D4D4D;
-  --color-brand-purple: #39B24A;
-  --color-brand-blue: #39B24A;
-  --color-brand-red: #ff2a3b;
-  --color-brand-green: #39B24A;
-  --color-card-bg: #F0F1F2;
-  --color-footer-bg: #F5F6F8;
-  --color-nav-dark: #3D3D3D;
+  --color-brand-purple: #E31E24;
+  --color-brand-blue: #111827;
+  --color-brand-red: #E31E24;
+  --color-brand-green: #E31E24;
+  --color-card-bg: #f7f7f7;
+  --color-footer-bg: #0a0a0a;
+  --color-nav-dark: #0a0a0a;
   --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   --font-mono: var(--font-geist-mono);
 }
@@ -19,14 +20,13 @@ body {
   color: #1f2937;
 }
 
-/* Custom Scrollbars */
 :root {
   scrollbar-gutter: stable;
 }
 
 html {
   scrollbar-width: thin;
-  scrollbar-color: #39B24A rgba(0, 0, 0, 0.05);
+  scrollbar-color: #E31E24 rgba(0, 0, 0, 0.05);
 }
 
 ::-webkit-scrollbar {
@@ -39,21 +39,20 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #39B24A;
+  background: #E31E24;
   border-radius: 10px;
   border: 1px solid transparent;
   background-clip: content-box;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2E8B3A;
+  background: #c4191f;
   border: 1px solid transparent;
   background-clip: content-box;
 }
 
-/* Custom selection color */
 ::selection {
-  background-color: #39B24A;
+  background-color: #E31E24;
   color: #ffffff;
 }
 
@@ -86,7 +85,6 @@ html {
 }
 
 @keyframes bounce-slow {
-
   0%,
   100% {
     transform: translateY(-10%);
@@ -103,7 +101,6 @@ html {
   animation: bounce-slow 2s infinite;
 }
 
-/* Hide scrollbar but keep scroll */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -112,9 +109,226 @@ html {
   scrollbar-width: none;
 }
 
-/* Section title style — green italic */
+/* Thin neutral scrollbars for filter sidebars (avoids heavy red global bar) */
+.filter-panel-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
+.filter-panel-scroll::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.filter-panel-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.filter-panel-scroll::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 4px;
+  border: none;
+}
+.filter-panel-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+.filter-panel-scroll::-webkit-scrollbar-button {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.section-title-accent {
+  color: #E31E24;
+  font-weight: 700;
+}
+
 .section-title-green {
-  color: #39B24A;
-  font-style: italic;
-  font-weight: 600;
+  color: #E31E24;
+  font-weight: 700;
+}
+
+.page-prose h2 {
+  position: relative;
+}
+
+/* Product (and similar) API HTML descriptions — typography plugin not used */
+.product-description {
+  color: #4b5563;
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: none;
+  -webkit-hyphens: none;
+}
+
+@media (min-width: 768px) {
+  .product-description {
+    font-size: 1rem;
+  }
+}
+
+.product-description > *:first-child {
+  margin-top: 0;
+}
+
+.product-description > *:last-child {
+  margin-bottom: 0;
+}
+
+.product-description p {
+  margin: 0 0 1em;
+  line-height: 1.75;
+}
+
+.product-description p:last-child {
+  margin-bottom: 0;
+}
+
+.product-description div {
+  margin: 0 0 1em;
+  line-height: 1.75;
+}
+
+.product-description div:last-child {
+  margin-bottom: 0;
+}
+
+/* CMS often uses <br> instead of paragraphs */
+.product-description br {
+  display: block;
+  margin-bottom: 0.65em;
+  content: "";
+}
+
+.product-description h1,
+.product-description h2,
+.product-description h3,
+.product-description h4,
+.product-description h5,
+.product-description h6 {
+  color: #111827;
+  font-weight: 800;
+  line-height: 1.35;
+  margin: 1.5em 0 0.65em;
+}
+
+.product-description h1:first-child,
+.product-description h2:first-child,
+.product-description h3:first-child,
+.product-description h4:first-child {
+  margin-top: 0;
+}
+
+.product-description h1 {
+  font-size: 1.5rem;
+}
+
+.product-description h2 {
+  font-size: 1.25rem;
+}
+
+.product-description h3 {
+  font-size: 1.125rem;
+}
+
+.product-description ul,
+.product-description ol {
+  margin: 0 0 1.25em;
+  padding-left: 1.5em;
+  line-height: 1.75;
+}
+
+.product-description ul {
+  list-style-type: disc;
+}
+
+.product-description ol {
+  list-style-type: decimal;
+}
+
+.product-description li {
+  margin-bottom: 0.5em;
+  line-height: 1.75;
+}
+
+.product-description li:last-child {
+  margin-bottom: 0;
+}
+
+.product-description li > p {
+  margin-bottom: 0.5em;
+}
+
+.product-description a {
+  color: #e31e24;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.product-description a:hover {
+  opacity: 0.85;
+}
+
+.product-description strong,
+.product-description b {
+  color: #111827;
+  font-weight: 700;
+}
+
+.product-description img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1.25em 0;
+  border-radius: 0.5rem;
+}
+
+.product-description table {
+  width: 100%;
+  margin: 1.25em 0;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.product-description th,
+.product-description td {
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  line-height: 1.5;
+}
+
+.product-description th {
+  background: #f9fafb;
+  font-weight: 700;
+  color: #111827;
+}
+
+.product-description blockquote {
+  margin: 1.25em 0;
+  padding: 0.75em 1em;
+  border-left: 3px solid #e31e24;
+  background: #f9fafb;
+  color: #374151;
+}
+
+.product-description hr {
+  margin: 1.5em 0;
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+}
+
+/* Override tight inline styles often sent from admin/CMS HTML */
+.product-description p[style],
+.product-description div[style],
+.product-description span[style] {
+  line-height: 1.75 !important;
+}
+
+.product-description p[style] {
+  margin-bottom: 1em !important;
+}
+
+.product-description div[style]:not(:last-child) {
+  margin-bottom: 1em !important;
 }

@@ -13,7 +13,7 @@ export default function RepairServices() {
 
     return (
         <section className="bg-white py-10 md:py-20 px-3 md:px-6 border-b border-gray-100">
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-site mx-auto">
                 <div className="text-center mb-8 md:mb-16 max-w-2xl mx-auto">
                     <h2 className="text-xl md:text-4xl font-extrabold text-gray-900 mb-2 md:mb-4 tracking-tight">
                         We Make <span className="text-brand-purple">Device Repair</span> Stress Free

@@ -8,7 +8,7 @@ export default function Testimonials() {
         { id: 1, name: "Rahim Ahmed", role: "Custom PC Builder", rating: 5, text: "Got all my components delivered within 24 hours. Everything was perfectly packaged. Top-notch service!", avatar: "RA", color: "bg-blue-500" },
         { id: 2, name: "Tasnia Farin", role: "Content Creator", rating: 5, text: "Bought the A7 IV bundle. Genuine product and the lowest price in the market. Highly recommended!", avatar: "TF", color: "bg-purple-500" },
         { id: 3, name: "Imran Khan", role: "Gamer", rating: 5, text: "My PS5 arrived safely. Customer support was very responsive when I asked about warranty details. The packaging was extremely secure.", avatar: "IK", color: "bg-orange-500" },
-        { id: 4, name: "Nusrat Jahan", role: "Software Engineer", rating: 5, text: "Upgraded my WFH setup with a new monitor and ergonomic chair from Apple Face BD BD. Life-changing experience with their delivery team!", avatar: "NJ", color: "bg-green-500" },
+        { id: 4, name: "Nusrat Jahan", role: "Software Engineer", rating: 5, text: "Upgraded my WFH setup with a new monitor and ergonomic chair from Apple Face BD. Life-changing experience with their delivery team!", avatar: "NJ", color: "bg-brand-primary" },
         { id: 5, name: "Sakib Hasan", role: "Smartphone Buyer", rating: 5, text: "Pre-ordered the new iPhone, got it on release day. Seamless experience from start to finish. Best tech shop in BD.", avatar: "SH", color: "bg-red-500" },
         { id: 6, name: "Maliha Rahman", role: "Audiophile", rating: 5, text: "The Sony headphones are 100% authentic. Great sound, fast delivery, couldn't ask for more from a gadgets shop.", avatar: "MR", color: "bg-indigo-500" },
     ];
@@ -21,7 +21,7 @@ export default function Testimonials() {
                 <div className="absolute bottom-[-10%] right-[-5%] w-[40%] h-[40%] bg-brand-primary/5 rounded-full blur-[120px]" />
             </div>
 
-            <div className="max-w-7xl mx-auto px-4 md:px-6 relative z-10">
+            <div className="max-w-site mx-auto px-4 md:px-6 relative z-10">
                 
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 md:mb-16 gap-6">
                     <div className="max-w-2xl">
@@ -33,7 +33,7 @@ export default function Testimonials() {
                             of Tech Enthusiasts.
                         </h2>
                         <p className="text-base md:text-lg text-gray-500 leading-relaxed">
-                            Don't just take our word for it. Here's what our community has to say about their experience with Apple Face BD BD.
+                            Don't just take our word for it. Here's what our community has to say about their experience with Apple Face BD.
                         </p>
                     </div>
 

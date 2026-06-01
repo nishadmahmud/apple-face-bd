@@ -4,12 +4,14 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FiSearch, FiUser, FiShoppingCart, FiMenu, FiX, FiMic, FiChevronRight, FiGrid, FiChevronDown, FiHeart, FiGift, FiMapPin, FiTruck, FiLayers } from 'react-icons/fi';
+import { FiSearch, FiUser, FiShoppingCart, FiMenu, FiX, FiChevronRight, FiGrid, FiHeart, FiGift, FiTruck, FiLayers, FiMapPin } from 'react-icons/fi';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { useCompare } from '../../context/CompareContext';
 import { searchProducts } from '../../lib/api';
 import { useWishlist } from '../../context/WishlistContext';
+import AppleFaceTextLogo from '../Brand/AppleFaceTextLogo';
+import AppleFaceMark from '../Brand/AppleFaceMark';
 
 export default function Header({ categories = [] }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -21,8 +23,8 @@ export default function Header({ categories = [] }) {
   const [searchCategories, setSearchCategories] = useState([]);
   const [activeSearchCategory, setActiveSearchCategory] = useState('all');
   const [showSearchModal, setShowSearchModal] = useState(false);
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [hydrated, setHydrated] = useState(false);
 
   const { cartCount, openCart } = useCart();
   const { wishlistCount } = useWishlist();
@@ -97,6 +99,10 @@ export default function Header({ categories = [] }) {
   }, [searchQuery]);
 
   useEffect(() => {
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
     const handleScroll = () => {
       const y = window.scrollY;
       setIsScrolled((prev) => (prev ? y > 16 : y > 48));
@@ -106,14 +112,13 @@ export default function Header({ categories = [] }) {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    if (isScrolled) setIsCategoriesOpen(false);
-  }, [isScrolled]);
+  const getCategoryHref = (cat) =>
+    `/category/${cat.slug || (typeof cat.name === 'string' ? cat.name.toLowerCase().replace(/\s+/g, '-') : 'all')}`;
 
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty('--header-offset', isScrolled ? '56px' : '64px');
-    root.style.setProperty('--header-offset-md', isScrolled ? '56px' : '76px');
+    root.style.setProperty('--header-offset', isScrolled ? '52px' : '56px');
+    root.style.setProperty('--header-offset-md', isScrolled ? '96px' : '104px');
     return () => {
       root.style.removeProperty('--header-offset');
       root.style.removeProperty('--header-offset-md');
@@ -121,7 +126,6 @@ export default function Header({ categories = [] }) {
   }, [isScrolled]);
 
   const closeSearchModal = () => { setShowSearchModal(false); setIsSearchOpen(false); setSearchQuery(''); setSearchResults([]); setSearchCategories([]); };
-  const openSearchModal = () => { setShowSearchModal(true); };
   const filteredSearchResults = useMemo(() => {
     if (activeSearchCategory === 'all') return searchResults;
     return searchResults.filter((p) => p.categoryName === activeSearchCategory);
@@ -129,188 +133,108 @@ export default function Header({ categories = [] }) {
 
   return (
     <>
-      <header className={`w-full sticky top-0 z-[90] transition-shadow duration-500 ease-in-out ${isScrolled ? 'md:shadow-[0_4px_24px_rgba(0,0,0,0.12)]' : 'md:shadow-none'}`}>
+      <header className={`w-full sticky top-0 z-[90] bg-[#0a0a0a] transition-shadow duration-300 ${isScrolled ? 'shadow-lg shadow-black/30' : 'shadow-sm'}`}>
 
-        {/* ─── MOBILE HEADER ─── */}
-        <div className={`md:hidden px-3 bg-gray-50/80 backdrop-blur-md transition-[padding] duration-500 ease-in-out ${isScrolled ? 'pt-0 pb-2.5' : 'pt-3 pb-2.5'}`}>
-          <div className="bg-[#2D2D2D] rounded-full flex items-center justify-between px-2.5 py-2.5 shadow-xl relative border border-white/10">
-            {/* Logo in White Pill */}
-            <Link href="/" className="bg-white rounded-full px-3.5 py-2 flex items-center shadow-md flex-shrink-0" aria-label="Home">
-              <Image src="/CTBD Text.png" alt="Apple Face BD BD" width={100} height={26} className="h-5 sm:h-6 w-auto object-contain" unoptimized priority />
+        {/* ─── MOBILE: main bar (black) ─── */}
+        <div className="md:hidden px-2 py-2 border-b border-white/10">
+          <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-1.5 w-full">
+            <Link href="/" className="shrink-0 p-0.5" aria-label="Home">
+              <AppleFaceMark size={34} className="w-8 h-8 object-contain" />
             </Link>
-
-            {/* Mobile Search Input */}
-            <form onSubmit={handleSearchSubmit} className={`flex-grow flex items-center bg-white/10 focus-within:bg-white/20 border ${isSearchOpen || showSearchModal ? 'border-brand-primary' : 'border-white/5'} rounded-full px-2.5 py-1.5 mx-2 transition-colors`}>
-              <FiSearch className={`${isSearchOpen || showSearchModal ? 'text-brand-primary' : 'text-gray-300'} mr-2 flex-shrink-0 w-3.5 h-3.5 transition-colors`} />
+            <form
+              onSubmit={handleSearchSubmit}
+              className={`min-w-0 w-full flex items-center bg-white/10 border rounded-lg px-2.5 py-2 transition-colors ${isSearchOpen || showSearchModal ? 'border-brand-primary ring-1 ring-brand-primary/30' : 'border-white/15'}`}
+            >
+              <FiSearch className={`${isSearchOpen || showSearchModal ? 'text-brand-primary' : 'text-gray-400'} mr-1.5 shrink-0 w-4 h-4`} />
               <input
                 type="text"
                 value={searchQuery}
                 onFocus={() => setShowSearchModal(true)}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search..."
-                className="bg-transparent border-none outline-none text-[16px] text-white placeholder-gray-300 min-w-0 w-full"
+                placeholder="Search products..."
+                className="bg-transparent border-none outline-none text-[16px] text-white placeholder-gray-400 min-w-0 w-full flex-1"
               />
               {(showSearchModal || searchQuery) && (
-                <button type="button" onClick={() => { setSearchQuery(''); closeSearchModal(); }} className="text-gray-400 hover:text-white p-0.5 ml-1 flex-shrink-0">
+                <button type="button" onClick={() => { setSearchQuery(''); closeSearchModal(); }} className="text-gray-400 hover:text-white p-0.5 ml-1 shrink-0">
                   <FiX size={14} />
                 </button>
               )}
             </form>
-
-            {/* Icons */}
-            <div className="flex items-center gap-0.5 flex-shrink-0 mr-1">
-              <button onClick={() => setIsSidebarOpen(true)} className="text-gray-300 hover:text-brand-primary p-1.5 rounded-full hover:bg-white/5 transition-all" aria-label="Menu">
-                <FiMenu size={18} />
-              </button>
-            </div>
+            <button onClick={() => setIsSidebarOpen(true)} className="text-gray-200 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-all shrink-0" aria-label="Menu">
+              <FiMenu size={20} />
+            </button>
           </div>
         </div>
 
-        {/* ─── DESKTOP: Pill-Shaped Navigation Bar ─── */}
-        <div
-          className={`hidden md:block transition-[padding,background-color,box-shadow] duration-500 ease-in-out ${
-            isScrolled ? 'bg-[#2D2D2D] py-0 px-0' : 'bg-transparent py-3 px-6'
-          }`}
-        >
-          <div
-            className={`mx-auto w-full transition-[max-width,padding] duration-500 ease-in-out ${
-              isScrolled ? 'max-w-full px-4 lg:px-6' : 'max-w-6xl px-0'
-            }`}
-          >
-            <div
-              className={`bg-[#2D2D2D] flex items-center relative transition-[padding,box-shadow,border-radius] duration-500 ease-in-out py-1.5 px-3 ${
-                isScrolled ? 'shadow-none' : 'shadow-xl'
-              }`}
-              style={{
-                borderRadius: isScrolled ? '0px' : '9999px',
-                transition: 'border-radius 500ms ease-in-out, padding 500ms ease-in-out, box-shadow 500ms ease-in-out',
-              }}
-            >
+        {/* ─── DESKTOP: strip 1 — logo, search, actions (black) ─── */}
+        <div className="hidden md:block border-b border-white/10">
+          <div className="max-w-site mx-auto px-4 lg:px-6">
+            <div className="flex items-center gap-3 lg:gap-4 py-3 w-full min-w-0">
+              <Link href="/" className="shrink-0" aria-label="Home">
+                <AppleFaceTextLogo height={30} variant="onDark" className="h-7 w-auto" />
+              </Link>
 
-              {/* Left Nav Items */}
-              <div className="flex items-center gap-0.5">
-                {/* Categories Mega Dropdown */}
-                <div
-                  className="relative"
-                  onMouseEnter={() => setIsCategoriesOpen(true)}
-                  onMouseLeave={() => setIsCategoriesOpen(false)}
-                >
-                  <button className="flex items-center gap-1.5 text-gray-300 hover:text-brand-primary text-[13px] font-semibold px-4 py-2.5 rounded-full hover:bg-white/5 transition-all whitespace-nowrap">
-                    Categories
-                    <FiChevronDown size={13} className={`opacity-70 transition-transform duration-300 ${isCategoriesOpen ? 'rotate-180' : ''}`} />
+              <form
+                onSubmit={handleSearchSubmit}
+                className={`flex-1 min-w-0 w-full flex items-center gap-2 bg-white/10 border rounded-lg px-4 py-2.5 transition-colors ${isSearchOpen || showSearchModal ? 'border-brand-primary ring-1 ring-brand-primary/30' : 'border-white/15 hover:border-white/25'}`}
+              >
+                <FiSearch className={`${isSearchOpen || showSearchModal ? 'text-brand-primary' : 'text-gray-400'} shrink-0 w-5 h-5`} />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onFocus={() => setShowSearchModal(true)}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search for products, brands..."
+                  className="bg-transparent border-none outline-none text-base text-white placeholder-gray-400 min-w-0 w-full flex-1"
+                  style={{ fontSize: '16px' }}
+                />
+                {(showSearchModal || searchQuery) && (
+                  <button type="button" onClick={() => { setSearchQuery(''); closeSearchModal(); }} className="text-gray-400 hover:text-white p-1 shrink-0">
+                    <FiX size={16} />
                   </button>
-                  <div className={`absolute top-full -left-4 mt-3 w-[520px] bg-white rounded-2xl shadow-2xl border border-gray-100 transition-all duration-200 z-50 overflow-hidden ${isCategoriesOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
-                      <div className="p-5">
-                        <div className="flex items-center justify-between mb-4">
-                          <h3 className="text-sm font-bold text-gray-800">All Categories</h3>
-                          <Link href="/category" className="text-[11px] font-semibold text-brand-primary hover:underline">View All →</Link>
-                        </div>
-                        {orderedDisplayCategories.length > 0 ? (
-                          <div className="grid grid-cols-4 gap-3 max-h-[400px] overflow-y-auto no-scrollbar">
-                            {orderedDisplayCategories.map((cat, idx) => (
-                              <Link key={cat.id || idx} href={`/category/${cat.slug || cat.name.toLowerCase().replace(/\s+/g, '-')}`}
-                                className="flex flex-col items-center group/cat">
-                                <div className="w-full aspect-square rounded-xl overflow-visible relative flex items-center justify-center group-hover/cat:bg-[#F0F0F0] transition-all">
-                                  {(cat.image_url || cat.image || cat.image_path) ? (
-                                    <div className="relative w-[75%] h-[75%]">
-                                      <Image src={cat.image_url || cat.image || cat.image_path} alt={cat.name} fill className="object-contain group-hover/cat:scale-105 transition-transform duration-300" unoptimized />
-                                    </div>
-                                  ) : (
-                                    <FiGrid size={20} className="text-gray-400" />
-                                  )}
-                                </div>
-                                <span className="text-[11px] font-semibold text-gray-700 group-hover/cat:text-brand-primary transition-colors text-center line-clamp-2 leading-tight mt-2">{cat.name}</span>
-                              </Link>
-                            ))}
-                          </div>
-                        ) : (
-                          <div className="py-8 text-center text-sm text-gray-500">
-                            Categories are loading...
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                </div>
+                )}
+              </form>
 
-                <Link href="/blogs" className="text-gray-300 hover:text-brand-primary text-[13px] font-semibold px-4 py-2.5 rounded-full hover:bg-white/5 transition-all whitespace-nowrap">
-                  Blogs
+              <div className="flex items-center gap-0.5 shrink-0">
+                <Link
+                  href="/track-order"
+                  className="text-gray-300 hover:text-white p-2.5 rounded-lg hover:bg-white/10 transition-all"
+                  aria-label="Track order"
+                  title="Track order"
+                >
+                  <FiTruck size={18} />
                 </Link>
-                <Link href="/about" className="text-gray-300 hover:text-brand-primary text-[13px] font-semibold px-4 py-2.5 rounded-full hover:bg-white/5 transition-all whitespace-nowrap">
-                  About
-                </Link>
-                <Link href="/contact" className="text-gray-300 hover:text-brand-primary text-[13px] font-semibold px-4 py-2.5 rounded-full hover:bg-white/5 transition-all whitespace-nowrap">
-                  Contact
-                </Link>
-              </div>
-
-              {/* Center Logo in White Pill */}
-              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-                <Link href="/" className="bg-white rounded-full px-6 py-2 flex items-center shadow-lg border border-gray-100 hover:shadow-xl transition-shadow">
-                  <Image src="/CTBD Text.png" alt="Apple Face BD BD" width={120} height={30} className="h-5 md:h-6 w-auto object-contain" unoptimized />
-                </Link>
-              </div>
-
-              {/* Right Nav + Action Icons */}
-              <div className="flex items-center gap-0.5 ml-auto">
-                <Link href="/compare" className="relative flex items-center gap-1 text-gray-300 hover:text-brand-primary text-[13px] font-semibold px-4 py-2.5 rounded-full hover:bg-white/5 transition-all whitespace-nowrap" aria-label="Compare products">
-                  <FiLayers size={14} className="opacity-90" />
-                  Compare
-                  {compareCount > 0 && (
-                    <span className="absolute top-1.5 right-1.5 bg-brand-primary text-white text-[8px] font-bold min-w-[14px] h-3.5 px-0.5 rounded-full flex items-center justify-center ring-1 ring-[#2D2D2D]">
+                <Link href="/compare" className="relative text-gray-300 hover:text-white p-2.5 rounded-lg hover:bg-white/10 transition-all" aria-label="Compare">
+                  <FiLayers size={18} />
+                  {hydrated && compareCount > 0 && (
+                    <span className="absolute top-1 right-1 bg-brand-primary text-white text-[8px] font-bold min-w-[14px] h-3.5 px-0.5 rounded-full flex items-center justify-center">
                       {compareCount}
                     </span>
                   )}
                 </Link>
-                <Link href="/special-offers" className="flex items-center gap-1 text-brand-primary text-[13px] font-bold px-3 py-2.5 rounded-full hover:bg-white/5 transition-all whitespace-nowrap">
-                  <FiGift size={14} />
-                  Offers
-                </Link>
-
-                {/* Divider */}
-                <div className="w-px h-5 bg-white/20 mx-1.5"></div>
-
-                {/* Search Toggle */}
-                <button
-                  onClick={openSearchModal}
-                  className="text-gray-300 hover:text-brand-primary p-2.5 rounded-full hover:bg-white/5 transition-all"
-                  aria-label="Search"
-                >
-                  <FiSearch size={18} />
-                </button>
-
-                {/* Track Order */}
-                <Link href="/track-order" className="text-gray-300 hover:text-brand-primary p-2.5 rounded-full hover:bg-white/5 transition-all" aria-label="Track Order">
-                  <FiTruck size={18} />
-                </Link>
-
-                {/* Wishlist */}
-                <Link href="/wishlist" className="text-gray-300 hover:text-brand-primary p-2.5 rounded-full hover:bg-white/5 transition-all relative" aria-label="Wishlist">
+                <Link href="/wishlist" className="relative text-gray-300 hover:text-white p-2.5 rounded-lg hover:bg-white/10 transition-all" aria-label="Wishlist">
                   <FiHeart size={18} />
-                  {wishlistCount > 0 && (
-                    <span className="absolute top-1 right-1 bg-brand-primary text-white text-[8px] font-bold h-3.5 w-3.5 rounded-full flex items-center justify-center ring-1 ring-[#1E3E28]">
+                  {hydrated && wishlistCount > 0 && (
+                    <span className="absolute top-1 right-1 bg-brand-primary text-white text-[8px] font-bold h-3.5 w-3.5 rounded-full flex items-center justify-center">
                       {wishlistCount}
                     </span>
                   )}
                 </Link>
-
-                {/* Cart */}
-                <button onClick={openCart} className="text-gray-300 hover:text-brand-primary p-2.5 rounded-full hover:bg-white/5 transition-all relative" aria-label="Cart">
+                <button onClick={openCart} className="relative text-gray-300 hover:text-white p-2.5 rounded-lg hover:bg-white/10 transition-all" aria-label="Cart">
                   <FiShoppingCart size={18} />
-                  {cartCount > 0 && (
-                    <span className="absolute top-1 right-1 bg-brand-primary text-white text-[8px] font-bold h-3.5 w-3.5 rounded-full flex items-center justify-center ring-1 ring-[#2D2D2D]">
+                  {hydrated && cartCount > 0 && (
+                    <span className="absolute top-1 right-1 bg-brand-primary text-white text-[8px] font-bold h-3.5 w-3.5 rounded-full flex items-center justify-center">
                       {cartCount}
                     </span>
                   )}
                 </button>
-
-                {/* User / Profile (right-most) */}
-                <button onClick={handleUserClick} className="text-gray-300 hover:text-brand-primary p-2.5 rounded-full hover:bg-white/5 transition-all" aria-label="Account">
+                <button onClick={handleUserClick} className="text-gray-300 hover:text-white p-2.5 rounded-lg hover:bg-white/10 transition-all" aria-label="Account">
                   {user?.image ? (
-                    <div className="w-6 h-6 rounded-full overflow-hidden border border-white/30">
-                      <Image src={user.image} alt="Profile" width={24} height={24} className="w-full h-full object-cover" unoptimized />
+                    <div className="w-7 h-7 rounded-full overflow-hidden border border-white/20">
+                      <Image src={user.image} alt="Profile" width={28} height={28} className="w-full h-full object-cover" unoptimized />
                     </div>
                   ) : user ? (
-                    <div className="w-6 h-6 rounded-full bg-brand-primary flex items-center justify-center text-[10px] font-bold text-white">
+                    <div className="w-7 h-7 rounded-full bg-brand-primary flex items-center justify-center text-[10px] font-bold text-white">
                       {(user.first_name || user.name || 'U').charAt(0).toUpperCase()}
                     </div>
                   ) : (
@@ -319,37 +243,63 @@ export default function Header({ categories = [] }) {
                 </button>
               </div>
             </div>
-
           </div>
         </div>
 
-        {/* ─── Search Modal (Search Bar + Results in One) ─── */}
+        {/* ─── DESKTOP: strip 2 — categories + offers (unchanged) ─── */}
+        <div className="hidden md:block bg-white border-b border-gray-200">
+          <div className="max-w-site mx-auto px-4 lg:px-6">
+            <div className="flex items-center gap-3 pb-2.5 border-t border-gray-100 pt-2 min-h-[44px]">
+              <div className="flex items-center gap-1 flex-1 min-w-0 overflow-x-auto no-scrollbar">
+                <Link
+                  href="/category"
+                  className="shrink-0 text-sm font-bold text-gray-900 hover:text-brand-primary px-3 py-2 rounded-md hover:bg-red-50 transition-colors whitespace-nowrap"
+                >
+                  All
+                </Link>
+                {orderedDisplayCategories.length > 0 ? (
+                  orderedDisplayCategories.map((cat, idx) => (
+                    <Link
+                      key={cat.id || idx}
+                      href={getCategoryHref(cat)}
+                      className="shrink-0 text-sm font-semibold text-gray-600 hover:text-brand-primary px-3 py-2 rounded-md hover:bg-gray-50 transition-colors whitespace-nowrap capitalize"
+                    >
+                      {cat.name}
+                    </Link>
+                  ))
+                ) : (
+                  <span className="text-xs text-gray-400 px-2">Loading categories...</span>
+                )}
+              </div>
+              <Link
+                href="/special-offers"
+                className="shrink-0 flex items-center gap-1.5 text-brand-primary text-sm font-bold px-3 py-2 rounded-lg hover:bg-red-50 transition-colors whitespace-nowrap ml-2"
+              >
+                <FiGift size={15} />
+                Offers
+                <span className="bg-brand-primary text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">Hot</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* ─── Search Modal ─── */}
         {showSearchModal && (
           <>
             {/* Backdrop */}
             <div className="fixed inset-0 bg-black/40 z-[80]" onClick={closeSearchModal} />
 
             {/* Modal */}
-            <div className="fixed inset-0 z-[85] flex items-start justify-center pt-16 md:pt-20 px-4 pointer-events-none">
-              <div className="w-full max-w-6xl bg-[#F5F6F8] rounded-2xl shadow-2xl max-h-[80vh] flex flex-col overflow-hidden border border-gray-200 pointer-events-auto">
+            <div className="fixed inset-0 z-[85] flex items-start justify-center pt-[var(--header-offset,56px)] md:pt-[calc(var(--header-offset-md,104px)+0.5rem)] px-4 pointer-events-none">
+              <div className="w-full max-w-site bg-[#F5F6F8] rounded-2xl shadow-2xl max-h-[min(80vh,calc(100vh-var(--header-offset-md,104px)-2rem))] flex flex-col overflow-hidden border border-gray-200 pointer-events-auto">
 
-                {/* Search Bar — Always at Top (Desktop Only) */}
-                <div className="hidden md:block bg-white border-b border-gray-200 px-4 md:px-6 py-4 flex-shrink-0">
-                  <form onSubmit={handleSearchSubmit} className="flex items-center bg-gray-50 border border-gray-200 focus-within:border-brand-primary focus-within:shadow-[0_2px_12px_rgba(57,178,74,0.1)] rounded-full px-4 py-2.5 transition-all duration-300 group">
-                    <FiSearch className="text-gray-400 group-focus-within:text-brand-primary mr-3 flex-shrink-0 w-5 h-5" />
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search for products, brands, categories..."
-                      className="flex-grow bg-transparent border-none outline-none text-base text-gray-800 placeholder-gray-400 min-w-0 w-full"
-                      style={{ fontSize: '16px' }}
-                      autoFocus
-                    />
-                    <button type="button" onClick={closeSearchModal} className="text-gray-400 hover:text-gray-600 p-1 ml-2 flex-shrink-0">
-                      <FiX size={18} />
-                    </button>
-                  </form>
+                <div className="hidden md:flex items-center justify-between px-4 md:px-6 py-3 bg-white border-b border-gray-200 shrink-0">
+                  <p className="text-sm font-bold text-gray-800 truncate pr-4">
+                    {searchQuery.trim() ? `Results for “${searchQuery.trim()}”` : 'Search products'}
+                  </p>
+                  <button type="button" onClick={closeSearchModal} className="p-2 rounded-lg hover:bg-gray-100 text-gray-500 shrink-0" aria-label="Close search">
+                    <FiX size={18} />
+                  </button>
                 </div>
 
                 {/* Results Area */}
@@ -374,10 +324,10 @@ export default function Header({ categories = [] }) {
                         </button>
                       </div>
                       <div className="flex gap-2 px-4 pb-3 overflow-x-auto no-scrollbar">
-                        <button onClick={() => setActiveSearchCategory('all')} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${activeSearchCategory === 'all' ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-green-50 hover:text-brand-primary'}`}>All ({searchResults.length})</button>
+                        <button onClick={() => setActiveSearchCategory('all')} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${activeSearchCategory === 'all' ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-brand-primary'}`}>All ({searchResults.length})</button>
                         {searchCategories.map(cat => {
                           const count = searchResults.filter(p => p.categoryName === cat).length;
-                          return <button key={cat} onClick={() => setActiveSearchCategory(cat)} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${activeSearchCategory === cat ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-green-50 hover:text-brand-primary'}`}>{cat} ({count})</button>;
+                          return <button key={cat} onClick={() => setActiveSearchCategory(cat)} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${activeSearchCategory === cat ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-brand-primary'}`}>{cat} ({count})</button>;
                         })}
                       </div>
                     </div>
@@ -386,7 +336,7 @@ export default function Header({ categories = [] }) {
                     <div className="md:hidden flex-1 overflow-y-auto no-scrollbar">
                       {filteredSearchResults.map(product => (
                         <Link key={product.id} href={`/product/${product.name.toLowerCase().replace(/\s+/g, '-')}-${product.id}`} onClick={closeSearchModal}
-                          className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 bg-white hover:bg-green-50/30 transition-colors">
+                          className="flex items-center gap-3 px-4 py-3 border-b border-gray-100 bg-white hover:bg-red-50/40 transition-colors">
                           <div className="w-14 h-14 relative bg-gray-50 rounded-lg overflow-hidden flex-shrink-0">
                             <Image src={product.imageUrl} alt={product.name} fill className="object-contain p-1 mix-blend-multiply" unoptimized />
                             {product.discount && <div className="absolute top-0.5 left-0.5 bg-brand-red text-white text-[8px] font-bold px-1 py-0.5 rounded">{product.discount}</div>}
@@ -413,7 +363,7 @@ export default function Header({ categories = [] }) {
                           <ul className="space-y-0.5">
                             <li>
                               <button onClick={() => setActiveSearchCategory('all')}
-                                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${activeSearchCategory === 'all' ? 'bg-brand-primary text-white font-semibold' : 'text-gray-600 hover:bg-green-50 hover:text-brand-primary'}`}>
+                                className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${activeSearchCategory === 'all' ? 'bg-brand-primary text-white font-semibold' : 'text-gray-600 hover:bg-red-50 hover:text-brand-primary'}`}>
                                 All Results ({searchResults.length})
                               </button>
                             </li>
@@ -422,7 +372,7 @@ export default function Header({ categories = [] }) {
                               return (
                                 <li key={cat}>
                                   <button onClick={() => setActiveSearchCategory(cat)}
-                                    className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors flex justify-between items-center ${activeSearchCategory === cat ? 'bg-brand-primary text-white font-semibold' : 'text-gray-600 hover:bg-green-50 hover:text-brand-primary'}`}>
+                                    className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors flex justify-between items-center ${activeSearchCategory === cat ? 'bg-brand-primary text-white font-semibold' : 'text-gray-600 hover:bg-red-50 hover:text-brand-primary'}`}>
                                     <span className="truncate pr-2">{cat}</span>
                                     <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${activeSearchCategory === cat ? 'bg-white/20' : 'bg-gray-200'}`}>{count}</span>
                                   </button>
@@ -477,12 +427,12 @@ export default function Header({ categories = [] }) {
       <div className={`fixed inset-y-0 left-0 w-[300px] bg-gray-50 z-[110] transform transition-transform duration-300 ease-in-out flex flex-col md:hidden shadow-[20px_0_40px_rgba(0,0,0,0.15)] rounded-r-[2rem] ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         
         {/* Top Header & Header Profile Block */}
-        <div className="bg-[#2D2D2D] text-white rounded-tr-[2rem] pt-6 pb-6 px-6 relative overflow-hidden flex-shrink-0 shadow-lg">
+        <div className="bg-[#0a0a0a] text-white rounded-tr-[2rem] pt-6 pb-6 px-6 relative overflow-hidden flex-shrink-0 shadow-lg">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
           
           <div className="flex justify-between items-center mb-6 relative z-10">
             <Link href="/" onClick={closeSidebar} className="bg-white rounded-full px-3.5 py-1.5 flex items-center shadow-md">
-              <Image src="/CTBD Text.png" alt="Apple Face BD BD" width={100} height={24} className="h-5 w-auto object-contain" unoptimized />
+              <AppleFaceTextLogo height={26} variant="onLight" className="h-6 w-auto" />
             </Link>
             <button onClick={closeSidebar} className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors backdrop-blur-sm">
               <FiX size={18} />
