@@ -4,10 +4,9 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import ProductCard from '../Shared/ProductCard';
-import VideoBanners from '../VideoBanners/VideoBanners';
 import SectionHeader from '../Shared/SectionHeader';
 
-export default function CampaignShowcase({ splitBanners = [], products = [], videoBanner = null, title = "Featured Campaigns" }) {
+export default function CampaignShowcase({ splitBanners = [], products = [], title = "Featured Campaigns" }) {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isMobile, setIsMobile] = useState(false);
 
@@ -109,22 +108,6 @@ export default function CampaignShowcase({ splitBanners = [], products = [], vid
                                 })}
                             </div>
                         )}
-                    </div>
-                )}
-
-                {/* Linked Video Section */}
-                {videoBanner && (
-                    <div className="mt-8 md:mt-12 w-full mx-auto">
-                        <div className="w-full relative rounded-xl md:rounded-3xl overflow-hidden" style={{ aspectRatio: '21/5' }}>
-                            <video
-                                src={videoBanner.videoUrl || videoBanner.image_path || videoBanner.image}
-                                autoPlay
-                                loop
-                                muted
-                                playsInline
-                                className="object-cover w-full h-full"
-                            ></video>
-                        </div>
                     </div>
                 )}
             </div>

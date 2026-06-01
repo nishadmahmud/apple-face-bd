@@ -12,6 +12,7 @@ import { searchProducts } from '../../lib/api';
 import { useWishlist } from '../../context/WishlistContext';
 import AppleFaceTextLogo from '../Brand/AppleFaceTextLogo';
 import AppleFaceMark from '../Brand/AppleFaceMark';
+import { getCategoryHref } from '../../lib/categoryLinks';
 
 export default function Header({ categories = [] }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -111,9 +112,6 @@ export default function Header({ categories = [] }) {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  const getCategoryHref = (cat) =>
-    `/category/${cat.slug || (typeof cat.name === 'string' ? cat.name.toLowerCase().replace(/\s+/g, '-') : 'all')}`;
 
   useEffect(() => {
     const root = document.documentElement;
@@ -468,7 +466,7 @@ export default function Header({ categories = [] }) {
             {displayCategories.length > 0 ? (
               <div className="grid grid-cols-4 gap-1.5">
                 {displayCategories.map((cat, idx) => (
-                  <Link key={cat.id || idx} href={`/category/${cat.slug || cat.name.toLowerCase().replace(/\s+/g, '-')}`} onClick={closeSidebar}
+                  <Link key={cat.category_id ?? cat.id ?? idx} href={getCategoryHref(cat)} onClick={closeSidebar}
                     className="flex flex-col items-center justify-center gap-1 p-1.5 bg-white border border-gray-100 rounded-xl shadow-[0_1px_6px_rgba(0,0,0,0.03)] hover:border-brand-primary/40 hover:shadow-md hover:shadow-brand-primary/5 transition-all duration-300 group">
                     {cat.image_url ? (
                       <div className="w-8 h-8 relative flex items-center justify-center bg-gray-50 rounded-lg group-hover:scale-105 transition-transform duration-300 p-0.5">

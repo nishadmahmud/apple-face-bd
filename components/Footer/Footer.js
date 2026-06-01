@@ -3,18 +3,21 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaFacebook, FaInstagram, FaTiktok, FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
+import { FaFacebook, FaTiktok, FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
 import AppleFaceTextLogo from '../Brand/AppleFaceTextLogo';
 import { HiOutlineMail, HiOutlineLocationMarker } from 'react-icons/hi';
 import { SITE_INFO } from '../../lib/siteInfo';
 import { getCategoriesFromServer } from '../../lib/api';
+import { getCategoryHref } from '../../lib/categoryLinks';
 
-const DUMMY = {
-  address: SITE_INFO.outlets?.[0]?.details?.join(', ') || 'Level 0, Demo Plaza, Sample Road, Dhaka 1000, Bangladesh',
-  phone: SITE_INFO.callDisplay,
-  email: SITE_INFO.email,
-  outletName: SITE_INFO.outlets?.[0]?.name || 'Apple Face BD Showroom',
-};
+const outlet = SITE_INFO.outlets?.[0];
+const addressLine =
+  outlet?.fullAddress || outlet?.details?.join(', ') || 'Dhaka, Bangladesh';
+const phoneHref = `tel:${SITE_INFO.callDialPrimary || SITE_INFO.phoneDial}`;
+const emailHref = `mailto:${SITE_INFO.email}`;
+const whatsappHref = SITE_INFO.whatsappNumberIntl
+  ? `https://wa.me/${SITE_INFO.whatsappNumberIntl}`
+  : '#';
 
 export default function Footer() {
   const [categories, setCategories] = useState([]);
@@ -52,24 +55,34 @@ export default function Footer() {
                 <HiOutlineLocationMarker className="text-brand-primary shrink-0 mt-0.5" size={20} />
                 <div>
                   <p className="font-bold text-white text-xs uppercase tracking-wider mb-1">Store</p>
-                  <p className="font-semibold text-gray-300">{DUMMY.outletName}</p>
-                  <p className="text-gray-500 text-[13px] mt-1 leading-relaxed">{DUMMY.address}</p>
+                  <p className="font-semibold text-gray-300">{outlet?.name || 'Apple Face BD'}</p>
+                  <p className="text-gray-500 text-[13px] mt-1 leading-relaxed">{addressLine}</p>
                 </div>
               </div>
               <div className="flex gap-3">
                 <FaPhoneAlt className="text-brand-primary shrink-0 mt-0.5" size={16} />
                 <div>
                   <p className="font-bold text-white text-xs uppercase tracking-wider mb-1">Phone</p>
-                  <p className="text-gray-300 font-semibold">{DUMMY.phone}</p>
-                  <p className="text-[11px] text-gray-600 mt-1">Placeholder — update before launch</p>
+                  <a href={phoneHref} className="text-gray-300 font-semibold hover:text-brand-primary transition-colors">
+                    {SITE_INFO.callDisplay}
+                  </a>
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-[11px] text-brand-primary mt-1 inline-block hover:underline"
+                  >
+                    WhatsApp: {SITE_INFO.whatsappDisplay}
+                  </a>
                 </div>
               </div>
               <div className="flex gap-3">
                 <HiOutlineMail className="text-brand-primary shrink-0 mt-0.5" size={20} />
                 <div>
                   <p className="font-bold text-white text-xs uppercase tracking-wider mb-1">Email</p>
-                  <p className="text-gray-300 font-semibold break-all">{DUMMY.email}</p>
-                  <p className="text-[11px] text-gray-600 mt-1">Placeholder — update before launch</p>
+                  <a href={emailHref} className="text-gray-300 font-semibold break-all hover:text-brand-primary transition-colors">
+                    {SITE_INFO.email}
+                  </a>
                 </div>
               </div>
             </div>
@@ -102,8 +115,8 @@ export default function Footer() {
             <ul className="space-y-2.5 text-[13px] capitalize">
               {categories.length > 0 ? (
                 categories.map((cat, idx) => (
-                  <li key={`${cat.id || idx}`}>
-                    <Link href={`/category/${cat.id}`} className="hover:text-brand-primary transition-colors line-clamp-1">
+                  <li key={cat.category_id ?? cat.id ?? cat.slug ?? idx}>
+                    <Link href={getCategoryHref(cat)} className="hover:text-brand-primary transition-colors line-clamp-1">
                       {cat.name}
                     </Link>
                   </li>
@@ -143,18 +156,39 @@ export default function Footer() {
         <div className="max-w-site mx-auto px-4 md:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
             <span className="text-xs text-gray-500">Follow</span>
-            <span className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center text-gray-500 cursor-default" aria-hidden>
-              <FaFacebook size={14} />
-            </span>
-            <span className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center text-gray-500 cursor-default" aria-hidden>
-              <FaInstagram size={14} />
-            </span>
-            <span className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center text-gray-500 cursor-default" aria-hidden>
-              <FaTiktok size={12} />
-            </span>
-            <span className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center text-gray-500 cursor-default" aria-hidden>
-              <FaWhatsapp size={14} />
-            </span>
+            {SITE_INFO.social.facebook ? (
+              <a
+                href={SITE_INFO.social.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-brand-primary transition-colors"
+                aria-label="Facebook"
+              >
+                <FaFacebook size={14} />
+              </a>
+            ) : null}
+            {SITE_INFO.social.tiktok ? (
+              <a
+                href={SITE_INFO.social.tiktok}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-brand-primary transition-colors"
+                aria-label="TikTok"
+              >
+                <FaTiktok size={12} />
+              </a>
+            ) : null}
+            {SITE_INFO.whatsappNumberIntl ? (
+              <a
+                href={whatsappHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 rounded-full border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-brand-primary transition-colors"
+                aria-label="WhatsApp"
+              >
+                <FaWhatsapp size={14} />
+              </a>
+            ) : null}
           </div>
           <p className="text-xs text-gray-600">
             &copy; {new Date().getFullYear()} Apple Face BD. All rights reserved.

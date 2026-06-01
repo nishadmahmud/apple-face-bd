@@ -4,15 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FiBox } from 'react-icons/fi';
 import SectionHeader from '../Shared/SectionHeader';
-
-function categoryHref(cat) {
-  const slug =
-    cat.slug ||
-    (typeof cat.name === 'string'
-      ? encodeURIComponent(cat.name.toLowerCase().replace(/\s+/g, '-'))
-      : 'all');
-  return `/category/${slug}`;
-}
+import { getCategoryHref } from '../../lib/categoryLinks';
 
 export default function ShopCategories({ categories = [] }) {
   const displayCategories = Array.isArray(categories) ? categories : [];
@@ -27,7 +19,7 @@ export default function ShopCategories({ categories = [] }) {
             displayCategories.map((cat, idx) => (
               <Link
                 key={cat.id || idx}
-                href={categoryHref(cat)}
+                href={getCategoryHref(cat)}
                 className="group relative flex flex-col bg-white rounded-lg border border-gray-200 overflow-hidden hover:border-brand-primary/50 hover:shadow-sm transition-all duration-200"
               >
                 <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-transparent group-hover:bg-brand-primary transition-colors z-10" />

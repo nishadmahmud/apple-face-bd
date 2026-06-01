@@ -9,6 +9,11 @@ export const metadata = {
 };
 
 const outlet = SITE_INFO.outlets?.[0];
+const phoneHref = `tel:${SITE_INFO.callDialPrimary || SITE_INFO.phoneDial}`;
+const emailHref = `mailto:${SITE_INFO.email}`;
+const whatsappHref = SITE_INFO.whatsappNumberIntl
+  ? `https://wa.me/${SITE_INFO.whatsappNumberIntl}`
+  : '#';
 
 export default function AboutPage() {
   return (
@@ -64,13 +69,13 @@ export default function AboutPage() {
                 <FiMapPin size={22} />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900">{outlet?.name || 'Apple Face BD Showroom'}</h3>
-                {(outlet?.details || ['Level 0, Demo Plaza, Sample Road', 'Dhaka 1000, Bangladesh']).map((line) => (
+                <h3 className="font-bold text-gray-900">{outlet?.name || 'Apple Face BD'}</h3>
+                {(outlet?.details || []).map((line) => (
                   <p key={line} className="text-sm text-gray-600 mt-1">{line}</p>
                 ))}
-                <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-md px-2 py-1 mt-3 inline-block">
-                  Sample address — replace with your real store location before launch.
-                </p>
+                {outlet?.fullAddress ? (
+                  <p className="text-sm text-gray-500 mt-2">{outlet.fullAddress}</p>
+                ) : null}
               </div>
             </div>
           </section>
@@ -85,9 +90,18 @@ export default function AboutPage() {
                   <FiPhone size={20} />
                 </div>
                 <div>
-                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Phone</p>
-                  <p className="font-semibold text-gray-800">{SITE_INFO.callDisplay}</p>
-                  <p className="text-[11px] text-gray-500 mt-0.5">Placeholder number</p>
+                  <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Phone & WhatsApp</p>
+                  <a href={phoneHref} className="font-semibold text-gray-800 hover:text-brand-primary transition-colors block">
+                    {SITE_INFO.callDisplay}
+                  </a>
+                  <a
+                    href={whatsappHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-brand-primary font-medium hover:underline mt-0.5 inline-block"
+                  >
+                    Chat on WhatsApp
+                  </a>
                 </div>
               </div>
               <div className="flex items-center gap-4 p-4 bg-card-bg rounded-lg border border-brand-primary/15">
@@ -96,8 +110,12 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <p className="text-xs font-bold text-gray-400 uppercase tracking-wider">Email</p>
-                  <p className="font-semibold text-gray-800">{SITE_INFO.email}</p>
-                  <p className="text-[11px] text-gray-500 mt-0.5">Placeholder email</p>
+                  <a
+                    href={emailHref}
+                    className="font-semibold text-gray-800 hover:text-brand-primary transition-colors break-all"
+                  >
+                    {SITE_INFO.email}
+                  </a>
                 </div>
               </div>
             </div>

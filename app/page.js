@@ -11,7 +11,6 @@ import FAQ from "../components/FAQ/FAQ";
 import BlogTips from "../components/BlogTips/BlogTips";
 import HomeSEOContent from "../components/HomeSEOContent/HomeSEOContent";
 import WidePromoBanner from "../components/WidePromoBanner/WidePromoBanner";
-import VideoBanners from "../components/VideoBanners/VideoBanners";
 import CampaignShowcase from "../components/CampaignShowcase/CampaignShowcase";
 
 import {
@@ -91,14 +90,6 @@ export default async function Home() {
     .map((b) => ({
       id: b.id,
       image: b.image_path,
-      link: b.button_url || "/",
-    }));
-
-  const videoBanners = allBanners
-    .filter((b) => b.type === "video")
-    .map((b) => ({
-      id: b.id,
-      videoUrl: b.image_path,
       link: b.button_url || "/",
     }));
 
@@ -263,9 +254,7 @@ export default async function Home() {
         title="Top Digital Trends"
         splitBanners={homeBanners.slice(1, 3)}
         products={featuredProducts}
-        videoBanner={videoBanners[1]}
       />
-      {videoBanners[0] && <VideoBanners banner={videoBanners[0]} />}
       {wideBanners[1] && <WidePromoBanner banner={wideBanners[1]} />}
       <BlogTips posts={blogPosts} />
       <Testimonials />
