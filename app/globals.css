@@ -1,0 +1,120 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-primary: #39B24A;
+  --color-brand-secondary: #4D4D4D;
+  --color-brand-purple: #39B24A;
+  --color-brand-blue: #39B24A;
+  --color-brand-red: #ff2a3b;
+  --color-brand-green: #39B24A;
+  --color-card-bg: #F0F1F2;
+  --color-footer-bg: #F5F6F8;
+  --color-nav-dark: #3D3D3D;
+  --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background-color: #ffffff;
+  color: #1f2937;
+}
+
+/* Custom Scrollbars */
+:root {
+  scrollbar-gutter: stable;
+}
+
+html {
+  scrollbar-width: thin;
+  scrollbar-color: #39B24A rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #39B24A;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2E8B3A;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+/* Custom selection color */
+::selection {
+  background-color: #39B24A;
+  color: #ffffff;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 40s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
+.animate-marquee-slow {
+  animation-duration: 60s;
+}
+
+.animate-marquee-fast {
+  animation-duration: 25s;
+}
+
+@keyframes bounce-slow {
+
+  0%,
+  100% {
+    transform: translateY(-10%);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+
+  50% {
+    transform: translateY(0);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
+.animate-bounce-slow {
+  animation: bounce-slow 2s infinite;
+}
+
+/* Hide scrollbar but keep scroll */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Section title style — green italic */
+.section-title-green {
+  color: #39B24A;
+  font-style: italic;
+  font-weight: 600;
+}
