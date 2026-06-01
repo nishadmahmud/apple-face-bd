@@ -17,27 +17,30 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl =
+  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") || "https://applefacebd.com";
+
+const ogImage = "/apple-face-logo-square.png";
+
 export const metadata = {
+  metadataBase: new URL(siteUrl),
   title: "Apple Face BD | Premium Tech & Gadgets",
   description: "Apple Face BD is your destination for authentic smartphones, laptops, gaming gear, and tech accessories in Bangladesh.",
   icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-      { url: "/apple-face-logo-square.png", type: "image/png", sizes: "512x512" },
-    ],
-    apple: "/apple-face-logo-square.png",
+    apple: ogImage,
   },
   openGraph: {
     title: "Apple Face BD | Premium Tech & Gadgets",
     description: "Authentic smartphones, laptops, gaming gear, and tech accessories in Bangladesh.",
-    url: "https://applefacebd.com",
+    url: siteUrl,
     siteName: "Apple Face BD",
     images: [
       {
-        url: "/apple-face-logo-square.png",
+        url: ogImage,
         width: 512,
         height: 512,
-        alt: "Apple Face BD",
+        alt: "Apple Face BD logo",
+        type: "image/png",
       },
     ],
     locale: "en_US",
@@ -47,7 +50,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "Apple Face BD | Premium Tech & Gadgets",
     description: "Authentic smartphones, laptops, gaming gear, and tech accessories in Bangladesh.",
-    images: ["/apple-face-logo-square.png"],
+    images: [ogImage],
   },
 };
 

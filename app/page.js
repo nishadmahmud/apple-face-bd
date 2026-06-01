@@ -17,13 +17,12 @@ import {
   getSlidersFromServer,
   getCategoriesFromServer,
   getNewArrivalsFromServer,
-  getBlogs,
   getBannerFromServer,
   getBestDealsFromServer,
   getBestSellersFromServer,
   getTopBrands,
 } from "../lib/api";
-import { mapApiBlogsToPosts } from "../lib/blogs";
+import { getDummyBlogPosts } from "../lib/dummyBlogs";
 
 export const revalidate = 120;
 
@@ -54,7 +53,6 @@ export default async function Home() {
     newArrivalsRes,
     bestDealsRes,
     bestSellersRes,
-    blogsRes,
     topBrandsRes,
   ] = await Promise.all([
     settle(getCategoriesFromServer, "categories"),
@@ -63,7 +61,6 @@ export default async function Home() {
     settle(getNewArrivalsFromServer, "new arrivals"),
     settle(getBestDealsFromServer, "best deals"),
     settle(getBestSellersFromServer, "best sellers"),
-    settle(getBlogs, "blogs"),
     settle(getTopBrands, "top brands"),
   ]);
 
@@ -236,7 +233,7 @@ export default async function Home() {
       })
     : [];
 
-  const blogPosts = mapApiBlogsToPosts(Array.isArray(blogsRes?.data) ? blogsRes.data : []).slice(0, 3);
+  const blogPosts = getDummyBlogPosts();
   const topBrands = topBrandsRes?.success && Array.isArray(topBrandsRes?.data) ? topBrandsRes.data : [];
 
   return (

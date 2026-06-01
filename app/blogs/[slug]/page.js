@@ -1,27 +1,29 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { FiCalendar, FiClock } from "react-icons/fi";
-import { getBlogs } from "../../../lib/api";
-import { mapApiBlogsToPosts, parseBlogIdFromSlug } from "../../../lib/blogs";
+import { getDummyBlogBySlug, getDummyBlogPosts } from "../../../lib/dummyBlogs";
 import PageBreadcrumb from "../../../components/Shared/PageBreadcrumb";
+
+export function generateStaticParams() {
+  return getDummyBlogPosts().map((post) => ({ slug: post.slug }));
+}
+
+export async function generateMetadata({ params }) {
+  const resolvedParams = await params;
+  const slug = typeof resolvedParams?.slug === "string" ? resolvedParams.slug : "";
+  const post = getDummyBlogBySlug(slug);
+  if (!post) return { title: "Blog | Apple Face BD" };
+
+  return {
+    title: `${post.title} | Apple Face BD`,
+    description: post.excerpt,
+  };
+}
 
 export default async function BlogDetailsPage({ params }) {
   const resolvedParams = await params;
   const slug = typeof resolvedParams?.slug === "string" ? resolvedParams.slug : "";
-  const blogId = parseBlogIdFromSlug(slug);
-  if (!blogId) notFound();
-
-  let posts = [];
-
-  try {
-    const res = await getBlogs();
-    const apiBlogs = Array.isArray(res?.data) ? res.data : [];
-    posts = mapApiBlogsToPosts(apiBlogs);
-  } catch (error) {
-    console.error("Failed to fetch blog details:", error);
-  }
-
-  const post = posts.find((item) => Number(item.id) === Number(blogId));
+  const post = getDummyBlogBySlug(slug);
   if (!post) notFound();
 
   return (
