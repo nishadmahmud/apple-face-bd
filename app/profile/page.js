@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/context/AuthContext";
+import { getLoginUrl } from "@/lib/authRoutes";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getCustomerOrders, getCustomerCoupons, trackOrder, uploadSingleFile } from "@/lib/api";
@@ -12,6 +13,7 @@ import ProfileOrders from "@/components/Profile/ProfileOrders";
 import ProfileTracking from "@/components/Profile/ProfileTracking";
 import ProfileCoupons from "@/components/Profile/ProfileCoupons";
 import ProfileSettings from "@/components/Profile/ProfileSettings";
+import LoadingSpinner from "@/components/Shared/LoadingSpinner";
 
 const SECTION_LABELS = {
     orders: "My Orders",
@@ -50,7 +52,7 @@ export default function ProfileDashboard() {
     const [trackLoading, setTrackLoading] = useState(false);
 
     useEffect(() => {
-        if (!loading && !user) router.push("/");
+        if (!loading && !user) router.replace(getLoginUrl({ redirect: "/profile" }));
         else if (user) {
             let first = user.first_name || "";
             let last = user.last_name || "";
@@ -205,7 +207,7 @@ export default function ProfileDashboard() {
     if (loading || !user) {
         return (
             <div className="min-h-screen bg-card-bg flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-primary" />
+                <LoadingSpinner size="lg" />
             </div>
         );
     }

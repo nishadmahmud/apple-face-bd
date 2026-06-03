@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { FaFacebook, FaTiktok, FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
 import AppleFaceTextLogo from '../Brand/AppleFaceTextLogo';
 import { HiOutlineMail, HiOutlineLocationMarker } from 'react-icons/hi';
@@ -46,7 +45,7 @@ export default function Footer() {
                 <AppleFaceTextLogo height={40} variant="onDark" className="h-10 w-auto" />
               </Link>
               <p className="text-sm text-gray-500 leading-relaxed">
-                Apple Face BD — your destination for authentic smartphones, accessories, and tech in Bangladesh.
+                Apple Face BD is your destination for authentic smartphones, accessories, and tech in Bangladesh.
               </p>
             </div>
 
@@ -135,20 +134,6 @@ export default function Footer() {
               <li><Link href="/refund" className="hover:text-brand-primary transition-colors">Returns</Link></li>
             </ul>
           </div>
-        </div>
-      </div>
-
-      <div className="border-t border-gray-800 bg-white">
-        <div className="max-w-site mx-auto px-4 md:px-6 py-6 text-center">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-4">Secure payments</p>
-          <Image
-            src="https://securepay.sslcommerz.com/public/image/SSLCommerz-Pay-With-logo-All-Size-01.png"
-            alt="Payment methods"
-            width={900}
-            height={80}
-            className="w-full max-w-3xl mx-auto h-auto object-contain"
-            unoptimized
-          />
         </div>
       </div>
 

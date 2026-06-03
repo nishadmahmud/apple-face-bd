@@ -1,6 +1,5 @@
-import Hero from "../components/Hero/Hero";
+import HomeHero from "../components/Hero/HomeHero";
 import ShopCategories from "../components/ShopCategories/ShopCategories";
-import PromoBanners from "../components/PromoBanners/PromoBanners";
 import FlashSale from "../components/FlashSale/FlashSale";
 import NewArrivals from "../components/NewArrivals/NewArrivals";
 import FeaturedProducts from "../components/FeaturedProducts/FeaturedProducts";
@@ -23,6 +22,12 @@ import {
   getTopBrands,
 } from "../lib/api";
 import { getDummyBlogPosts } from "../lib/dummyBlogs";
+import {
+  normalizeHeroSlides,
+  normalizeHeroBanners,
+  normalizeHomeBanners,
+  normalizeWideBanners,
+} from "../lib/homeHero";
 
 export const revalidate = 120;
 
@@ -69,36 +74,11 @@ export default async function Home() {
       ? categoriesRes.data
       : [];
 
-  const allBanners =
-    bannersRes?.success && Array.isArray(bannersRes?.banners)
-      ? bannersRes.banners
-      : [];
-
-  const homeBanners = allBanners
-    .filter((b) => !b.type || b.type === "image")
-    .map((b) => ({
-      id: b.id,
-      image: b.image_path,
-      link: b.button_url || "/",
-    }));
-
-  const wideBanners = allBanners
-    .filter((b) => b.type === "wide-image")
-    .map((b) => ({
-      id: b.id,
-      image: b.image_path,
-      link: b.button_url || "/",
-    }));
-
-  const sliderData = slidersRes?.success ? slidersRes?.sliders : null;
-  const heroSlides = Array.isArray(sliderData)
-    ? sliderData.map((s, idx) => ({
-        id: s.id || idx,
-        title: s.title || "",
-        buttonLink: s.link || "/category",
-        image: s.image_path || "/no-image.svg",
-      }))
-    : [];
+  const heroSlides = normalizeHeroSlides(slidersRes);
+  const heroBanners = normalizeHeroBanners(bannersRes, 3);
+  const homeBanners = normalizeHomeBanners(bannersRes);
+  const wideBanners = normalizeWideBanners(bannersRes);
+  const campaignBanners = homeBanners.slice(3, 5);
 
   const newArrivalsItems = newArrivalsRes?.success ? newArrivalsRes?.data?.data : null;
   const newArrivals = Array.isArray(newArrivalsItems)
@@ -238,18 +218,17 @@ export default async function Home() {
 
   return (
     <>
-      <Hero slides={heroSlides} />
+      <HomeHero slides={heroSlides} banners={heroBanners} />
       <ShopCategories categories={categories} />
       <NewArrivals products={newArrivals} />
       <FlashSale products={flashSaleProducts} />
-      <PromoBanners banners={homeBanners} />
       <FeaturedProducts products={featuredProducts} />
       {wideBanners[0] && <WidePromoBanner banner={wideBanners[0]} />}
       <BrandProductSection brands={topBrands} />
       <BestDeals deals={bestDealsCards} />
       <CampaignShowcase
         title="Top Digital Trends"
-        splitBanners={homeBanners.slice(1, 3)}
+        splitBanners={campaignBanners}
         products={featuredProducts}
       />
       {wideBanners[1] && <WidePromoBanner banner={wideBanners[1]} />}

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef } from "react";
 import Image from "next/image";
 import { FiX } from "react-icons/fi";
 import VariantOptionChip from "./VariantOptionChip";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function ProductVariantModal({
     open,
@@ -150,7 +151,7 @@ export default function ProductVariantModal({
                 <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
                     {isResolvingVariants && (
                         <div className="flex items-center gap-2 text-sm text-gray-600">
-                            <div className="w-4 h-4 rounded-full border-2 border-brand-primary/30 border-t-brand-primary animate-spin" />
+                            <LoadingSpinner size="xs" inline />
                             Loading variants...
                         </div>
                     )}

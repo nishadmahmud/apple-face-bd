@@ -6,7 +6,6 @@ import { WishlistProvider } from "../context/WishlistContext";
 import { CompareProvider } from "../context/CompareContext";
 import { RecentlyViewedProvider } from "../context/RecentlyViewedContext";
 import CartSidebar from "./Shared/CartSidebar";
-import AuthModal from "./Auth/AuthModal";
 import { Toaster } from "react-hot-toast";
 
 export default function Providers({ children }) {
@@ -18,7 +17,6 @@ export default function Providers({ children }) {
                         <CartProvider>
                             {children}
                             <CartSidebar />
-                            <AuthModal />
                             <Toaster
                                 position="top-center"
                                 toastOptions={{

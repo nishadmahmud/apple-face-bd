@@ -10,6 +10,7 @@ import { Package, Search, MapPin } from "lucide-react";
 import PageHero from "../../components/Shared/PageHero";
 import OrderTimeline from "../../components/Shared/OrderTimeline";
 import { getStatusLabel, getStatusColor } from "../../lib/orderStatus";
+import LoadingSpinner from "../../components/Shared/LoadingSpinner";
 
 function TrackOrderContent() {
     const searchParams = useSearchParams();
@@ -85,7 +86,7 @@ function TrackOrderContent() {
                         >
                             {loading ? (
                                 <span className="flex items-center justify-center gap-2">
-                                    <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" />
+                                    <LoadingSpinner size="sm" variant="light" />
                                     Tracking...
                                 </span>
                             ) : "Track Order"}
@@ -210,7 +211,7 @@ export default function TrackOrderPage() {
     return (
         <Suspense fallback={
             <div className="min-h-screen flex items-center justify-center bg-card-bg">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-primary"></div>
+                <LoadingSpinner size="lg" />
             </div>
         }>
             <TrackOrderContent />

@@ -68,7 +68,7 @@ export default async function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-800 pb-16 md:pb-0`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-800 pb-24 md:pb-0`}
       >
         <Providers>
           <Header categories={categories} />

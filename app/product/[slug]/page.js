@@ -10,6 +10,7 @@ import ProductTabs from '../../../components/Product/ProductTabs';
 import ProductCard from '../../../components/Shared/ProductCard';
 import FAQ from '../../../components/FAQ/FAQ';
 import EmptyState from '../../../components/Shared/EmptyState';
+import LoadingSpinner from '../../../components/Shared/LoadingSpinner';
 import { FiPackage } from 'react-icons/fi';
 import { useRecentlyViewed } from '../../../context/RecentlyViewedContext';
 import { getProductById, getRelatedProduct } from '../../../lib/api';
@@ -323,7 +324,7 @@ export default function ProductDetailsPage() {
             : 'Product');
 
     return (
-        <div className="bg-card-bg min-h-screen pb-20 md:pb-10">
+        <div className="bg-card-bg min-h-screen pb-32 md:pb-10">
             <div className="max-w-site mx-auto px-4 md:px-6 pt-4 md:pt-6 pb-4">
                 <nav className="text-[11px] md:text-sm text-gray-500 flex items-center gap-2 font-medium min-w-0" aria-label="Breadcrumb">
                     <Link href="/" className="hover:text-brand-primary cursor-pointer transition-colors shrink-0">Home</Link>
@@ -347,8 +348,7 @@ export default function ProductDetailsPage() {
 
                 {isInitialLoading ? (
                     <div className="py-20 flex flex-col items-center justify-center">
-                        <div className="w-10 h-10 border-4 border-brand-primary/20 border-t-brand-primary rounded-full animate-spin mb-4"></div>
-                        <p className="text-sm text-gray-500">Loading product details…</p>
+                        <LoadingSpinner size="lg" label="Loading product details…" />
                     </div>
                 ) : error || !productData ? (
                     <EmptyState

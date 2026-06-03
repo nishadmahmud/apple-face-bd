@@ -6,6 +6,7 @@ import { searchProducts, getProductById } from '../../lib/api';
 import { useCompare } from '../../context/CompareContext';
 import { FiSearch, FiTrash2, FiX } from 'react-icons/fi';
 import PageHero from '../../components/Shared/PageHero';
+import LoadingSpinner from '../../components/Shared/LoadingSpinner';
 
 const MAX_SLOTS = 3;
 const EMPTY_SLOT = { id: null, name: '', image: '/no-image.svg', brand: '', price: null, displayPrice: '', oldPrice: null, specs: [] };
@@ -179,7 +180,7 @@ export default function ComparePage() {
               </form>
               {searchingSlot === idx && (
                 <div className="mb-3 border border-gray-100 rounded-xl px-3 py-3 text-sm text-gray-500 flex items-center gap-2">
-                  <span className="w-4 h-4 rounded-full border-2 border-gray-300 border-t-brand-primary animate-spin" />
+                  <LoadingSpinner size="xs" inline />
                   Searching products...
                 </div>
               )}

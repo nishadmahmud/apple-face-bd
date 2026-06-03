@@ -4,15 +4,16 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FiSearch, FiUser, FiShoppingCart, FiMenu, FiX, FiChevronRight, FiGrid, FiHeart, FiGift, FiTruck, FiLayers, FiMapPin } from 'react-icons/fi';
+import { FiSearch, FiUser, FiShoppingCart, FiMenu, FiX, FiChevronRight, FiGrid, FiHeart, FiGift, FiTruck, FiMapPin, FiZap, FiHome, FiFileText, FiInfo, FiShuffle } from 'react-icons/fi';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
-import { useCompare } from '../../context/CompareContext';
+import { getLoginUrl } from '../../lib/authRoutes';
 import { searchProducts } from '../../lib/api';
 import { useWishlist } from '../../context/WishlistContext';
 import AppleFaceTextLogo from '../Brand/AppleFaceTextLogo';
 import AppleFaceMark from '../Brand/AppleFaceMark';
 import { getCategoryHref } from '../../lib/categoryLinks';
+import LoadingSpinner from '../Shared/LoadingSpinner';
 
 export default function Header({ categories = [] }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -29,8 +30,7 @@ export default function Header({ categories = [] }) {
 
   const { cartCount, openCart } = useCart();
   const { wishlistCount } = useWishlist();
-  const { compareCount } = useCompare();
-  const { user, openAuthModal } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
 
   const displayCategories = Array.isArray(categories) ? categories : [];
@@ -57,10 +57,19 @@ export default function Header({ categories = [] }) {
 
   const handleUserClick = () => {
     if (user) { router.push('/profile'); }
-    else { openAuthModal('login'); }
+    else { router.push(getLoginUrl({ redirect: '/profile' })); }
   };
 
   const closeSidebar = () => setIsSidebarOpen(false);
+
+  const getCategoryImage = (cat) => cat?.image || cat?.image_path || cat?.image_url || null;
+
+  useEffect(() => {
+    if (!isSidebarOpen) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => { document.body.style.overflow = prev; };
+  }, [isSidebarOpen]);
 
   const runSearch = async (q) => {
     if (!q) { setIsSearchOpen(false); setSearchResults([]); setSearchCategories([]); setSearchError(''); return; }
@@ -115,7 +124,7 @@ export default function Header({ categories = [] }) {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty('--header-offset', isScrolled ? '52px' : '56px');
+    root.style.setProperty('--header-offset', isScrolled ? '50px' : '54px');
     root.style.setProperty('--header-offset-md', isScrolled ? '96px' : '104px');
     return () => {
       root.style.removeProperty('--header-offset');
@@ -133,35 +142,35 @@ export default function Header({ categories = [] }) {
     <>
       <header className={`w-full sticky top-0 z-[90] bg-[#0a0a0a] transition-shadow duration-300 ${isScrolled ? 'shadow-lg shadow-black/30' : 'shadow-sm'}`}>
 
-        {/* ─── MOBILE: main bar (black) ─── */}
-        <div className="md:hidden px-2 py-2 border-b border-white/10">
-          <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-1.5 w-full">
-            <Link href="/" className="shrink-0 p-0.5" aria-label="Home">
-              <AppleFaceMark size={34} className="w-8 h-8 object-contain" />
-            </Link>
-            <form
-              onSubmit={handleSearchSubmit}
-              className={`min-w-0 w-full flex items-center bg-white/10 border rounded-lg px-2.5 py-2 transition-colors ${isSearchOpen || showSearchModal ? 'border-brand-primary ring-1 ring-brand-primary/30' : 'border-white/15'}`}
-            >
-              <FiSearch className={`${isSearchOpen || showSearchModal ? 'text-brand-primary' : 'text-gray-400'} mr-1.5 shrink-0 w-4 h-4`} />
-              <input
-                type="text"
-                value={searchQuery}
-                onFocus={() => setShowSearchModal(true)}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search products..."
-                className="bg-transparent border-none outline-none text-[16px] text-white placeholder-gray-400 min-w-0 w-full flex-1"
-              />
-              {(showSearchModal || searchQuery) && (
-                <button type="button" onClick={() => { setSearchQuery(''); closeSearchModal(); }} className="text-gray-400 hover:text-white p-0.5 ml-1 shrink-0">
-                  <FiX size={14} />
-                </button>
-              )}
-            </form>
-            <button onClick={() => setIsSidebarOpen(true)} className="text-gray-200 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-all shrink-0" aria-label="Menu">
-              <FiMenu size={20} />
-            </button>
-          </div>
+        {/* ─── MOBILE: compact top bar ─── */}
+        <div className="md:hidden flex items-center gap-2 px-3 py-2.5 bg-[#0a0a0a] border-b border-white/10">
+          <Link href="/" className="flex items-center gap-2 min-w-0 shrink" aria-label="Home">
+            <AppleFaceMark size={32} className="w-8 h-8 object-contain shrink-0" />
+            <AppleFaceTextLogo height={22} variant="onDark" className="h-5 w-auto max-w-[110px]" />
+          </Link>
+
+          <button
+            type="button"
+            onClick={() => setShowSearchModal(true)}
+            className={`flex-1 min-w-0 flex items-center gap-2 rounded-full px-3 py-2 text-left transition-colors ${
+              showSearchModal
+                ? 'bg-white/15 ring-1 ring-brand-primary/40'
+                : 'bg-white/10 hover:bg-white/15'
+            }`}
+            aria-label="Search products"
+          >
+            <FiSearch className="shrink-0 w-4 h-4 text-gray-400" />
+            <span className="text-sm text-gray-400 truncate">Search products...</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsSidebarOpen(true)}
+            className="shrink-0 p-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+            aria-label="Menu"
+          >
+            <FiMenu size={20} />
+          </button>
         </div>
 
         {/* ─── DESKTOP: strip 1 — logo, search, actions (black) ─── */}
@@ -201,14 +210,6 @@ export default function Header({ categories = [] }) {
                   title="Track order"
                 >
                   <FiTruck size={18} />
-                </Link>
-                <Link href="/compare" className="relative text-gray-300 hover:text-white p-2.5 rounded-lg hover:bg-white/10 transition-all" aria-label="Compare">
-                  <FiLayers size={18} />
-                  {hydrated && compareCount > 0 && (
-                    <span className="absolute top-1 right-1 bg-brand-primary text-white text-[8px] font-bold min-w-[14px] h-3.5 px-0.5 rounded-full flex items-center justify-center">
-                      {compareCount}
-                    </span>
-                  )}
                 </Link>
                 <Link href="/wishlist" className="relative text-gray-300 hover:text-white p-2.5 rounded-lg hover:bg-white/10 transition-all" aria-label="Wishlist">
                   <FiHeart size={18} />
@@ -289,7 +290,40 @@ export default function Header({ categories = [] }) {
 
             {/* Modal */}
             <div className="fixed inset-0 z-[85] flex items-start justify-center pt-[var(--header-offset,56px)] md:pt-[calc(var(--header-offset-md,104px)+0.5rem)] px-4 pointer-events-none">
-              <div className="w-full max-w-site bg-[#F5F6F8] rounded-2xl shadow-2xl max-h-[min(80vh,calc(100vh-var(--header-offset-md,104px)-2rem))] flex flex-col overflow-hidden border border-gray-200 pointer-events-auto">
+              <div className="w-full max-w-site bg-[#F5F6F8] rounded-2xl shadow-2xl max-h-[min(80vh,calc(100vh-var(--header-offset,54px)-1rem))] md:max-h-[min(80vh,calc(100vh-var(--header-offset-md,104px)-2rem))] flex flex-col overflow-hidden border border-gray-200 pointer-events-auto">
+
+                {/* Mobile: search input inside modal */}
+                <div className="md:hidden flex items-center gap-2 px-3 py-3 bg-white border-b border-gray-200 shrink-0">
+                  <form onSubmit={handleSearchSubmit} className="flex-1 flex items-center gap-2 rounded-full bg-gray-100 px-3 py-2.5 min-w-0">
+                    <FiSearch className="shrink-0 w-4 h-4 text-gray-400" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder="Search phones, laptops, gadgets..."
+                      autoFocus
+                      className="bg-transparent border-none outline-none text-[16px] text-gray-900 placeholder-gray-400 min-w-0 w-full flex-1"
+                    />
+                    {searchQuery && (
+                      <button
+                        type="button"
+                        onClick={() => setSearchQuery('')}
+                        className="shrink-0 w-6 h-6 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center"
+                        aria-label="Clear search"
+                      >
+                        <FiX size={14} />
+                      </button>
+                    )}
+                  </form>
+                  <button
+                    type="button"
+                    onClick={closeSearchModal}
+                    className="shrink-0 p-2 rounded-lg text-gray-500 hover:bg-gray-100"
+                    aria-label="Close search"
+                  >
+                    <FiX size={18} />
+                  </button>
+                </div>
 
                 <div className="hidden md:flex items-center justify-between px-4 md:px-6 py-3 bg-white border-b border-gray-200 shrink-0">
                   <p className="text-sm font-bold text-gray-800 truncate pr-4">
@@ -302,8 +336,8 @@ export default function Header({ categories = [] }) {
 
                 {/* Results Area */}
                 {isSearching ? (
-                  <div className="p-12 flex justify-center items-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-brand-primary"></div>
+                    <div className="p-12 flex justify-center items-center">
+                    <LoadingSpinner size="md" />
                   </div>
                 ) : searchError ? (
                   <div className="p-8 text-center text-red-500 text-sm">{searchError}</div>
@@ -315,11 +349,8 @@ export default function Header({ categories = [] }) {
                   <>
                     {/* Mobile: Category Pills */}
                     <div className="md:hidden sticky top-0 bg-white z-10 border-b border-gray-200">
-                      <div className="flex items-center justify-between px-4 pt-4 pb-2">
+                      <div className="flex items-center justify-between px-4 pt-3 pb-2">
                         <h3 className="text-sm font-bold text-gray-800">{filteredSearchResults.length} Results</h3>
-                        <button onClick={closeSearchModal} className="w-7 h-7 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center text-gray-500 transition-colors">
-                          <FiX size={16} />
-                        </button>
                       </div>
                       <div className="flex gap-2 px-4 pb-3 overflow-x-auto no-scrollbar">
                         <button onClick={() => setActiveSearchCategory('all')} className={`flex-shrink-0 px-3 py-1.5 rounded-full text-xs font-semibold transition-colors ${activeSearchCategory === 'all' ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-brand-primary'}`}>All ({searchResults.length})</button>
@@ -418,117 +449,190 @@ export default function Header({ categories = [] }) {
         )}
       </header>
 
-      {/* ─── Mobile Sidebar Overlay ─── */}
-      {isSidebarOpen && <div className="fixed inset-0 bg-black/50 z-[100] md:hidden transition-opacity" onClick={closeSidebar} />}
+      {/* ─── Mobile menu overlay ─── */}
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/55 z-[100] md:hidden backdrop-blur-[2px]"
+          onClick={closeSidebar}
+          aria-hidden
+        />
+      )}
 
-      {/* ─── Mobile Sidebar Drawer ─── */}
-      <div className={`fixed inset-y-0 left-0 w-[300px] bg-gray-50 z-[110] transform transition-transform duration-300 ease-in-out flex flex-col md:hidden shadow-[20px_0_40px_rgba(0,0,0,0.15)] rounded-r-[2rem] ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
-        
-        {/* Top Header & Header Profile Block */}
-        <div className="bg-[#0a0a0a] text-white rounded-tr-[2rem] pt-6 pb-6 px-6 relative overflow-hidden flex-shrink-0 shadow-lg">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-2xl -mr-10 -mt-10"></div>
-          
-          <div className="flex justify-between items-center mb-6 relative z-10">
-            <Link href="/" onClick={closeSidebar} className="bg-white rounded-full px-3.5 py-1.5 flex items-center shadow-md">
-              <AppleFaceTextLogo height={26} variant="onLight" className="h-6 w-auto" />
+      {/* ─── Mobile menu drawer ─── */}
+      <aside
+        className={`fixed inset-y-0 left-0 w-[min(88vw,320px)] z-[110] flex flex-col md:hidden bg-white border-r-[3px] border-brand-primary shadow-2xl transition-transform duration-300 ease-out ${
+          isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+        aria-hidden={!isSidebarOpen}
+        aria-label="Main menu"
+      >
+        {/* Header */}
+        <div className="shrink-0 bg-[#0a0a0a] px-4 pt-4 pb-3 border-b-2 border-brand-primary">
+          <div className="flex items-center justify-between gap-3 mb-3">
+            <Link href="/" onClick={closeSidebar} aria-label="Home">
+              <AppleFaceTextLogo height={24} variant="onDark" className="h-6 w-auto" />
             </Link>
-            <button onClick={closeSidebar} className="p-2 bg-white/10 hover:bg-white/20 text-white rounded-full transition-colors backdrop-blur-sm">
-              <FiX size={18} />
+            <button
+              type="button"
+              onClick={closeSidebar}
+              className="p-2 text-gray-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
+              aria-label="Close menu"
+            >
+              <FiX size={20} />
             </button>
           </div>
 
-          <button onClick={() => { closeSidebar(); handleUserClick(); }} className="relative z-10 flex items-center gap-4 w-full p-3 rounded-2xl bg-white/10 hover:bg-white/20 border border-white/10 transition-all text-left group">
+          <button
+            type="button"
+            onClick={() => { closeSidebar(); handleUserClick(); }}
+            className="flex items-center gap-3 w-full py-2.5 px-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors text-left"
+          >
             {user?.image ? (
-              <div className="w-11 h-11 rounded-full overflow-hidden ring-2 ring-brand-primary"><Image src={user.image} alt="Profile" width={44} height={44} className="w-full h-full object-cover" unoptimized /></div>
+              <div className="w-9 h-9 rounded-full overflow-hidden ring-1 ring-white/20 shrink-0">
+                <Image src={user.image} alt="" width={36} height={36} className="w-full h-full object-cover" unoptimized />
+              </div>
             ) : user ? (
-              <div className="w-11 h-11 rounded-full bg-brand-primary flex items-center justify-center text-lg font-bold text-white shadow-lg shadow-brand-primary/30">{(user.first_name || user.name || 'U').charAt(0).toUpperCase()}</div>
+              <div className="w-9 h-9 rounded-full bg-brand-primary flex items-center justify-center text-sm font-bold text-white shrink-0">
+                {(user.first_name || user.name || 'U').charAt(0).toUpperCase()}
+              </div>
             ) : (
-              <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center"><FiUser size={20} className="text-white" /></div>
+              <div className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center shrink-0">
+                <FiUser size={18} className="text-white" />
+              </div>
             )}
-            <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-[15px] font-bold text-white truncate group-hover:text-brand-primary transition-colors">{user ? (user.first_name || user.name || 'User') : 'Login / Sign Up'}</span>
-              <span className="text-[11px] text-white/70 truncate">{user ? 'View your profile' : 'Access your account'}</span>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-white truncate">
+                {user ? (user.first_name || user.name || 'My account') : 'Sign in'}
+              </p>
+              <p className="text-[11px] text-gray-400 truncate">
+                {user ? 'Orders & profile' : 'Login or register'}
+              </p>
             </div>
-            <FiChevronRight size={18} className="text-white/50 group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
+            <FiChevronRight size={16} className="text-gray-500 shrink-0" />
           </button>
         </div>
 
-        {/* Content Body */}
-        <div className="flex-1 overflow-y-auto p-5 space-y-7 no-scrollbar pb-24">
-          
-          {/* Categories Grid */}
-          <div>
-            <div className="flex items-center gap-2 mb-3 px-1">
-              <div className="w-6 h-6 rounded-full bg-brand-primary/10 flex items-center justify-center"><FiGrid size={12} className="text-brand-primary" /></div>
-              <h3 className="text-[11px] font-black tracking-widest text-gray-800 uppercase">Shop by Category</h3>
+        <div className="flex-1 overflow-y-auto no-scrollbar">
+          {/* Shortcut row */}
+          <div className="grid grid-cols-4 gap-px bg-gray-200 border-b border-gray-200">
+            {[
+              { href: '/', label: 'Home', icon: FiHome },
+              { href: '/special-offers', label: 'Offers', icon: FiZap, accent: true },
+              { href: '/track-order', label: 'Track', icon: FiTruck },
+              { href: '/compare', label: 'Compare', icon: FiShuffle },
+            ].map(({ href, label, icon: Icon, accent }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={closeSidebar}
+                className={`flex flex-col items-center justify-center gap-1 py-3.5 bg-white active:bg-gray-50 transition-colors ${
+                  accent ? 'text-brand-primary' : 'text-gray-700'
+                }`}
+              >
+                <Icon size={18} className={accent ? 'text-brand-primary' : 'text-gray-500'} />
+                <span className={`text-[10px] font-bold ${accent ? 'text-brand-primary' : 'text-gray-600'}`}>{label}</span>
+              </Link>
+            ))}
+          </div>
+
+          {/* Categories — matches home ShopCategories look */}
+          <div className="bg-[#3d3d3d] px-3 py-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-xs font-bold text-white tracking-wide">
+                Browse <span className="text-brand-primary">Categories</span>
+              </h3>
+              <Link
+                href="/category"
+                onClick={closeSidebar}
+                className="text-[10px] font-bold text-gray-400 hover:text-white transition-colors"
+              >
+                View all →
+              </Link>
             </div>
-            
-            {displayCategories.length > 0 ? (
-              <div className="grid grid-cols-4 gap-1.5">
-                {displayCategories.map((cat, idx) => (
-                  <Link key={cat.category_id ?? cat.id ?? idx} href={getCategoryHref(cat)} onClick={closeSidebar}
-                    className="flex flex-col items-center justify-center gap-1 p-1.5 bg-white border border-gray-100 rounded-xl shadow-[0_1px_6px_rgba(0,0,0,0.03)] hover:border-brand-primary/40 hover:shadow-md hover:shadow-brand-primary/5 transition-all duration-300 group">
-                    {cat.image_url ? (
-                      <div className="w-8 h-8 relative flex items-center justify-center bg-gray-50 rounded-lg group-hover:scale-105 transition-transform duration-300 p-0.5">
-                        <Image src={cat.image_url} alt={cat.name} fill className="object-contain mix-blend-multiply" unoptimized />
+
+            {orderedDisplayCategories.length > 0 ? (
+              <div className="grid grid-cols-4 gap-x-1 gap-y-3">
+                {orderedDisplayCategories.map((cat, idx) => {
+                  const src = getCategoryImage(cat);
+                  return (
+                    <Link
+                      key={cat.category_id ?? cat.id ?? idx}
+                      href={getCategoryHref(cat)}
+                      onClick={closeSidebar}
+                      className="group flex flex-col items-center gap-1.5 text-center"
+                    >
+                      <div className="w-[52px] h-[52px] rounded-full bg-white flex items-center justify-center overflow-hidden ring-2 ring-transparent group-hover:ring-brand-primary transition-all shadow-sm">
+                        {src ? (
+                          <div className="relative w-[70%] h-[70%]">
+                            <Image
+                              src={src}
+                              alt={cat.name || 'Category'}
+                              fill
+                              unoptimized
+                              className="object-contain group-hover:scale-110 transition-transform duration-200"
+                            />
+                          </div>
+                        ) : (
+                          <FiGrid size={18} className="text-gray-300 group-hover:text-brand-primary transition-colors" />
+                        )}
                       </div>
-                    ) : (
-                      <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center group-hover:bg-brand-primary/10 group-hover:scale-105 transition-all duration-300">
-                        <FiGrid size={14} className="text-gray-300 group-hover:text-brand-primary transition-colors" />
-                      </div>
-                    )}
-                    <span className="text-[8.5px] font-bold text-gray-700 text-center leading-tight line-clamp-2 w-full pt-0.5 group-hover:text-brand-primary transition-colors break-words">{cat.name}</span>
-                  </Link>
-                ))}
+                      <span className="text-[8.5px] font-semibold text-gray-300 capitalize line-clamp-2 leading-tight group-hover:text-white transition-colors">
+                        {cat.name}
+                      </span>
+                    </Link>
+                  );
+                })}
               </div>
             ) : (
-              <div className="p-4 text-center text-sm text-gray-500 bg-white border border-gray-100 rounded-2xl shadow-sm">No categories available.</div>
+              <p className="text-center text-xs text-gray-500 py-6">Categories loading…</p>
             )}
           </div>
 
-          {/* Navigation Menu */}
-          <div>
-            <div className="flex items-center gap-2 mb-3 px-1">
-              <div className="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center"><FiMenu size={12} className="text-gray-600" /></div>
-              <h3 className="text-[11px] font-black tracking-widest text-gray-800 uppercase">Quick Menu</h3>
-            </div>
-            
-            <div className="flex flex-col gap-2.5">
-              <Link href="/" onClick={closeSidebar} className="flex items-center justify-between px-4 py-3.5 bg-white border border-gray-100 rounded-2xl text-[13px] font-bold text-gray-700 hover:border-brand-primary/40 hover:shadow-[0_4px_12px_rgba(57,178,74,0.08)] transition-all group">
-                <span>Home</span><FiChevronRight size={16} className="text-gray-400 group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
-              </Link>
-              <Link href="/about" onClick={closeSidebar} className="flex items-center justify-between px-4 py-3.5 bg-white border border-gray-100 rounded-2xl text-[13px] font-bold text-gray-700 hover:border-brand-primary/40 hover:shadow-[0_4px_12px_rgba(57,178,74,0.08)] transition-all group">
-                <span>About Us</span><FiChevronRight size={16} className="text-gray-400 group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
-              </Link>
-              <Link href="/blogs" onClick={closeSidebar} className="flex items-center justify-between px-4 py-3.5 bg-white border border-gray-100 rounded-2xl text-[13px] font-bold text-gray-700 hover:border-brand-primary/40 hover:shadow-[0_4px_12px_rgba(57,178,74,0.08)] transition-all group">
-                <span>Blogs</span><FiChevronRight size={16} className="text-gray-400 group-hover:text-brand-primary group-hover:translate-x-1 transition-all" />
-              </Link>
-              
-              {/* Highlighted Blocks */}
-              <div className="grid grid-cols-2 gap-2 mt-1">
-                <Link href="/contact" onClick={closeSidebar} className="flex flex-col items-center justify-center py-4 bg-white border border-gray-100 rounded-2xl hover:border-brand-primary/40 hover:bg-brand-primary/5 shadow-sm hover:shadow-md transition-all text-center group">
-                  <FiMapPin size={20} className="text-gray-400 mb-2 group-hover:text-brand-primary transition-colors" />
-                  <span className="text-[11px] font-bold text-gray-700 group-hover:text-brand-primary transition-colors">Contact Us</span>
-                </Link>
-                <Link href="/track-order" onClick={closeSidebar} className="flex flex-col items-center justify-center py-4 bg-brand-primary/5 border border-brand-primary/20 rounded-2xl hover:bg-brand-primary hover:border-brand-primary shadow-sm hover:shadow-lg hover:shadow-brand-primary/20 transition-all text-center group">
-                  <FiTruck size={20} className="text-brand-primary mb-2 group-hover:text-white transition-colors" />
-                  <span className="text-[11px] font-bold text-brand-primary group-hover:text-white transition-colors">Track Order</span>
-                </Link>
-              </div>
-            </div>
-          </div>
-
-          {/* Legal / Policies */}
-          <div className="pt-2">
-             <div className="flex flex-wrap gap-2 justify-center">
-                <Link href="/warranty" onClick={closeSidebar} className="text-[10px] font-bold text-gray-400 hover:text-brand-primary px-3 py-1.5 bg-white border border-gray-200 rounded-full hover:border-brand-primary/30 transition-colors">Warranty</Link>
-                <Link href="/refund" onClick={closeSidebar} className="text-[10px] font-bold text-gray-400 hover:text-brand-primary px-3 py-1.5 bg-white border border-gray-200 rounded-full hover:border-brand-primary/30 transition-colors">Refund</Link>
-                <Link href="/terms" onClick={closeSidebar} className="text-[10px] font-bold text-gray-400 hover:text-brand-primary px-3 py-1.5 bg-white border border-gray-200 rounded-full hover:border-brand-primary/30 transition-colors">Terms</Link>
-             </div>
-          </div>
-
+          {/* Secondary links */}
+          <nav className="px-4 py-4" aria-label="Site links">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2 px-1">More</p>
+            <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 overflow-hidden bg-card-bg">
+              {[
+                { href: '/contact', label: 'Contact & store', icon: FiMapPin },
+                { href: '/about', label: 'About Apple Face BD', icon: FiInfo },
+                { href: '/blogs', label: 'Blog & news', icon: FiFileText },
+                { href: '/wishlist', label: 'Wishlist', icon: FiHeart, badge: hydrated && wishlistCount > 0 ? wishlistCount : null },
+              ].map(({ href, label, icon: Icon, badge }) => (
+                <li key={href}>
+                  <Link
+                    href={href}
+                    onClick={closeSidebar}
+                    className="flex items-center gap-3 px-3.5 py-3 text-sm font-semibold text-gray-800 hover:bg-white hover:text-brand-primary transition-colors"
+                  >
+                    <span className="w-8 h-8 rounded-lg bg-white border border-gray-100 flex items-center justify-center text-gray-500 shrink-0">
+                      <Icon size={16} />
+                    </span>
+                    <span className="flex-1">{label}</span>
+                    {badge ? (
+                      <span className="min-w-[1.25rem] h-5 px-1.5 rounded-full bg-brand-primary text-white text-[10px] font-bold flex items-center justify-center">
+                        {badge}
+                      </span>
+                    ) : (
+                      <FiChevronRight size={14} className="text-gray-300" />
+                    )}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
         </div>
-      </div>
+
+        {/* Footer policies */}
+        <div className="shrink-0 px-4 py-3 border-t border-gray-100 bg-card-bg">
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-[10px] font-semibold text-gray-500">
+            <Link href="/warranty" onClick={closeSidebar} className="hover:text-brand-primary transition-colors">Warranty</Link>
+            <span className="text-gray-300" aria-hidden>·</span>
+            <Link href="/refund" onClick={closeSidebar} className="hover:text-brand-primary transition-colors">Refund</Link>
+            <span className="text-gray-300" aria-hidden>·</span>
+            <Link href="/terms" onClick={closeSidebar} className="hover:text-brand-primary">Terms</Link>
+          </div>
+        </div>
+      </aside>
     </>
   );
 }

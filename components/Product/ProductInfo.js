@@ -366,13 +366,51 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
             .filter(Boolean)
             .join(' · ');
     }, [product.specifications]);
-    const renderQuickActions = (isMobile = false) => (
-        <div className={`flex ${isMobile ? 'items-center justify-between gap-3 mt-3' : 'items-start justify-between gap-4'}`}>
-            <span className={`font-bold rounded-md uppercase tracking-wider ${isMobile ? 'text-[10px] px-2 py-1' : 'text-[10px] px-2 py-1'} ${isInStock ? 'bg-brand-primary/10 text-brand-primary' : 'bg-red-50 text-red-600'}`}>
+    const renderMobileIconActions = () => (
+        <div className="flex items-center gap-1 shrink-0">
+            <button
+                type="button"
+                onClick={() => toggleCompare(compareProduct)}
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                    compared ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-brand-primary/10 hover:text-brand-primary'
+                }`}
+                aria-label={compared ? 'Remove from compare' : 'Add to compare'}
+            >
+                <FiLayers size={18} />
+            </button>
+            <button
+                type="button"
+                onClick={() => toggleWishlist(wishlistProduct)}
+                className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors ${
+                    isWishlisted ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-red-50 hover:text-brand-primary'
+                }`}
+                aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+            >
+                <FiHeart size={18} className={isWishlisted ? 'fill-current' : ''} />
+            </button>
+            <button
+                type="button"
+                onClick={handleShare}
+                className="w-10 h-10 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center hover:bg-gray-200 transition-colors"
+                aria-label="Share product"
+            >
+                <FiShare2 size={18} />
+            </button>
+        </div>
+    );
+
+    const renderDesktopQuickActions = () => (
+        <div className="flex items-start justify-between gap-4">
+            <span
+                className={`font-bold rounded-md uppercase tracking-wider text-[10px] px-2 py-1 ${
+                    isInStock ? 'bg-brand-primary/10 text-brand-primary' : 'bg-red-50 text-red-600'
+                }`}
+            >
                 Availability: {isInStock ? 'In Stock' : 'Out of Stock'}
             </span>
             <div className="flex items-center gap-2">
                 <button
+                    type="button"
                     onClick={() => toggleCompare(compareProduct)}
                     className={`cursor-pointer flex flex-col items-center gap-0.5 transition-colors ${compared ? 'text-brand-primary' : 'hover:text-brand-primary text-gray-400'}`}
                     aria-label={compared ? 'Remove from compare' : 'Add to compare'}
@@ -383,6 +421,7 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                     <span className="text-[8px] font-bold uppercase">{compared ? 'Compared' : 'Compare'}</span>
                 </button>
                 <button
+                    type="button"
                     onClick={() => toggleWishlist(wishlistProduct)}
                     className={`cursor-pointer flex flex-col items-center gap-0.5 transition-colors ${isWishlisted ? 'text-brand-red' : 'hover:text-brand-red text-gray-400'}`}
                     aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
@@ -392,8 +431,14 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                     </div>
                     <span className="text-[8px] font-bold uppercase">{isWishlisted ? 'Saved' : 'Wishlist'}</span>
                 </button>
-                <button onClick={handleShare} className="cursor-pointer flex flex-col items-center gap-0.5 hover:text-blue-500 text-gray-400 transition-colors">
-                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-500"><FiShare2 size={14} /></div>
+                <button
+                    type="button"
+                    onClick={handleShare}
+                    className="cursor-pointer flex flex-col items-center gap-0.5 hover:text-blue-500 text-gray-400 transition-colors"
+                >
+                    <div className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                        <FiShare2 size={14} />
+                    </div>
                     <span className="text-[8px] font-bold uppercase">Share</span>
                 </button>
             </div>
@@ -426,15 +471,26 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
 
     const renderVariantSelectors = (displayClass) => {
         if (!hasVariants) return null;
+        const variantLabel = [selectedStorage, selectedColor, selectedRegion].filter(Boolean).join(' · ');
         return (
-            <div className={`bg-white border border-gray-200 rounded-lg p-4 md:p-5 shadow-sm space-y-4 md:space-y-5 ${displayClass}`}>
-                <div className="flex flex-col gap-1 text-[13px] mb-2 pb-4 border-b border-gray-100">
-                    {(selectedStorage || selectedColor || selectedRegion) && (
+            <div
+                className={`space-y-4 md:space-y-5 lg:bg-white lg:border lg:border-gray-200 lg:rounded-lg lg:p-5 lg:shadow-sm ${displayClass}`}
+            >
+                {variantLabel ? (
+                    <div className="lg:hidden">
+                        <p className="text-[11px] font-semibold text-gray-500 mb-1.5">Your selection</p>
+                        <p className="inline-flex items-center px-3 py-1.5 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold capitalize">
+                            {variantLabel}
+                        </p>
+                    </div>
+                ) : null}
+                <div className="hidden lg:flex flex-col gap-1 text-[13px] mb-2 pb-4 border-b border-gray-100">
+                    {variantLabel ? (
                         <p>
                             <span className="font-semibold text-gray-400">Variant: </span>
-                            <span className="font-bold text-brand-primary">{[selectedStorage, selectedColor, selectedRegion].filter(Boolean).join(' / ')}</span>
+                            <span className="font-bold text-brand-primary">{variantLabel}</span>
                         </p>
-                    )}
+                    ) : null}
                 </div>
 
                 {allColors.length > 0 && (
@@ -506,11 +562,59 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                 {galleryWithSync}
             </div>
 
-            {/* ========== COLUMN 2 (desktop): Product info & pricing ========== */}
-            <div className="flex flex-col gap-5 w-full order-2 lg:order-2 lg:sticky lg:top-24">
+            {/* ========== COLUMN 2: Product info & pricing ========== */}
+            <div className="flex flex-col gap-4 md:gap-5 w-full order-2 lg:order-2 lg:sticky lg:top-24">
 
-                {/* Title & Brand */}
-                <div>
+                {/* Mobile: summary card */}
+                <div className="lg:hidden bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm">
+                    {(inferredBrandName || brandLogo) && (
+                        <div className="flex items-center gap-2 px-4 pt-4">
+                            <div className="w-7 h-7 rounded-full border border-gray-200 bg-white overflow-hidden flex items-center justify-center shrink-0">
+                                {brandLogo ? (
+                                    // eslint-disable-next-line @next/next/no-img-element
+                                    <img src={brandLogo} alt={inferredBrandName || 'Brand'} className="w-full h-full object-contain p-0.5" />
+                                ) : (
+                                    <span className="text-[10px] font-bold text-gray-500">
+                                        {(inferredBrandName || 'B').charAt(0).toUpperCase()}
+                                    </span>
+                                )}
+                            </div>
+                            <p className="text-[11px] font-bold text-gray-500 uppercase tracking-wide">{inferredBrandName || 'Brand'}</p>
+                        </div>
+                    )}
+                    <div className="flex items-start gap-2 px-4 pt-2 pb-3">
+                        <h1 className="flex-1 min-w-0 text-lg font-extrabold text-gray-900 leading-snug">{product.name}</h1>
+                        {renderMobileIconActions()}
+                    </div>
+                    {specPreview && (
+                        <p className="px-4 pb-3 text-[12px] leading-relaxed text-gray-500 line-clamp-2">{specPreview}</p>
+                    )}
+                    <div className="px-4 py-3.5 bg-card-bg border-t border-gray-100 flex flex-wrap items-end justify-between gap-3">
+                        <div>
+                            <div className="flex flex-wrap items-baseline gap-2">
+                                <p className="text-2xl font-extrabold text-gray-900 leading-none">{selectedDisplayPrice}</p>
+                                {usingOfferPrice && displayDiscount && (
+                                    <span className="text-[11px] font-bold text-brand-primary bg-brand-primary/10 px-2 py-0.5 rounded-md">
+                                        {displayDiscount}
+                                    </span>
+                                )}
+                            </div>
+                            {selectedOldPrice && (
+                                <p className="text-sm text-gray-400 line-through font-medium mt-1">{selectedOldPrice}</p>
+                            )}
+                        </div>
+                        <span
+                            className={`text-[11px] font-bold px-2.5 py-1 rounded-full shrink-0 ${
+                                isInStock ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'
+                            }`}
+                        >
+                            {isInStock ? 'In stock' : 'Out of stock'}
+                        </span>
+                    </div>
+                </div>
+
+                {/* Desktop: title & brand */}
+                <div className="hidden lg:block">
                     {(inferredBrandName || brandLogo) && (
                         <div className="flex items-center gap-2 mb-2.5">
                             <div className="w-6 h-6 rounded-full border border-gray-200 bg-white overflow-hidden flex items-center justify-center shrink-0">
@@ -524,39 +628,38 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                             <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">{inferredBrandName || 'Brand'}</p>
                         </div>
                     )}
-                    <h1 className="text-xl md:text-2xl lg:text-[1.65rem] font-extrabold text-gray-900 leading-tight mb-2">{product.name}</h1>
+                    <h1 className="text-[1.65rem] font-extrabold text-gray-900 leading-tight mb-2">{product.name}</h1>
                     {specPreview && (
-                        <p className="text-[12px] leading-relaxed text-gray-500 font-medium line-clamp-2">
-                            {specPreview}
-                        </p>
+                        <p className="text-[12px] leading-relaxed text-gray-500 font-medium line-clamp-2">{specPreview}</p>
                     )}
-                    <div className="lg:hidden">
-                        {renderQuickActions(true)}
-                    </div>
                 </div>
 
-                {/* Price */}
-                <div className="pb-4 border-b border-gray-100">
+                {/* Desktop: price */}
+                <div className="hidden lg:block pb-4 border-b border-gray-100">
                     <div className="flex flex-wrap items-end gap-3 mb-1">
-                        <p className="text-3xl md:text-4xl leading-none font-extrabold text-gray-900">{selectedDisplayPrice}</p>
+                        <p className="text-4xl leading-none font-extrabold text-gray-900">{selectedDisplayPrice}</p>
                         {usingOfferPrice && displayDiscount && (
-                            <span className="text-xs md:text-sm font-bold text-red-600 bg-red-50 border border-red-100 px-2.5 py-1 rounded-md mb-1">{displayDiscount} Off</span>
+                            <span className="text-sm font-bold text-red-600 bg-red-50 border border-red-100 px-2.5 py-1 rounded-md mb-1">
+                                {displayDiscount} Off
+                            </span>
                         )}
                     </div>
                     {selectedOldPrice && (
-                        <div className="flex items-center gap-3">
-                            <span className="text-lg md:text-xl text-gray-400 line-through font-medium">{selectedOldPrice}</span>
-                        </div>
+                        <span className="text-xl text-gray-400 line-through font-medium">{selectedOldPrice}</span>
                     )}
                 </div>
 
-                {renderVariantSelectors('')}
+                <div className="lg:hidden bg-white rounded-2xl border border-gray-100 p-4 shadow-sm">
+                    {renderVariantSelectors('')}
+                </div>
+                <div className="hidden lg:block">{renderVariantSelectors('')}</div>
 
-                {/* Cart Actions */}
-                <div className="flex flex-col gap-2.5 mt-1">
+                {/* Desktop cart actions */}
+                <div className="hidden lg:flex flex-col gap-2.5 mt-1">
                     <div className="flex flex-row items-stretch gap-2 h-12">
                         <div className="flex items-center justify-between border-2 border-gray-200 rounded-lg py-1 px-1 w-[100px] shrink-0 bg-white">
                             <button
+                                type="button"
                                 onClick={() => setQuantity(Math.max(1, quantity - 1))}
                                 className="cursor-pointer w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-primary hover:bg-gray-100 rounded-lg transition-colors"
                             >
@@ -564,6 +667,7 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                             </button>
                             <span className="font-bold text-gray-900 w-6 text-center text-sm">{quantity}</span>
                             <button
+                                type="button"
                                 onClick={() => setQuantity(quantity + 1)}
                                 className="cursor-pointer w-8 h-8 flex items-center justify-center text-gray-500 hover:text-brand-primary hover:bg-gray-100 rounded-lg transition-colors"
                             >
@@ -571,6 +675,7 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                             </button>
                         </div>
                         <button
+                            type="button"
                             onClick={handleAddToCart}
                             className="cursor-pointer flex-1 bg-white border-2 border-brand-primary text-brand-primary font-bold px-3 rounded-lg hover:bg-brand-primary/5 transition-colors text-sm whitespace-nowrap"
                         >
@@ -578,11 +683,56 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
                         </button>
                     </div>
                     <button
+                        type="button"
                         onClick={handleBuyNow}
                         className="cursor-pointer w-full bg-brand-primary text-white font-extrabold tracking-wide py-3.5 px-4 rounded-lg hover:opacity-90 transition-all text-sm"
                     >
                         Buy Now
                     </button>
+                </div>
+
+                {/* Spacer for mobile sticky bar */}
+                <div className="lg:hidden h-4" aria-hidden />
+            </div>
+
+            {/* Mobile sticky purchase bar */}
+            <div className="lg:hidden fixed left-0 right-0 z-[70] bottom-[4.75rem] border-t border-gray-200 bg-white/95 backdrop-blur-md shadow-[0_-6px_24px_rgba(0,0,0,0.08)] px-4 py-2.5">
+                <div className="max-w-site mx-auto flex items-center gap-2">
+                    <div className="flex items-center h-11 border border-gray-200 rounded-lg bg-white shrink-0 overflow-hidden">
+                        <button
+                            type="button"
+                            onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                            className="w-9 h-11 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                            aria-label="Decrease quantity"
+                        >
+                            <FiMinus size={16} />
+                        </button>
+                        <span className="w-8 text-center text-sm font-bold text-gray-900">{quantity}</span>
+                        <button
+                            type="button"
+                            onClick={() => setQuantity(quantity + 1)}
+                            className="w-9 h-11 flex items-center justify-center text-gray-600 hover:bg-gray-50"
+                            aria-label="Increase quantity"
+                        >
+                            <FiPlus size={16} />
+                        </button>
+                    </div>
+                    <div className="flex flex-1 gap-2 min-w-0">
+                        <button
+                            type="button"
+                            onClick={handleAddToCart}
+                            className="flex-1 min-w-0 h-11 rounded-lg border-2 border-brand-primary text-brand-primary font-bold text-xs sm:text-sm hover:bg-brand-primary/5 transition-colors"
+                        >
+                            Add to Cart
+                        </button>
+                        <button
+                            type="button"
+                            onClick={handleBuyNow}
+                            className="flex-1 min-w-0 h-11 rounded-lg bg-brand-primary text-white font-extrabold text-xs sm:text-sm hover:opacity-90 transition-opacity"
+                        >
+                            Buy Now
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -590,9 +740,7 @@ export default function ProductInfo({ product, onPricingChange, selectedCarePlan
             <div className="flex flex-col gap-5 w-full order-3 lg:order-3 lg:sticky lg:top-24">
 
                 {/* Quick Actions */}
-                <div className="hidden lg:block">
-                    {renderQuickActions(false)}
-                </div>
+                <div className="hidden lg:block">{renderDesktopQuickActions()}</div>
 
                 {/* Sidebar */}
                 {sidebarComponent && (

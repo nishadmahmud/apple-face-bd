@@ -10,10 +10,6 @@ export function AuthProvider({ children }) {
     const [token, setToken] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Modal state
-    const [authModalOpen, setAuthModalOpen] = useState(false);
-    const [authModalMode, setAuthModalMode] = useState("login"); // "login" | "register"
-
     // Load user from localStorage on mount
     useEffect(() => {
         try {
@@ -50,17 +46,14 @@ export function AuthProvider({ children }) {
         try {
             const response = await customerLogin(email, password);
 
-            // API returns: { message, customer, token } at top level
             const userData = response.customer || response.data?.customer || response.data?.user || response.data;
             const authToken = response.token || response.data?.token;
 
             if (authToken && userData) {
                 persistAuth(authToken, userData);
-                setAuthModalOpen(false);
                 return { success: true };
             }
 
-            // If we got a message but no token, it's an error
             return {
                 success: false,
                 message: response.message || response.error || "Login failed. Please check your credentials.",
@@ -76,17 +69,14 @@ export function AuthProvider({ children }) {
         try {
             const response = await customerRegister(userData);
 
-            // API may return token+customer directly, or require auto-login
             const newUser = response.customer || response.data?.customer || response.data?.user || response.data;
             const authToken = response.token || response.data?.token;
 
             if (authToken && newUser) {
                 persistAuth(authToken, newUser);
-                setAuthModalOpen(false);
                 return { success: true };
             }
 
-            // If registration succeeds but no token returned, auto-login
             if (response.success || response.message?.toLowerCase().includes('success')) {
                 const loginResult = await login(userData.email, userData.password);
                 return loginResult;
@@ -138,31 +128,16 @@ export function AuthProvider({ children }) {
         }
     }, [token, user]);
 
-    // Modal controls
-    const openAuthModal = useCallback((mode = "login") => {
-        setAuthModalMode(mode);
-        setAuthModalOpen(true);
-    }, []);
-
-    const closeAuthModal = useCallback(() => {
-        setAuthModalOpen(false);
-    }, []);
-
     return (
         <AuthContext.Provider
             value={{
                 user,
                 token,
                 loading,
-                authModalOpen,
-                authModalMode,
                 login,
                 register,
                 logout,
                 updateProfile,
-                openAuthModal,
-                closeAuthModal,
-                setAuthModalMode,
             }}
         >
             {children}

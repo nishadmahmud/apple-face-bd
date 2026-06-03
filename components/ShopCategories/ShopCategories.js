@@ -1,56 +1,66 @@
 "use client";
 
-import Link from 'next/link';
-import Image from 'next/image';
-import { FiBox } from 'react-icons/fi';
-import SectionHeader from '../Shared/SectionHeader';
-import { getCategoryHref } from '../../lib/categoryLinks';
+import Link from "next/link";
+import Image from "next/image";
+import { FiBox } from "react-icons/fi";
+import SectionHeader from "../Shared/SectionHeader";
+import { getCategoryHref } from "../../lib/categoryLinks";
+
+function getCategoryImage(cat) {
+  return cat?.image || cat?.image_path || cat?.image_url || null;
+}
 
 export default function ShopCategories({ categories = [] }) {
   const displayCategories = Array.isArray(categories) ? categories : [];
 
   return (
-    <section className="bg-[#f7f7f7] py-8 md:py-10 border-b border-gray-200">
+    <section className="bg-[#3d3d3d] py-8 md:py-10 border-b border-gray-400/30">
       <div className="max-w-site mx-auto px-4 md:px-6 lg:px-8">
-        <SectionHeader title="Browse" highlight="Categories" href="/category" linkLabel="View all" />
+        <SectionHeader
+          dark
+          title="Browse"
+          highlight="Categories"
+          href="/category"
+          linkLabel="View all"
+        />
 
-        <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-1.5 sm:gap-2 md:gap-2.5">
-          {displayCategories.length > 0 ? (
-            displayCategories.map((cat, idx) => (
-              <Link
-                key={cat.id || idx}
-                href={getCategoryHref(cat)}
-                className="group relative flex flex-col bg-white rounded-lg border border-gray-200 overflow-hidden hover:border-brand-primary/50 hover:shadow-sm transition-all duration-200"
-              >
-                <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-transparent group-hover:bg-brand-primary transition-colors z-10" />
-                <div className="h-[56px] sm:h-[60px] md:h-[64px] bg-gradient-to-b from-gray-50 to-white flex items-center justify-center p-1.5 md:p-2">
-                  {cat.image || cat.image_path || cat.image_url ? (
-                    <div className="relative w-full h-full max-h-[44px] md:max-h-[48px]">
-                      <Image
-                        src={cat.image || cat.image_path || cat.image_url}
-                        alt={cat.name}
-                        fill
-                        unoptimized
-                        className="object-contain group-hover:scale-105 transition-transform duration-200"
-                      />
-                    </div>
-                  ) : (
-                    <FiBox className="w-6 h-6 md:w-7 md:h-7 text-gray-300" />
-                  )}
-                </div>
-                <div className="px-1.5 py-1.5 md:px-2 md:py-2 border-t border-gray-100 min-h-[36px] md:min-h-[40px] flex items-center justify-center">
-                  <span className="text-[9px] sm:text-[10px] md:text-[11px] font-bold text-gray-900 group-hover:text-brand-primary transition-colors line-clamp-2 leading-tight text-center capitalize">
+        {displayCategories.length > 0 ? (
+          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-8 gap-x-2 gap-y-5 md:gap-x-3 md:gap-y-6">
+            {displayCategories.map((cat, idx) => {
+              const src = getCategoryImage(cat);
+              return (
+                <Link
+                  key={cat.id || cat.category_id || idx}
+                  href={getCategoryHref(cat)}
+                  className="group flex flex-col items-center gap-2 text-center"
+                >
+                  <div className="relative w-[58px] h-[58px] sm:w-[62px] sm:h-[62px] md:w-[68px] md:h-[68px] rounded-full bg-white flex items-center justify-center overflow-hidden ring-2 ring-transparent group-hover:ring-brand-primary transition-all shadow-sm">
+                    {src ? (
+                      <div className="relative w-[72%] h-[72%]">
+                        <Image
+                          src={src}
+                          alt={cat.name || "Category"}
+                          fill
+                          unoptimized
+                          className="object-contain group-hover:scale-110 transition-transform duration-200"
+                        />
+                      </div>
+                    ) : (
+                      <FiBox className="w-6 h-6 text-gray-300" />
+                    )}
+                  </div>
+                  <span className="text-[9px] sm:text-[10px] md:text-[11px] font-semibold text-gray-300 capitalize line-clamp-2 leading-tight group-hover:text-white transition-colors">
                     {cat.name}
                   </span>
-                </div>
-              </Link>
-            ))
-          ) : (
-            <div className="col-span-full text-center py-12 text-gray-500 text-sm bg-white rounded-xl border border-dashed border-gray-300">
-              Categories will appear here once loaded.
-            </div>
-          )}
-        </div>
+                </Link>
+              );
+            })}
+          </div>
+        ) : (
+          <div className="text-center py-12 text-gray-500 text-sm rounded-xl border border-dashed border-white/20">
+            Categories will appear here once loaded.
+          </div>
+        )}
       </div>
     </section>
   );

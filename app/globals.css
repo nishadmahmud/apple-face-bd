@@ -101,6 +101,52 @@ html {
   animation: bounce-slow 2s infinite;
 }
 
+/* Apple Face BD — loading ring */
+@keyframes af-loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.af-loader {
+  flex-shrink: 0;
+  border-radius: 50%;
+  border-style: solid;
+  border-color: #e5e7eb;
+  border-top-color: #e31e24;
+  animation: af-loader-spin 0.65s linear infinite;
+  box-sizing: border-box;
+}
+
+.af-loader--xs {
+  width: 1rem;
+  height: 1rem;
+  border-width: 2px;
+}
+
+.af-loader--sm {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-width: 2px;
+}
+
+.af-loader--md {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-width: 3px;
+}
+
+.af-loader--lg {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-width: 3px;
+}
+
+.af-loader--light {
+  border-color: rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+}
+
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getCategoriesFromServer } from '../../lib/api';
 import { FiChevronRight, FiGrid } from 'react-icons/fi';
+import LoadingSpinner from '../../components/Shared/LoadingSpinner';
 
 export default function CategoryIndexPage() {
     const [categories, setCategories] = useState([]);
@@ -43,8 +44,7 @@ export default function CategoryIndexPage() {
 
                 {isLoading ? (
                     <div className="flex flex-col items-center justify-center py-20">
-                        <div className="w-12 h-12 border-4 border-brand-purple/20 border-t-brand-purple rounded-full animate-spin mb-4"></div>
-                        <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Loading Categories...</p>
+                        <LoadingSpinner size="lg" label="Loading categories…" />
                     </div>
                 ) : (
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">

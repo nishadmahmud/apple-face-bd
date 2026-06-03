@@ -1,6 +1,7 @@
 "use client";
 
 import OrderTimeline from "../Shared/OrderTimeline";
+import LoadingSpinner from "../Shared/LoadingSpinner";
 import { getStatusLabel, getStatusColor } from "../../lib/orderStatus";
 
 export default function ProfileTracking({
@@ -31,7 +32,7 @@ export default function ProfileTracking({
                         className="px-6 py-3 bg-brand-primary text-white font-bold rounded-lg hover:opacity-90 transition-opacity disabled:opacity-70 sm:min-w-[100px]"
                     >
                         {trackLoading ? (
-                            <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mx-auto" />
+                            <LoadingSpinner size="sm" variant="light" className="mx-auto" />
                         ) : (
                             "Track"
                         )}

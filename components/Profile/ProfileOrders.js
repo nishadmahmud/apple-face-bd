@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Clock, CheckCircle, Truck, PackageCheck, XCircle, Package, MapPin, X } from "lucide-react";
 import OrderTimeline from "../Shared/OrderTimeline";
+import LoadingSpinner from "../Shared/LoadingSpinner";
 import EmptyState from "../Shared/EmptyState";
 import { getStatusLabel, getStatusColor } from "../../lib/orderStatus";
 
@@ -55,7 +56,7 @@ export default function ProfileOrders({ orders, ordersLoading, activeOrderTab, o
             <div className="p-4 md:p-6">
                 {ordersLoading ? (
                     <div className="flex justify-center py-20">
-                        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-brand-primary" />
+                        <LoadingSpinner size="md" />
                     </div>
                 ) : orders.length > 0 ? (
                     <div className="space-y-4">

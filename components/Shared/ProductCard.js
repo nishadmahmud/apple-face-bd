@@ -10,6 +10,7 @@ import { useWishlist } from '../../context/WishlistContext';
 import { getProductById } from '../../lib/api';
 import { readProductSeed, writeProductSeed } from '../../lib/productSeedCache';
 import ProductVariantModal from './ProductVariantModal';
+import LoadingSpinner from './LoadingSpinner';
 
 export default function ProductCard({ product, variant = 'default' }) {
     const isCompact = variant === 'compact';
@@ -499,7 +500,7 @@ export default function ProductCard({ product, variant = 'default' }) {
                 <div className="fixed inset-0 z-[110] bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
                     <div className="w-full max-w-sm bg-white rounded-2xl border border-gray-200 shadow-2xl p-5">
                         <div className="flex items-center gap-3">
-                            <div className="w-5 h-5 rounded-full border-2 border-brand-primary/30 border-t-brand-primary animate-spin" />
+                            <LoadingSpinner size="sm" inline />
                             <p className="text-sm font-semibold text-gray-700">Loading variants...</p>
                         </div>
                     </div>

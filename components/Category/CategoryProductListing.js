@@ -4,6 +4,7 @@ import { Package } from "lucide-react";
 import ProductCard from "../Shared/ProductCard";
 import CustomDropdown from "../Shared/CustomDropdown";
 import EmptyState from "../Shared/EmptyState";
+import LoadingSpinner from "../Shared/LoadingSpinner";
 import CategoryPagination from "./CategoryPagination";
 
 const SORT_OPTIONS = [
@@ -55,8 +56,7 @@ export default function CategoryProductListing({
 
             {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-20 bg-card-bg rounded-lg border border-gray-200 border-dashed">
-                    <div className="w-8 h-8 border-4 border-brand-primary/20 border-t-brand-primary rounded-full animate-spin mb-4" />
-                    <p className="text-gray-500 font-medium text-sm">Loading products…</p>
+                    <LoadingSpinner size="md" label="Loading products…" />
                 </div>
             ) : products.length > 0 ? (
                 <>
