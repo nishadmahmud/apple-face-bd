@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --max-width-site: 96rem;
+  --max-width-site: 80rem;
   --color-brand-primary: #E31E24;
   --color-brand-secondary: #4D4D4D;
   --color-brand-purple: #E31E24;

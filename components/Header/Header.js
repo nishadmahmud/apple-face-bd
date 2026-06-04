@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { FiSearch, FiUser, FiShoppingCart, FiMenu, FiX, FiChevronRight, FiGrid, FiHeart, FiGift, FiTruck, FiMapPin, FiZap, FiHome, FiFileText, FiInfo, FiShuffle } from 'react-icons/fi';
+import { FiSearch, FiUser, FiShoppingCart, FiMenu, FiX, FiChevronRight, FiChevronDown, FiGrid, FiHeart, FiGift, FiTruck, FiMapPin, FiZap, FiHome, FiFileText, FiInfo, FiShuffle } from 'react-icons/fi';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
 import { getLoginUrl } from '../../lib/authRoutes';
@@ -14,6 +14,40 @@ import AppleFaceTextLogo from '../Brand/AppleFaceTextLogo';
 import AppleFaceMark from '../Brand/AppleFaceMark';
 import { getCategoryHref } from '../../lib/categoryLinks';
 import LoadingSpinner from '../Shared/LoadingSpinner';
+
+/** Tier-2 only — routes not already in the top action bar */
+const QUICK_NAV_LINKS = [
+  { href: '/special-offers', label: 'Flash Deals', icon: FiZap, iconWrap: 'bg-amber-500/20 text-amber-400' },
+  { href: '/compare', label: 'Compare', icon: FiShuffle, iconWrap: 'bg-brand-primary/20 text-brand-primary' },
+  { href: '/blogs', label: 'Blog', icon: FiFileText, iconWrap: 'bg-violet-500/20 text-violet-400' },
+  { href: '/contact', label: 'Contact', icon: FiMapPin, iconWrap: 'bg-emerald-500/20 text-emerald-400' },
+];
+
+function QuickNavLink({ href, label, icon: Icon, iconWrap, onClick }) {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="flex items-center gap-2 shrink-0 group py-1"
+    >
+      <span className={`flex items-center justify-center w-7 h-7 rounded-lg ${iconWrap} transition-transform group-hover:scale-105`}>
+        <Icon size={14} strokeWidth={2.5} />
+      </span>
+      <span className="text-xs font-semibold text-gray-300 group-hover:text-white whitespace-nowrap transition-colors">
+        {label}
+      </span>
+    </Link>
+  );
+}
+
+function CountBadge({ count }) {
+  if (!count || count <= 0) return null;
+  return (
+    <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-brand-primary text-white text-[10px] font-bold flex items-center justify-center ring-2 ring-[#0a0a0a]">
+      {count > 99 ? '99+' : count}
+    </span>
+  );
+}
 
 export default function Header({ categories = [] }) {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -124,8 +158,8 @@ export default function Header({ categories = [] }) {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty('--header-offset', isScrolled ? '50px' : '54px');
-    root.style.setProperty('--header-offset-md', isScrolled ? '96px' : '104px');
+    root.style.setProperty('--header-offset', isScrolled ? '120px' : '132px');
+    root.style.setProperty('--header-offset-md', isScrolled ? '108px' : '118px');
     return () => {
       root.style.removeProperty('--header-offset');
       root.style.removeProperty('--header-offset-md');
@@ -142,142 +176,232 @@ export default function Header({ categories = [] }) {
     <>
       <header className={`w-full sticky top-0 z-[90] bg-[#0a0a0a] transition-shadow duration-300 ${isScrolled ? 'shadow-lg shadow-black/30' : 'shadow-sm'}`}>
 
-        {/* ─── MOBILE: compact top bar ─── */}
-        <div className="md:hidden flex items-center gap-2 px-3 py-2.5 bg-[#0a0a0a] border-b border-white/10">
+        {/* ─── MOBILE: tier 1 — logo + actions ─── */}
+        <div className="md:hidden flex items-center justify-between gap-2 px-3 py-2.5 bg-[#0a0a0a]">
           <Link href="/" className="flex items-center gap-2 min-w-0 shrink" aria-label="Home">
-            <AppleFaceMark size={32} className="w-8 h-8 object-contain shrink-0" />
+            <AppleFaceMark size={34} className="w-[34px] h-[34px] object-contain shrink-0 drop-shadow-sm" />
             <AppleFaceTextLogo height={22} variant="onDark" className="h-5 w-auto" />
           </Link>
 
+          <div className="flex items-center gap-0.5 shrink-0">
+            <button
+              type="button"
+              onClick={handleUserClick}
+              className="p-2 rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+              aria-label="Account"
+            >
+              <FiUser size={19} />
+            </button>
+            <Link
+              href="/wishlist"
+              className="relative p-2 rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+              aria-label="Wishlist"
+            >
+              <FiHeart size={19} />
+              <CountBadge count={hydrated ? wishlistCount : 0} />
+            </Link>
+            <button
+              type="button"
+              onClick={openCart}
+              className="relative p-2 rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+              aria-label="Cart"
+            >
+              <FiShoppingCart size={19} />
+              <CountBadge count={hydrated ? cartCount : 0} />
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsSidebarOpen(true)}
+              className="p-2 rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+              aria-label="Menu"
+            >
+              <FiMenu size={20} />
+            </button>
+          </div>
+        </div>
+
+        {/* ─── MOBILE: tier 2 — pill search ─── */}
+        <div className="md:hidden px-3 pb-2.5 bg-[#0a0a0a]">
           <button
             type="button"
             onClick={() => setShowSearchModal(true)}
-            className={`flex-1 min-w-0 flex items-center gap-2 rounded-full px-3 py-2 text-left transition-colors ${
-              showSearchModal
-                ? 'bg-white/15 ring-1 ring-brand-primary/40'
-                : 'bg-white/10 hover:bg-white/15'
+            className={`w-full flex items-center gap-2 rounded-full bg-white pl-4 pr-1.5 py-1.5 text-left shadow-sm transition-shadow ${
+              showSearchModal ? 'ring-2 ring-brand-primary/50' : 'hover:shadow-md'
             }`}
             aria-label="Search products"
           >
-            <FiSearch className="shrink-0 w-4 h-4 text-gray-400" />
-            <span className="text-sm text-gray-400 truncate">Search products...</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsSidebarOpen(true)}
-            className="shrink-0 p-2 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
-            aria-label="Menu"
-          >
-            <FiMenu size={20} />
+            <span className="flex-1 min-w-0 text-sm text-gray-400 truncate">
+              Search for products, brands, categories...
+            </span>
+            <span className="shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-brand-primary to-[#b8181d] flex items-center justify-center text-white shadow-md shadow-brand-primary/30">
+              <FiSearch size={17} />
+            </span>
           </button>
         </div>
 
-        {/* ─── DESKTOP: strip 1 — logo, search, actions (black) ─── */}
-        <div className="hidden md:block border-b border-white/10">
+        {/* ─── MOBILE: tier 3 — quick links + categories entry ─── */}
+        <div className="md:hidden flex items-center gap-4 px-3 py-2 bg-[#141414] border-t border-white/[0.06] overflow-x-auto no-scrollbar">
+          <Link
+            href="/category"
+            className="flex items-center gap-2 shrink-0 py-0.5 group"
+          >
+            <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white/10 text-white group-hover:bg-brand-primary/25 transition-colors">
+              <FiGrid size={14} strokeWidth={2.5} />
+            </span>
+            <span className="text-[11px] font-bold uppercase tracking-wide text-white whitespace-nowrap">
+              All Categories
+            </span>
+          </Link>
+          <span className="w-px h-6 bg-white/10 shrink-0" aria-hidden />
+          {QUICK_NAV_LINKS.map((item) => (
+            <QuickNavLink key={item.label} {...item} />
+          ))}
+        </div>
+
+        {/* ─── DESKTOP: tier 1 — logo, search, actions ─── */}
+        <div className="hidden md:block border-b border-white/[0.08]">
           <div className="max-w-site mx-auto px-4 lg:px-6">
-            <div className="flex items-center gap-3 lg:gap-4 py-3 w-full min-w-0">
-              <Link href="/" className="shrink-0" aria-label="Home">
-                <AppleFaceTextLogo height={30} variant="onDark" className="h-7 w-auto" />
+            <div className="flex items-center gap-4 lg:gap-6 py-3.5 w-full min-w-0">
+              <Link href="/" className="flex items-center gap-2.5 shrink-0 group" aria-label="Home">
+                <AppleFaceMark size={40} className="w-10 h-10 object-contain shrink-0 transition-transform group-hover:scale-105" />
+                <AppleFaceTextLogo height={32} variant="onDark" className="h-8 w-auto" />
               </Link>
 
               <form
                 onSubmit={handleSearchSubmit}
-                className={`flex-1 min-w-0 w-full flex items-center gap-2 bg-white/10 border rounded-lg px-4 py-2.5 transition-colors ${isSearchOpen || showSearchModal ? 'border-brand-primary ring-1 ring-brand-primary/30' : 'border-white/15 hover:border-white/25'}`}
+                className={`flex-1 min-w-0 max-w-3xl mx-auto flex items-center rounded-full bg-white pl-5 pr-1.5 py-1 shadow-sm transition-shadow ${
+                  isSearchOpen || showSearchModal ? 'ring-2 ring-brand-primary/40' : 'hover:shadow-md'
+                }`}
               >
-                <FiSearch className={`${isSearchOpen || showSearchModal ? 'text-brand-primary' : 'text-gray-400'} shrink-0 w-5 h-5`} />
                 <input
                   type="text"
                   value={searchQuery}
                   onFocus={() => setShowSearchModal(true)}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search for products, brands..."
-                  className="bg-transparent border-none outline-none text-base text-white placeholder-gray-400 min-w-0 w-full flex-1"
+                  placeholder="Search for products, brands, categories..."
+                  className="bg-transparent border-none outline-none text-[15px] text-gray-900 placeholder-gray-400 min-w-0 w-full flex-1"
                   style={{ fontSize: '16px' }}
                 />
                 {(showSearchModal || searchQuery) && (
-                  <button type="button" onClick={() => { setSearchQuery(''); closeSearchModal(); }} className="text-gray-400 hover:text-white p-1 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => { setSearchQuery(''); closeSearchModal(); }}
+                    className="text-gray-400 hover:text-gray-600 p-1.5 shrink-0 mr-1"
+                    aria-label="Clear search"
+                  >
                     <FiX size={16} />
                   </button>
                 )}
+                <button
+                  type="submit"
+                  className="shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-brand-primary to-[#b8181d] text-white flex items-center justify-center hover:brightness-110 transition-all shadow-md shadow-brand-primary/25"
+                  aria-label="Search"
+                >
+                  <FiSearch size={18} />
+                </button>
               </form>
 
-              <div className="flex items-center gap-0.5 shrink-0">
-                <Link
-                  href="/track-order"
-                  className="text-gray-300 hover:text-white p-2.5 rounded-lg hover:bg-white/10 transition-all"
-                  aria-label="Track order"
-                  title="Track order"
+              <div className="flex items-center gap-1 lg:gap-2 shrink-0">
+                <button
+                  type="button"
+                  onClick={handleUserClick}
+                  className="flex items-center gap-2.5 pl-1 pr-2 py-1.5 rounded-xl hover:bg-white/10 transition-colors text-left"
+                  aria-label="Account"
                 >
-                  <FiTruck size={18} />
-                </Link>
-                <Link href="/wishlist" className="relative text-gray-300 hover:text-white p-2.5 rounded-lg hover:bg-white/10 transition-all" aria-label="Wishlist">
-                  <FiHeart size={18} />
-                  {hydrated && wishlistCount > 0 && (
-                    <span className="absolute top-1 right-1 bg-brand-primary text-white text-[8px] font-bold h-3.5 w-3.5 rounded-full flex items-center justify-center">
-                      {wishlistCount}
-                    </span>
-                  )}
-                </Link>
-                <button onClick={openCart} className="relative text-gray-300 hover:text-white p-2.5 rounded-lg hover:bg-white/10 transition-all" aria-label="Cart">
-                  <FiShoppingCart size={18} />
-                  {hydrated && cartCount > 0 && (
-                    <span className="absolute top-1 right-1 bg-brand-primary text-white text-[8px] font-bold h-3.5 w-3.5 rounded-full flex items-center justify-center">
-                      {cartCount}
-                    </span>
-                  )}
-                </button>
-                <button onClick={handleUserClick} className="text-gray-300 hover:text-white p-2.5 rounded-lg hover:bg-white/10 transition-all" aria-label="Account">
                   {user?.image ? (
-                    <div className="w-7 h-7 rounded-full overflow-hidden border border-white/20">
-                      <Image src={user.image} alt="Profile" width={28} height={28} className="w-full h-full object-cover" unoptimized />
+                    <div className="w-9 h-9 rounded-full overflow-hidden ring-2 ring-white/20 shrink-0">
+                      <Image src={user.image} alt="" width={36} height={36} className="w-full h-full object-cover" unoptimized />
                     </div>
                   ) : user ? (
-                    <div className="w-7 h-7 rounded-full bg-brand-primary flex items-center justify-center text-[10px] font-bold text-white">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-brand-primary to-[#b8181d] flex items-center justify-center text-sm font-bold text-white shrink-0">
                       {(user.first_name || user.name || 'U').charAt(0).toUpperCase()}
                     </div>
                   ) : (
-                    <FiUser size={18} />
+                    <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                      <FiUser size={18} className="text-white" />
+                    </div>
                   )}
+                  <div className="hidden lg:block min-w-0">
+                    <p className="text-sm font-bold text-white leading-tight">
+                      {user ? (user.first_name || user.name || 'My Account') : 'Join / Sign in'}
+                    </p>
+                    <p className="text-[11px] text-gray-400 leading-tight">My Account</p>
+                  </div>
+                  <FiChevronDown size={14} className="text-gray-500 hidden lg:block shrink-0" />
+                </button>
+
+                <Link
+                  href="/track-order"
+                  className="p-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                  aria-label="Track order"
+                  title="Track order"
+                >
+                  <FiTruck size={19} />
+                </Link>
+
+                <Link
+                  href="/wishlist"
+                  className="relative p-2.5 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                  aria-label="Wishlist"
+                >
+                  <FiHeart size={19} />
+                  <CountBadge count={hydrated ? wishlistCount : 0} />
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={openCart}
+                  className="flex items-center gap-2 pl-2 pr-2.5 py-1.5 rounded-xl text-gray-300 hover:text-white hover:bg-white/10 transition-all"
+                  aria-label="Cart"
+                >
+                  <span className="relative">
+                    <FiShoppingCart size={20} />
+                    <CountBadge count={hydrated ? cartCount : 0} />
+                  </span>
+                  <span className="text-sm font-semibold text-white hidden xl:inline">Cart</span>
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ─── DESKTOP: strip 2 — categories + offers (unchanged) ─── */}
-        <div className="hidden md:block bg-white border-b border-gray-200">
+        {/* ─── DESKTOP: tier 2 — categories + quick nav (dark) ─── */}
+        <div className="hidden md:block bg-[#141414] border-b border-white/[0.06]">
           <div className="max-w-site mx-auto px-4 lg:px-6">
-            <div className="flex items-center gap-3 pb-2.5 border-t border-gray-100 pt-2 min-h-[44px]">
-              <div className="flex items-center gap-1 flex-1 min-w-0 overflow-x-auto no-scrollbar">
-                <Link
-                  href="/category"
-                  className="shrink-0 text-sm font-bold text-gray-900 hover:text-brand-primary px-3 py-2 rounded-md hover:bg-red-50 transition-colors whitespace-nowrap"
-                >
-                  All
-                </Link>
+            <div className="flex items-center gap-4 lg:gap-6 min-h-[46px] py-2">
+              <Link
+                href="/category"
+                className="flex items-center gap-2 shrink-0 py-1.5 pr-3 border-r border-white/10 group"
+              >
+                <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-white/10 text-white group-hover:bg-brand-primary/25 transition-colors">
+                  <FiGrid size={16} strokeWidth={2.5} />
+                </span>
+                <span className="text-xs font-bold uppercase tracking-wider text-white whitespace-nowrap group-hover:text-brand-primary transition-colors">
+                  All Categories
+                </span>
+              </Link>
+
+              <div className="flex items-center gap-0.5 flex-1 min-w-0 overflow-x-auto no-scrollbar">
                 {orderedDisplayCategories.length > 0 ? (
                   orderedDisplayCategories.map((cat, idx) => (
                     <Link
                       key={cat.id || idx}
                       href={getCategoryHref(cat)}
-                      className="shrink-0 text-sm font-semibold text-gray-600 hover:text-brand-primary px-3 py-2 rounded-md hover:bg-gray-50 transition-colors whitespace-nowrap capitalize"
+                      className="shrink-0 text-sm font-medium text-gray-400 hover:text-white px-3 py-2 rounded-lg hover:bg-white/[0.06] transition-colors whitespace-nowrap capitalize"
                     >
                       {cat.name}
                     </Link>
                   ))
                 ) : (
-                  <span className="text-xs text-gray-400 px-2">Loading categories...</span>
+                  <span className="text-xs text-gray-500 px-2">Loading categories...</span>
                 )}
               </div>
-              <Link
-                href="/special-offers"
-                className="shrink-0 flex items-center gap-1.5 text-brand-primary text-sm font-bold px-3 py-2 rounded-lg hover:bg-red-50 transition-colors whitespace-nowrap ml-2"
-              >
-                <FiGift size={15} />
-                Offers
-                <span className="bg-brand-primary text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">Hot</span>
-              </Link>
+
+              <div className="flex items-center gap-4 lg:gap-5 shrink-0 pl-2 border-l border-white/10">
+                {QUICK_NAV_LINKS.map((item) => (
+                  <QuickNavLink key={item.label} {...item} />
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import ProductCard from "../Shared/ProductCard";
 import SectionIntro from "../Shared/SectionIntro";
+import { SITE_GUTTER } from "../Shared/SectionShell";
 import { FiZap } from "react-icons/fi";
 
 export default function FlashSale({ products = [] }) {
@@ -54,8 +55,9 @@ export default function FlashSale({ products = [] }) {
   const mobileGridProducts = displayProducts.slice(0, 6);
 
   return (
-    <section className="bg-[#0a0a0a] text-white py-10 md:py-16 border-t-2 border-brand-primary">
-      <div className="max-w-site mx-auto px-4 md:px-6 lg:px-8">
+    <section className="py-10 md:py-16">
+      <div className={`max-w-site mx-auto w-full ${SITE_GUTTER}`}>
+        <div className="bg-[#0a0a0a] text-white rounded-lg border-t-2 border-brand-primary py-8 md:py-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
           <div className="flex items-center gap-3">
             <FiZap className="text-brand-primary w-5 h-5 md:w-6 md:h-6 shrink-0" />
@@ -129,6 +131,7 @@ export default function FlashSale({ products = [] }) {
             No flash sale products available right now.
           </div>
         )}
+        </div>
       </div>
     </section>
   );

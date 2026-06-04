@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { FaFacebook, FaTiktok, FaPhoneAlt, FaWhatsapp } from 'react-icons/fa';
 import AppleFaceTextLogo from '../Brand/AppleFaceTextLogo';
 import { HiOutlineMail, HiOutlineLocationMarker } from 'react-icons/hi';
@@ -133,6 +134,27 @@ export default function Footer() {
               <li><Link href="/warranty" className="hover:text-brand-primary transition-colors">Warranty</Link></li>
               <li><Link href="/refund" className="hover:text-brand-primary transition-colors">Returns</Link></li>
             </ul>
+          </div>
+        </div>
+      </div>
+
+      <div className="border-t border-gray-800 bg-black">
+        <div className="max-w-site mx-auto px-4 md:px-6 lg:px-8 py-6 md:py-7">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+            <Link href="/" className="shrink-0" aria-label="Home">
+              <AppleFaceTextLogo height={36} variant="onDark" className="h-9 w-auto" />
+            </Link>
+            <p className="text-sm font-bold text-white shrink-0">Accept:</p>
+            <div className="min-w-0 flex-1 overflow-x-auto no-scrollbar">
+              <Image
+                src="/payment-methods.png"
+                alt="Accepted payment methods including Visa, Mastercard, bKash, Nagad, and Rocket"
+                width={1200}
+                height={80}
+                className="h-10 sm:h-11 md:h-12 w-auto max-w-none"
+                unoptimized
+              />
+            </div>
           </div>
         </div>
       </div>

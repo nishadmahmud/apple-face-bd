@@ -41,7 +41,7 @@ export default function Testimonials() {
         </div>
       </div>
 
-      <div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-2 -mx-1 px-1">
+      <div className="md:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-2">
         {reviews.map((review) => (
           <div key={review.id} className="w-[85vw] max-w-sm shrink-0 snap-center">
             <ReviewCard review={review} compact />

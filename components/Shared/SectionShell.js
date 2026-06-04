@@ -4,6 +4,9 @@ const VARIANTS = {
   dark: "bg-[#0a0a0a] text-white",
 };
 
+/** Shared horizontal padding — keep content inside max-w-site on all breakpoints */
+export const SITE_GUTTER = "px-4 md:px-6 lg:px-8";
+
 export default function SectionShell({
   children,
   variant = "light",
@@ -17,20 +20,29 @@ export default function SectionShell({
   const paddingClass = tight ? "py-8 md:py-12" : "py-10 md:py-16";
   const variantClass = VARIANTS[variant] || VARIANTS.light;
 
-  const inner = inset ? (
-    <div className="rounded-xl border border-gray-200/80 bg-white p-4 md:p-6 shadow-sm">
-      {children}
-    </div>
-  ) : (
-    children
-  );
+  let inner = children;
+
+  if (inset) {
+    const panel = (
+      <div className="rounded-xl border border-gray-200/80 bg-white p-4 md:p-6 shadow-sm">
+        {children}
+      </div>
+    );
+    inner =
+      variant !== "light" ? (
+        <div className={`${variantClass} rounded-lg p-3 md:p-4`}>{panel}</div>
+      ) : (
+        panel
+      );
+  } else if (variant !== "light") {
+    inner = <div className={`${variantClass} rounded-lg`}>{children}</div>;
+  }
 
   return (
-    <section
-      id={id}
-      className={`${variantClass} ${paddingClass} ${borderClass} ${className}`}
-    >
-      <div className="max-w-site mx-auto px-4 md:px-6 lg:px-8">{inner}</div>
+    <section id={id} className={`${borderClass} ${className}`}>
+      <div className={`max-w-site mx-auto w-full ${SITE_GUTTER} ${paddingClass}`}>
+        {inner}
+      </div>
     </section>
   );
 }

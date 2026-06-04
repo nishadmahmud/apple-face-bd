@@ -4,11 +4,21 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { SITE_GUTTER } from "../Shared/SectionShell";
 
 const AUTOPLAY_MS = 5000;
 const SWIPE_THRESHOLD = 48;
 
-function HeroCarousel({ slides = [] }) {
+const MOBILE_CAROUSEL_H =
+  "h-[220px] sm:h-[260px]";
+const DESKTOP_HERO_H =
+  "md:h-[400px] lg:h-[420px]";
+
+function HeroCarousel({
+  slides = [],
+  className = "",
+  showArrows = true,
+}) {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [reduceMotion, setReduceMotion] = useState(false);
   const timerRef = useRef(null);
@@ -103,7 +113,7 @@ function HeroCarousel({ slides = [] }) {
 
   return (
     <div
-      className="w-full relative overflow-hidden rounded-none md:rounded-lg h-[220px] sm:h-[260px] md:h-[420px] lg:h-[440px] bg-gray-900 group touch-pan-y"
+      className={`w-full relative overflow-hidden rounded-lg bg-gray-900 group touch-pan-y ${className}`}
       role="region"
       aria-roledescription="carousel"
       aria-label="Promotional slides"
@@ -147,25 +157,29 @@ function HeroCarousel({ slides = [] }) {
 
       {slideCount > 1 && (
         <>
-          <button
-            type="button"
-            onClick={() => handleManualNav(goPrev)}
-            className="hidden md:flex absolute left-3 lg:left-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 lg:w-11 lg:h-11 rounded-full bg-black/70 text-white border border-white/20 items-center justify-center hover:bg-brand-primary transition-colors"
-            aria-label="Previous slide"
-          >
-            <FiChevronLeft size={22} />
-          </button>
-          <button
-            type="button"
-            onClick={() => handleManualNav(goNext)}
-            className="hidden md:flex absolute right-3 lg:right-4 top-1/2 -translate-y-1/2 z-30 w-10 h-10 lg:w-11 lg:h-11 rounded-full bg-black/70 text-white border border-white/20 items-center justify-center hover:bg-brand-primary transition-colors"
-            aria-label="Next slide"
-          >
-            <FiChevronRight size={22} />
-          </button>
+          {showArrows && (
+            <>
+              <button
+                type="button"
+                onClick={() => handleManualNav(goPrev)}
+                className="absolute left-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/70 text-white border border-white/20 items-center justify-center hover:bg-brand-primary transition-colors hidden md:flex"
+                aria-label="Previous slide"
+              >
+                <FiChevronLeft size={22} />
+              </button>
+              <button
+                type="button"
+                onClick={() => handleManualNav(goNext)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-black/70 text-white border border-white/20 items-center justify-center hover:bg-brand-primary transition-colors hidden md:flex"
+                aria-label="Next slide"
+              >
+                <FiChevronRight size={22} />
+              </button>
+            </>
+          )}
 
           <div
-            className="absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 z-30 flex gap-1.5 md:gap-2"
+            className="absolute bottom-3 md:bottom-4 left-1/2 -translate-x-1/2 z-30 flex gap-1.5 md:gap-2"
             role="tablist"
             aria-label="Slide indicators"
           >
@@ -191,29 +205,55 @@ function HeroCarousel({ slides = [] }) {
   );
 }
 
+/** Mobile: 2-column strip under slider */
 function HeroBannerStrip({ banners = [] }) {
   const displayBanners = Array.isArray(banners) ? banners : [];
   if (displayBanners.length === 0) return null;
 
-  const gridCols =
-    displayBanners.length === 1
-      ? "grid-cols-1 md:grid-cols-1"
-      : "grid-cols-2 md:grid-cols-3";
-
   return (
     <div
-      className={`grid ${gridCols} gap-2 md:gap-4 px-4 md:px-0`}
+      className="grid grid-cols-2 gap-1.5 md:hidden"
       role="list"
       aria-label="Featured promotions"
     >
-      {displayBanners.map((banner, idx) => (
+      {displayBanners.slice(0, 2).map((banner, idx) => (
         <Link
           key={banner.id ?? idx}
           href={banner.link || "/"}
           role="listitem"
-          className={`relative overflow-hidden rounded-md bg-gray-100 border border-gray-200/80 h-[88px] sm:h-[100px] md:h-[150px] lg:h-[160px] hover:ring-2 hover:ring-brand-primary/40 transition-all duration-300 group ${
-            idx >= 2 ? "hidden md:block" : "block"
-          }`}
+          className="relative overflow-hidden rounded-md bg-gray-100 border border-gray-200/80 h-[88px] sm:h-[100px] hover:ring-2 hover:ring-brand-primary/40 transition-all duration-300 group block"
+        >
+          <Image
+            src={banner.image || "/no-image.svg"}
+            alt={banner.title || `Promotion ${idx + 1}`}
+            fill
+            unoptimized
+            className="object-cover object-center group-hover:scale-105 transition-transform duration-500"
+            priority={idx === 0}
+          />
+        </Link>
+      ))}
+    </div>
+  );
+}
+
+/** Desktop: stacked banners beside slider */
+function HeroSideBanners({ banners = [] }) {
+  const sideBanners = Array.isArray(banners) ? banners.slice(0, 2) : [];
+  if (sideBanners.length === 0) return null;
+
+  return (
+    <div
+      className="hidden md:flex flex-col gap-2 h-full min-h-0"
+      role="list"
+      aria-label="Featured promotions"
+    >
+      {sideBanners.map((banner, idx) => (
+        <Link
+          key={banner.id ?? idx}
+          href={banner.link || "/"}
+          role="listitem"
+          className="relative flex-1 min-h-0 overflow-hidden rounded-lg bg-gray-100 border border-gray-200/80 hover:ring-2 hover:ring-brand-primary/40 transition-all duration-300 group block"
         >
           <Image
             src={banner.image || "/no-image.svg"}
@@ -230,17 +270,36 @@ function HeroBannerStrip({ banners = [] }) {
 }
 
 export default function HomeHero({ slides = [], banners = [] }) {
-  const hasStrip = Array.isArray(banners) && banners.length > 0;
+  const displayBanners = Array.isArray(banners) ? banners : [];
+  const hasBanners = displayBanners.length > 0;
+  const desktopSplit = hasBanners;
 
   return (
     <section
-      className="w-full bg-card-bg pt-0 md:pt-4 pb-5 md:pb-8 border-b border-gray-200/80"
+      className="border-b border-gray-200/80 pt-0 md:pt-4 pb-5 md:pb-8"
       aria-label="Home hero"
     >
-      <div className="max-w-site mx-auto px-0 md:px-4 lg:px-8">
-        <div className={hasStrip ? "space-y-3 md:space-y-4" : ""}>
-          <HeroCarousel slides={slides} />
-          {hasStrip && <HeroBannerStrip banners={banners} />}
+      <div className={`max-w-site mx-auto w-full ${SITE_GUTTER}`}>
+        {/* Mobile: slider + 2 banners below */}
+        <div className={`md:hidden ${hasBanners ? "space-y-2" : ""}`}>
+          <HeroCarousel slides={slides} className={MOBILE_CAROUSEL_H} />
+          {hasBanners && <HeroBannerStrip banners={displayBanners} />}
+        </div>
+
+        {/* Desktop: slider left + 2 stacked banners right */}
+        <div
+          className={
+            desktopSplit
+              ? `hidden md:grid md:grid-cols-[minmax(0,3fr)_minmax(0,1fr)] gap-2 items-stretch ${DESKTOP_HERO_H}`
+              : `hidden md:block ${DESKTOP_HERO_H}`
+          }
+        >
+          <HeroCarousel
+            slides={slides}
+            className="h-full min-h-0 w-full"
+            showArrows
+          />
+          {desktopSplit && <HeroSideBanners banners={displayBanners} />}
         </div>
       </div>
     </section>
