@@ -213,6 +213,9 @@ export default async function Home() {
       })
     : [];
 
+  const campaignProducts =
+    featuredProducts.length > 6 ? featuredProducts.slice(6, 12) : featuredProducts;
+
   const blogPosts = getDummyBlogPosts();
   const topBrands = topBrandsRes?.success && Array.isArray(topBrandsRes?.data) ? topBrandsRes.data : [];
 
@@ -223,15 +226,15 @@ export default async function Home() {
       <NewArrivals products={newArrivals} />
       <FlashSale products={flashSaleProducts} />
       <FeaturedProducts products={featuredProducts} />
-      {wideBanners[0] && <WidePromoBanner banner={wideBanners[0]} />}
+      {wideBanners[0] && <WidePromoBanner banner={wideBanners[0]} variant="light" />}
       <BrandProductSection brands={topBrands} />
       <BestDeals deals={bestDealsCards} />
       <CampaignShowcase
         title="Top Digital Trends"
         splitBanners={campaignBanners}
-        products={featuredProducts}
+        products={campaignProducts}
       />
-      {wideBanners[1] && <WidePromoBanner banner={wideBanners[1]} />}
+      {wideBanners[1] && <WidePromoBanner banner={wideBanners[1]} variant="muted" />}
       <BlogTips posts={blogPosts} />
       <Testimonials />
       <FAQ />

@@ -146,7 +146,7 @@ export default function Header({ categories = [] }) {
         <div className="md:hidden flex items-center gap-2 px-3 py-2.5 bg-[#0a0a0a] border-b border-white/10">
           <Link href="/" className="flex items-center gap-2 min-w-0 shrink" aria-label="Home">
             <AppleFaceMark size={32} className="w-8 h-8 object-contain shrink-0" />
-            <AppleFaceTextLogo height={22} variant="onDark" className="h-5 w-auto max-w-[110px]" />
+            <AppleFaceTextLogo height={22} variant="onDark" className="h-5 w-auto" />
           </Link>
 
           <button

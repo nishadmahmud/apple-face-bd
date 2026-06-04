@@ -1,25 +1,38 @@
-import Link from 'next/link';
-import ProductCard from '../Shared/ProductCard';
-import SectionHeader from '../Shared/SectionHeader';
+import ProductCard from "../Shared/ProductCard";
+import SectionIntro from "../Shared/SectionIntro";
+import SectionShell from "../Shared/SectionShell";
 
 export default function FeaturedProducts({ products = [] }) {
-    const displayProducts = Array.isArray(products) ? products : [];
+  const displayProducts = Array.isArray(products) ? products : [];
+  const [featured, ...rest] = displayProducts;
+  const useBento = displayProducts.length >= 3;
 
-    return (
-        <section className="bg-[#f7f7f7] py-10 md:py-16 border-y border-gray-100">
-            <div className="max-w-site mx-auto px-4 md:px-6">
-                <SectionHeader title="Featured" highlight="Products" href="/category" />
+  return (
+    <SectionShell variant="light" border>
+      <SectionIntro title="Featured" highlight="Products" href="/category" />
 
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5">
-                    {displayProducts.length > 0 ? displayProducts.map((product, idx) => (
-                        <ProductCard key={product.id || idx} product={product} />
-                    )) : (
-                        <div className="col-span-full text-center py-10 text-gray-500 border border-dashed border-gray-300 rounded-lg bg-white">
-                            No featured products available right now.
-                        </div>
-                    )}
-                </div>
+      {displayProducts.length > 0 ? (
+        useBento ? (
+          <div className="grid grid-cols-2 lg:grid-cols-4 lg:grid-rows-2 gap-3 md:gap-4">
+            <div className="col-span-2 row-span-2 min-h-[280px] lg:min-h-0">
+              <ProductCard product={featured} />
             </div>
-        </section>
-    );
+            {rest.map((product, idx) => (
+              <ProductCard key={product.id || idx} product={product} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-5">
+            {displayProducts.map((product, idx) => (
+              <ProductCard key={product.id || idx} product={product} />
+            ))}
+          </div>
+        )
+      ) : (
+        <div className="text-center py-10 text-gray-500 border border-dashed border-gray-300 rounded-lg bg-card-bg">
+          No featured products available right now.
+        </div>
+      )}
+    </SectionShell>
+  );
 }

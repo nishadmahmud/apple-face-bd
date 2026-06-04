@@ -197,10 +197,8 @@ function HeroBannerStrip({ banners = [] }) {
 
   const gridCols =
     displayBanners.length === 1
-      ? "grid-cols-1"
-      : displayBanners.length === 2
-        ? "grid-cols-2"
-        : "grid-cols-3";
+      ? "grid-cols-1 md:grid-cols-1"
+      : "grid-cols-2 md:grid-cols-3";
 
   return (
     <div
@@ -213,7 +211,9 @@ function HeroBannerStrip({ banners = [] }) {
           key={banner.id ?? idx}
           href={banner.link || "/"}
           role="listitem"
-          className="relative block overflow-hidden rounded-md bg-gray-100 border border-gray-200/80 h-[88px] sm:h-[100px] md:h-[150px] lg:h-[160px] hover:ring-2 hover:ring-brand-primary/40 transition-all duration-300 group"
+          className={`relative overflow-hidden rounded-md bg-gray-100 border border-gray-200/80 h-[88px] sm:h-[100px] md:h-[150px] lg:h-[160px] hover:ring-2 hover:ring-brand-primary/40 transition-all duration-300 group ${
+            idx >= 2 ? "hidden md:block" : "block"
+          }`}
         >
           <Image
             src={banner.image || "/no-image.svg"}
