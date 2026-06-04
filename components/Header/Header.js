@@ -18,7 +18,6 @@ import LoadingSpinner from '../Shared/LoadingSpinner';
 /** Tier-2 only — routes not already in the top action bar */
 const QUICK_NAV_LINKS = [
   { href: '/special-offers', label: 'Flash Deals', icon: FiZap, iconWrap: 'bg-amber-500/20 text-amber-400' },
-  { href: '/compare', label: 'Compare', icon: FiShuffle, iconWrap: 'bg-brand-primary/20 text-brand-primary' },
   { href: '/blogs', label: 'Blog', icon: FiFileText, iconWrap: 'bg-violet-500/20 text-violet-400' },
   { href: '/contact', label: 'Contact', icon: FiMapPin, iconWrap: 'bg-emerald-500/20 text-emerald-400' },
 ];
@@ -158,7 +157,7 @@ export default function Header({ categories = [] }) {
 
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty('--header-offset', isScrolled ? '120px' : '132px');
+    root.style.setProperty('--header-offset', isScrolled ? '50px' : '54px');
     root.style.setProperty('--header-offset-md', isScrolled ? '108px' : '118px');
     return () => {
       root.style.removeProperty('--header-offset');
@@ -176,86 +175,35 @@ export default function Header({ categories = [] }) {
     <>
       <header className={`w-full sticky top-0 z-[90] bg-[#0a0a0a] transition-shadow duration-300 ${isScrolled ? 'shadow-lg shadow-black/30' : 'shadow-sm'}`}>
 
-        {/* ─── MOBILE: tier 1 — logo + actions ─── */}
-        <div className="md:hidden flex items-center justify-between gap-2 px-3 py-2.5 bg-[#0a0a0a]">
-          <Link href="/" className="flex items-center gap-2 min-w-0 shrink" aria-label="Home">
-            <AppleFaceMark size={34} className="w-[34px] h-[34px] object-contain shrink-0 drop-shadow-sm" />
-            <AppleFaceTextLogo height={22} variant="onDark" className="h-5 w-auto" />
+        {/* ─── MOBILE: logo, search, menu ─── */}
+        <div className="md:hidden flex items-center gap-2 px-3 py-2.5 bg-[#0a0a0a] border-b border-white/[0.08]">
+          <Link href="/" className="flex items-center gap-1.5 shrink-0 min-w-0" aria-label="Home">
+            <AppleFaceMark size={32} className="w-8 h-8 object-contain shrink-0" />
+            <AppleFaceTextLogo height={20} variant="onDark" className="h-5 w-auto shrink-0" />
           </Link>
 
-          <div className="flex items-center gap-0.5 shrink-0">
-            <button
-              type="button"
-              onClick={handleUserClick}
-              className="p-2 rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
-              aria-label="Account"
-            >
-              <FiUser size={19} />
-            </button>
-            <Link
-              href="/wishlist"
-              className="relative p-2 rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
-              aria-label="Wishlist"
-            >
-              <FiHeart size={19} />
-              <CountBadge count={hydrated ? wishlistCount : 0} />
-            </Link>
-            <button
-              type="button"
-              onClick={openCart}
-              className="relative p-2 rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
-              aria-label="Cart"
-            >
-              <FiShoppingCart size={19} />
-              <CountBadge count={hydrated ? cartCount : 0} />
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsSidebarOpen(true)}
-              className="p-2 rounded-full text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
-              aria-label="Menu"
-            >
-              <FiMenu size={20} />
-            </button>
-          </div>
-        </div>
-
-        {/* ─── MOBILE: tier 2 — pill search ─── */}
-        <div className="md:hidden px-3 pb-2.5 bg-[#0a0a0a]">
           <button
             type="button"
             onClick={() => setShowSearchModal(true)}
-            className={`w-full flex items-center gap-2 rounded-full bg-white pl-4 pr-1.5 py-1.5 text-left shadow-sm transition-shadow ${
+            className={`flex-1 min-w-0 flex items-center gap-1.5 rounded-full bg-white pl-3 pr-1 py-1 text-left shadow-sm transition-shadow ${
               showSearchModal ? 'ring-2 ring-brand-primary/50' : 'hover:shadow-md'
             }`}
             aria-label="Search products"
           >
-            <span className="flex-1 min-w-0 text-sm text-gray-400 truncate">
-              Search for products, brands, categories...
-            </span>
-            <span className="shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-brand-primary to-[#b8181d] flex items-center justify-center text-white shadow-md shadow-brand-primary/30">
-              <FiSearch size={17} />
+            <span className="flex-1 min-w-0 text-xs text-gray-400 truncate">Search...</span>
+            <span className="shrink-0 w-8 h-8 rounded-full bg-gradient-to-br from-brand-primary to-[#b8181d] flex items-center justify-center text-white">
+              <FiSearch size={15} />
             </span>
           </button>
-        </div>
 
-        {/* ─── MOBILE: tier 3 — quick links + categories entry ─── */}
-        <div className="md:hidden flex items-center gap-4 px-3 py-2 bg-[#141414] border-t border-white/[0.06] overflow-x-auto no-scrollbar">
-          <Link
-            href="/category"
-            className="flex items-center gap-2 shrink-0 py-0.5 group"
+          <button
+            type="button"
+            onClick={() => setIsSidebarOpen(true)}
+            className="shrink-0 p-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+            aria-label="Menu"
           >
-            <span className="flex items-center justify-center w-7 h-7 rounded-lg bg-white/10 text-white group-hover:bg-brand-primary/25 transition-colors">
-              <FiGrid size={14} strokeWidth={2.5} />
-            </span>
-            <span className="text-[11px] font-bold uppercase tracking-wide text-white whitespace-nowrap">
-              All Categories
-            </span>
-          </Link>
-          <span className="w-px h-6 bg-white/10 shrink-0" aria-hidden />
-          {QUICK_NAV_LINKS.map((item) => (
-            <QuickNavLink key={item.label} {...item} />
-          ))}
+            <FiMenu size={22} />
+          </button>
         </div>
 
         {/* ─── DESKTOP: tier 1 — logo, search, actions ─── */}
@@ -426,7 +374,8 @@ export default function Header({ categories = [] }) {
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search phones, laptops, gadgets..."
                       autoFocus
-                      className="bg-transparent border-none outline-none text-[16px] text-gray-900 placeholder-gray-400 min-w-0 w-full flex-1"
+                      className="bg-transparent border-none outline-none text-base text-gray-900 placeholder-gray-400 min-w-0 w-full flex-1"
+                      style={{ fontSize: '16px' }}
                     />
                     {searchQuery && (
                       <button
