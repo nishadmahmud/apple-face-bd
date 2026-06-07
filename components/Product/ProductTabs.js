@@ -8,8 +8,21 @@ import { useRecentlyViewed } from '../../context/RecentlyViewedContext';
 /** Prevent awkward wraps after hyphens in specs like "6.9-inch" — text nodes only, not tags/URLs. */
 function normalizeDescriptionHtml(html) {
     if (!html || typeof html !== 'string') return '';
+
+    const stripBackgroundFromStyle = (styleValue) =>
+        styleValue
+            .replace(/\s*background(?:-color)?\s*:\s*[^;]+;?/gi, '')
+            .replace(/\s*;\s*;/g, ';')
+            .trim()
+            .replace(/^;|;$/g, '');
+
     return html.replace(/(<[^>]+>)|([^<]+)/g, (_match, tag, text) => {
-        if (tag) return tag;
+        if (tag) {
+            return tag.replace(/\sstyle=(["'])([\s\S]*?)\1/i, (_m, quote, styles) => {
+                const cleaned = stripBackgroundFromStyle(styles);
+                return cleaned ? ` style=${quote}${cleaned}${quote}` : '';
+            });
+        }
         if (text) return text.replace(/(\d(?:\.\d+)?)-([a-zA-Z])/g, '$1\u2011$2');
         return _match;
     });

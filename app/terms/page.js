@@ -2,15 +2,15 @@ import LegalPageLayout from '../../components/Shared/LegalPageLayout';
 import { SITE_INFO } from '../../lib/siteInfo';
 
 export const metadata = {
-    title: 'Terms & Conditions | Apple Face BD',
-    description: 'Read our terms and conditions for using Apple Face BD services and products.',
+    title: 'Terms & Conditions | Apple Face',
+    description: 'Read our terms and conditions for using Apple Face services and products.',
 };
 
 const sections = [
     {
         title: '1. General Terms',
         content:
-            'By accessing and placing an order with Apple Face BD, you confirm that you agree to and are bound by the terms and conditions contained herein. These terms apply to the entire website and any email or other communication between you and Apple Face BD.',
+            'By accessing and placing an order with Apple Face, you confirm that you agree to and are bound by the terms and conditions contained herein. These terms apply to the entire website and any email or other communication between you and Apple Face.',
     },
     {
         title: '2. Products & Pricing',
@@ -43,12 +43,12 @@ const sections = [
     {
         title: '6. Intellectual Property',
         content:
-            'All content on this website, including but not limited to text, images, graphics, logos, and software, is the property of Apple Face BD or its content suppliers and is protected by intellectual property laws.',
+            'All content on this website, including but not limited to text, images, graphics, logos, and software, is the property of Apple Face or its content suppliers and is protected by intellectual property laws.',
     },
     {
         title: '7. Limitation of Liability',
         content:
-            'Apple Face BD shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of our services or products purchased through our platform.',
+            'Apple Face shall not be liable for any indirect, incidental, special, consequential, or punitive damages resulting from your use of our services or products purchased through our platform.',
     },
     {
         title: '8. Contact',
@@ -63,7 +63,7 @@ export default function TermsPage() {
             title="Terms &"
             highlight="Conditions"
             meta="Last updated: February 2026"
-            intro="Please read these terms and conditions carefully before using Apple Face BD's website and services. By using our platform, you agree to be bound by these terms."
+            intro="Please read these terms and conditions carefully before using Apple Face's website and services. By using our platform, you agree to be bound by these terms."
             sections={sections}
         />
     );

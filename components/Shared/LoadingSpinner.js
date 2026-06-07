@@ -10,7 +10,7 @@ const SIZE_MAP = {
 };
 
 /**
- * Apple Face BD loader — simple ring (brand red accent).
+ * Apple Face loader — simple ring (brand red accent).
  * Use showBrand on full-page loads only; inline/button uses ring only.
  */
 export default function LoadingSpinner({

@@ -2,8 +2,8 @@ import LegalPageLayout from '../../components/Shared/LegalPageLayout';
 import { SITE_INFO } from '../../lib/siteInfo';
 
 export const metadata = {
-    title: 'Privacy Policy | Apple Face BD',
-    description: 'Apple Face BD privacy policy — how we collect, use, and protect your personal information.',
+    title: 'Privacy Policy | Apple Face',
+    description: 'Apple Face privacy policy — how we collect, use, and protect your personal information.',
 };
 
 const sections = [
@@ -78,7 +78,7 @@ export default function PrivacyPage() {
             title="Privacy"
             highlight="Policy"
             meta="Last updated: February 2026"
-            intro="At Apple Face BD, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or make a purchase."
+            intro="At Apple Face, we are committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website or make a purchase."
             sections={sections}
         />
     );

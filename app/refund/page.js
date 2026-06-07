@@ -2,7 +2,7 @@ import Link from 'next/link';
 import LegalPageLayout from '../../components/Shared/LegalPageLayout';
 
 export const metadata = {
-    title: 'Refund Policy | Apple Face BD',
+    title: 'Refund Policy | Apple Face',
     description: 'Our refund and return policy. Learn about our hassle-free return process.',
 };
 

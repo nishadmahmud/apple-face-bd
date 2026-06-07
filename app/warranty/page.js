@@ -2,15 +2,15 @@ import Link from 'next/link';
 import LegalPageLayout from '../../components/Shared/LegalPageLayout';
 
 export const metadata = {
-    title: 'Warranty Policy | Apple Face BD',
-    description: 'Learn about our warranty policy for electronics and gadgets purchased from Apple Face BD.',
+    title: 'Warranty Policy | Apple Face',
+    description: 'Learn about our warranty policy for electronics and gadgets purchased from Apple Face.',
 };
 
 const sections = [
     {
         title: 'Warranty Coverage',
         content:
-            "All products sold through Apple Face BD come with the manufacturer's official warranty. The warranty period and coverage vary by product and brand. Warranty details are listed on each product page.",
+            "All products sold through Apple Face come with the manufacturer's official warranty. The warranty period and coverage vary by product and brand. Warranty details are listed on each product page.",
     },
     {
         title: 'Coverage by Product Type',

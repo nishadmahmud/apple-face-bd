@@ -787,7 +787,7 @@ export default function CheckoutPage() {
                                     </div>
                                     {selectedCareTotal > 0 && (
                                         <div className="flex justify-between text-sm text-gray-600">
-                                            <span>Apple Face BD Care+</span>
+                                            <span>Apple Face Care+</span>
                                             <span className="font-medium">{formatPrice(selectedCareTotal)}</span>
                                         </div>
                                     )}

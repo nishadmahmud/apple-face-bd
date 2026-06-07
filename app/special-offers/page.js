@@ -6,8 +6,8 @@ import PageHero from '../../components/Shared/PageHero';
 import EmptyState from '../../components/Shared/EmptyState';
 
 export const metadata = {
-    title: 'Special Offers | Apple Face BD',
-    description: 'Browse active campaign offers and discounted products at Apple Face BD.',
+    title: 'Special Offers | Apple Face',
+    description: 'Browse active campaign offers and discounted products at Apple Face.',
 };
 
 const formatDate = (value) => {
@@ -38,7 +38,7 @@ export default async function SpecialOffersPage() {
                 eyebrow="Live Campaigns"
                 title="Special"
                 highlight="Offers"
-                description="Explore active campaign deals and discounted products at Apple Face BD."
+                description="Explore active campaign deals and discounted products at Apple Face."
             />
 
             <div className="max-w-site mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-10">

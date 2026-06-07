@@ -25,11 +25,11 @@ export default function ProductSidebar({ product, pricingInfo, selectedCarePlans
     } else if (isCable) {
         carePlansToShow = [{ id: 'warranty_cable', name: '6 Month Instant Replacement Warranty', description: 'Instant replacement for manufacturing issues', price: 0 }];
     } else if (isLaptop) {
-        carePlansToShow = [{ id: 'care_laptop', name: 'Apple Face BD Care+ 1 Year', description: 'Brand new replacement support', price: Math.round(selectedPrice * 0.05) }];
+        carePlansToShow = [{ id: 'care_laptop', name: 'Apple Face Care+ 1 Year', description: 'Brand new replacement support', price: Math.round(selectedPrice * 0.05) }];
     } else if (isPhoneCategory) {
         carePlansToShow = [
-            { id: 'care_phone', name: 'Apple Face BD Care+ 1 Year', description: 'Brand new replacement support', price: Math.round(selectedPrice * 0.05) },
-            { id: 'screen_care', name: 'Apple Face BD Screen Care+ (730 days)', description: 'One-time display replacement (excluding physical damage)', price: Math.round(selectedPrice * 0.06) },
+            { id: 'care_phone', name: 'Apple Face Care+ 1 Year', description: 'Brand new replacement support', price: Math.round(selectedPrice * 0.05) },
+            { id: 'screen_care', name: 'Apple Face Screen Care+ (730 days)', description: 'One-time display replacement (excluding physical damage)', price: Math.round(selectedPrice * 0.06) },
             { id: 'parts', name: '1 Year Parts Warranty', description: 'Coverage for key internal parts', price: Math.round(selectedPrice * 0.04) }
         ];
     } else {
@@ -110,11 +110,11 @@ export default function ProductSidebar({ product, pricingInfo, selectedCarePlans
                 </div>
             </a>
 
-            {/* Apple Face BD Care+ - Commented out for now
+            {/* Apple Face Care+ - Commented out for now
             <div className="border border-gray-200 rounded-xl overflow-hidden">
                 <div className="bg-black text-white px-4 py-3 flex items-center gap-2">
                     <FiShield className="text-brand-primary" size={16} />
-                    <span className="font-bold text-sm">Apple Face BD Care+</span>
+                    <span className="font-bold text-sm">Apple Face Care+</span>
                 </div>
                 <div className="p-3 space-y-2 bg-white">
                     {carePlansToShow.map((plan) => {
@@ -143,7 +143,7 @@ export default function ProductSidebar({ product, pricingInfo, selectedCarePlans
 
                     <p className="text-[11px] text-gray-500 flex items-center gap-1 pt-1">
                         <FiCheckCircle className="text-green-600" />
-                        I agree to Apple Face BD&apos;s <a href="/terms" target="_blank" className="underline hover:text-brand-primary">terms & conditions</a>
+                        I agree to Apple Face&apos;s <a href="/terms" target="_blank" className="underline hover:text-brand-primary">terms & conditions</a>
                     </p>
                 </div>
             </div>

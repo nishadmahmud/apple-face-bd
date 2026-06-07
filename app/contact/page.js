@@ -4,8 +4,8 @@ import { SITE_INFO } from '../../lib/siteInfo';
 import PageHero from '../../components/Shared/PageHero';
 
 export const metadata = {
-  title: 'Contact Us | Apple Face BD',
-  description: 'Contact Apple Face BD for product help, orders, and store information in Dhaka, Bangladesh.',
+  title: 'Contact Us | Apple Face',
+  description: 'Contact Apple Face for product help, orders, and store information in Dhaka, Bangladesh.',
 };
 
 const outlet = SITE_INFO.outlets?.[0];
@@ -22,7 +22,7 @@ const socialLinks = [
   {
     name: 'Facebook',
     href: SITE_INFO.social.facebook,
-    label: 'Apple Face BD on Facebook',
+    label: 'Apple Face on Facebook',
   },
   {
     name: 'TikTok',
@@ -37,7 +37,7 @@ export default function ContactPage() {
       <PageHero
         eyebrow="Support"
         title="Contact"
-        highlight="Apple Face BD"
+        highlight="Apple Face"
         description="Call, WhatsApp, or email us — or visit our Kuril showroom in Dhaka."
       />
 
@@ -109,7 +109,7 @@ export default function ContactPage() {
                 <FiMapPin size={22} />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 text-lg">{outlet?.name || 'Apple Face BD'}</h3>
+                <h3 className="font-bold text-gray-900 text-lg">{outlet?.name || 'Apple Face'}</h3>
                 {(outlet?.details || []).map((line) => (
                   <p key={line} className="text-sm text-gray-600 mt-1">{line}</p>
                 ))}

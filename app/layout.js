@@ -24,22 +24,22 @@ const ogImage = "/apple-face-logo-square.png";
 
 export const metadata = {
   metadataBase: new URL(siteUrl),
-  title: "Apple Face BD | Premium Tech & Gadgets",
-  description: "Apple Face BD is your destination for authentic smartphones, laptops, gaming gear, and tech accessories in Bangladesh.",
+  title: "Apple Face | Premium Tech & Gadgets",
+  description: "Apple Face is your destination for authentic smartphones, laptops, gaming gear, and tech accessories in Bangladesh.",
   icons: {
     apple: ogImage,
   },
   openGraph: {
-    title: "Apple Face BD | Premium Tech & Gadgets",
+    title: "Apple Face | Premium Tech & Gadgets",
     description: "Authentic smartphones, laptops, gaming gear, and tech accessories in Bangladesh.",
     url: siteUrl,
-    siteName: "Apple Face BD",
+    siteName: "Apple Face",
     images: [
       {
         url: ogImage,
         width: 512,
         height: 512,
-        alt: "Apple Face BD logo",
+        alt: "Apple Face logo",
         type: "image/png",
       },
     ],
@@ -48,7 +48,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Apple Face BD | Premium Tech & Gadgets",
+    title: "Apple Face | Premium Tech & Gadgets",
     description: "Authentic smartphones, laptops, gaming gear, and tech accessories in Bangladesh.",
     images: [ogImage],
   },

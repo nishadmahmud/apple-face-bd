@@ -13,8 +13,8 @@ export function AuthProvider({ children }) {
     // Load user from localStorage on mount
     useEffect(() => {
         try {
-            const storedToken = localStorage.getItem("Apple Face BD BD_token");
-            const storedUser = localStorage.getItem("Apple Face BD BD_user");
+            const storedToken = localStorage.getItem("Apple Face BD_token");
+            const storedUser = localStorage.getItem("Apple Face BD_user");
 
             if (storedToken && storedUser) {
                 setToken(storedToken);
@@ -22,8 +22,8 @@ export function AuthProvider({ children }) {
             }
         } catch (error) {
             console.error("Failed to load auth state from localStorage", error);
-            localStorage.removeItem("Apple Face BD BD_token");
-            localStorage.removeItem("Apple Face BD BD_user");
+            localStorage.removeItem("Apple Face BD_token");
+            localStorage.removeItem("Apple Face BD_user");
         } finally {
             setLoading(false);
         }
@@ -32,8 +32,8 @@ export function AuthProvider({ children }) {
     // Persist auth state
     const persistAuth = useCallback((newToken, newUser) => {
         try {
-            localStorage.setItem("Apple Face BD BD_token", newToken);
-            localStorage.setItem("Apple Face BD BD_user", JSON.stringify(newUser));
+            localStorage.setItem("Apple Face BD_token", newToken);
+            localStorage.setItem("Apple Face BD_user", JSON.stringify(newUser));
         } catch (error) {
             console.error("Failed to persist auth state", error);
         }
@@ -94,8 +94,8 @@ export function AuthProvider({ children }) {
 
     // Logout
     const logout = useCallback(() => {
-        localStorage.removeItem("Apple Face BD BD_token");
-        localStorage.removeItem("Apple Face BD BD_user");
+        localStorage.removeItem("Apple Face BD_token");
+        localStorage.removeItem("Apple Face BD_user");
         setUser(null);
         setToken(null);
     }, []);
@@ -111,7 +111,7 @@ export function AuthProvider({ children }) {
                 const updatedUser = { ...user, ...profileData };
                 setUser(updatedUser);
                 try {
-                    localStorage.setItem("Apple Face BD BD_user", JSON.stringify(updatedUser));
+                    localStorage.setItem("Apple Face BD_user", JSON.stringify(updatedUser));
                 } catch (e) {
                     console.error("Failed to persist updated user", e);
                 }

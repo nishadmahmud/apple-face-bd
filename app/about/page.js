@@ -4,8 +4,8 @@ import { SITE_INFO } from '../../lib/siteInfo';
 import PageHero from '../../components/Shared/PageHero';
 
 export const metadata = {
-  title: 'About Us | Apple Face BD',
-  description: 'Learn about Apple Face BD — authentic gadgets, transparent pricing, and customer support in Bangladesh.',
+  title: 'About Us | Apple Face',
+  description: 'Learn about Apple Face — authentic gadgets, transparent pricing, and customer support in Bangladesh.',
 };
 
 const outlet = SITE_INFO.outlets?.[0];
@@ -21,7 +21,7 @@ export default function AboutPage() {
       <PageHero
         eyebrow="About us"
         title="About"
-        highlight="Apple Face BD"
+        highlight="Apple Face"
         description="A modern tech retailer focused on authentic devices, clear pricing, and dependable after-sales care across Bangladesh."
       />
 
@@ -32,7 +32,7 @@ export default function AboutPage() {
               Who We Are
             </h2>
             <p className="text-gray-600 leading-relaxed">
-              Apple Face BD is building a trusted shopping experience for smartphones, laptops, tablets, and accessories.
+              Apple Face is building a trusted shopping experience for smartphones, laptops, tablets, and accessories.
               We work with authorized supply channels and aim to make every purchase straightforward — from product selection
               to warranty support.
             </p>
@@ -69,7 +69,7 @@ export default function AboutPage() {
                 <FiMapPin size={22} />
               </div>
               <div>
-                <h3 className="font-bold text-gray-900">{outlet?.name || 'Apple Face BD'}</h3>
+                <h3 className="font-bold text-gray-900">{outlet?.name || 'Apple Face'}</h3>
                 {(outlet?.details || []).map((line) => (
                   <p key={line} className="text-sm text-gray-600 mt-1">{line}</p>
                 ))}

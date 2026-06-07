@@ -667,7 +667,7 @@ export default function Header({ categories = [] }) {
             <ul className="divide-y divide-gray-100 rounded-lg border border-gray-100 overflow-hidden bg-card-bg">
               {[
                 { href: '/contact', label: 'Contact & store', icon: FiMapPin },
-                { href: '/about', label: 'About Apple Face BD', icon: FiInfo },
+                { href: '/about', label: 'About Apple Face', icon: FiInfo },
                 { href: '/blogs', label: 'Blog & news', icon: FiFileText },
                 { href: '/wishlist', label: 'Wishlist', icon: FiHeart, badge: hydrated && wishlistCount > 0 ? wishlistCount : null },
               ].map(({ href, label, icon: Icon, badge }) => (

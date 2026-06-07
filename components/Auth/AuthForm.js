@@ -119,7 +119,7 @@ export default function AuthForm() {
           <p className="text-sm text-gray-500">
             {mode === "login"
               ? "Sign in to access orders, wishlist, and more"
-              : "Join Apple Face BD today"}
+              : "Join Apple Face today"}
           </p>
 
           <div className="flex border-b border-gray-200 mt-6 -mb-px">

@@ -101,7 +101,7 @@ html {
   animation: bounce-slow 2s infinite;
 }
 
-/* Apple Face BD — loading ring */
+/* Apple Face — loading ring */
 @keyframes af-loader-spin {
   to {
     transform: rotate(360deg);
@@ -369,6 +369,8 @@ html {
 .product-description div[style],
 .product-description span[style] {
   line-height: 1.75 !important;
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 .product-description p[style] {

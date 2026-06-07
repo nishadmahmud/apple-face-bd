@@ -7,9 +7,9 @@ import SectionShell from "../Shared/SectionShell";
 
 const FAQ_ITEMS = [
   {
-    question: "What is Apple Face BD?",
+    question: "What is Apple Face?",
     answer:
-      "Apple Face BD is a multi-brand tech hub and retail chain in Bangladesh that sells genuine smartphones, laptops, gadgets, and home appliances from leading global brands.",
+      "Apple Face is a multi-brand tech hub and retail chain in Bangladesh that sells genuine smartphones, laptops, gadgets, and home appliances from leading global brands.",
   },
   {
     question: "Do you sell other smartphones besides iPhone?",
@@ -17,7 +17,7 @@ const FAQ_ITEMS = [
       "Yes, we sell top Android phones from Samsung, Xiaomi, OnePlus, Realme, Oppo, Vivo, and more—from budget to flagship level.",
   },
   {
-    question: "Does Apple Face BD sell original products?",
+    question: "Does Apple Face sell original products?",
     answer:
       "Yes, we focus on genuine, brand-new devices and check every product to ensure authenticity before delivery.",
   },
@@ -27,7 +27,7 @@ const FAQ_ITEMS = [
       "We stock models from HP, Dell, Asus, Acer, Lenovo, MSI, and Apple MacBook Air/Pro.",
   },
   {
-    question: "Does Apple Face BD sell home appliances?",
+    question: "Does Apple Face sell home appliances?",
     answer:
       "Yes—smart TVs, refrigerators, ACs, ovens, washing machines, and more through our outlets and website.",
   },
@@ -42,7 +42,7 @@ const FAQ_ITEMS = [
       "Most products include official brand warranty or store warranty; details are on each product page.",
   },
   {
-    question: "Is Apple Face BD online and offline?",
+    question: "Is Apple Face online and offline?",
     answer:
       "Yes—we have an online store and physical outlets in Dhaka including Bashundhara City, Jamuna Future Park, Mirpur, and Uttara.",
   },

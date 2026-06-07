@@ -46,7 +46,7 @@ export default function Footer() {
                 <AppleFaceTextLogo height={40} variant="onDark" className="h-10 w-auto" />
               </Link>
               <p className="text-sm text-gray-500 leading-relaxed">
-                Apple Face BD is your destination for authentic smartphones, accessories, and tech in Bangladesh.
+                Apple Face is your destination for authentic smartphones, accessories, and tech in Bangladesh.
               </p>
             </div>
 
@@ -55,7 +55,7 @@ export default function Footer() {
                 <HiOutlineLocationMarker className="text-brand-primary shrink-0 mt-0.5" size={20} />
                 <div>
                   <p className="font-bold text-white text-xs uppercase tracking-wider mb-1">Store</p>
-                  <p className="font-semibold text-gray-300">{outlet?.name || 'Apple Face BD'}</p>
+                  <p className="font-semibold text-gray-300">{outlet?.name || 'Apple Face'}</p>
                   <p className="text-gray-500 text-[13px] mt-1 leading-relaxed">{addressLine}</p>
                 </div>
               </div>
@@ -198,7 +198,7 @@ export default function Footer() {
             ) : null}
           </div>
           <p className="text-xs text-gray-600">
-            &copy; {new Date().getFullYear()} Apple Face BD. All rights reserved.
+            &copy; {new Date().getFullYear()} Apple Face. All rights reserved.
           </p>
         </div>
       </div>

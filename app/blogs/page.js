@@ -5,8 +5,8 @@ import { getDummyBlogPosts } from "../../lib/dummyBlogs";
 import PageHero from "../../components/Shared/PageHero";
 
 export const metadata = {
-  title: "Blogs | Apple Face BD",
-  description: "Explore the latest updates, offers, and insights from Apple Face BD.",
+  title: "Blogs | Apple Face",
+  description: "Explore the latest updates, offers, and insights from Apple Face.",
 };
 
 export default function BlogsPage() {

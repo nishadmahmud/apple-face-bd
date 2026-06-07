@@ -12,10 +12,10 @@ export async function generateMetadata({ params }) {
   const resolvedParams = await params;
   const slug = typeof resolvedParams?.slug === "string" ? resolvedParams.slug : "";
   const post = getDummyBlogBySlug(slug);
-  if (!post) return { title: "Blog | Apple Face BD" };
+  if (!post) return { title: "Blog | Apple Face" };
 
   return {
-    title: `${post.title} | Apple Face BD`,
+    title: `${post.title} | Apple Face`,
     description: post.excerpt,
   };
 }

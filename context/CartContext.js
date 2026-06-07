@@ -8,7 +8,7 @@ export function CartProvider({ children }) {
     const [cartItems, setCartItems] = useState(() => {
         if (typeof window === "undefined") return [];
         try {
-            const storedCart = localStorage.getItem("Apple Face BD BD_cart");
+            const storedCart = localStorage.getItem("Apple Face BD_cart");
             return storedCart ? JSON.parse(storedCart) : [];
         } catch (error) {
             console.error("Failed to load cart from local storage", error);
@@ -21,7 +21,7 @@ export function CartProvider({ children }) {
     // Save cart to localStorage whenever it changes
     useEffect(() => {
         try {
-            localStorage.setItem("Apple Face BD BD_cart", JSON.stringify(cartItems));
+            localStorage.setItem("Apple Face BD_cart", JSON.stringify(cartItems));
         } catch (error) {
             console.error("Failed to save cart to local storage", error);
         }

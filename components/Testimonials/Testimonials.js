@@ -10,7 +10,7 @@ export default function Testimonials() {
     { id: 1, name: "Rahim Ahmed", role: "Custom PC Builder", rating: 5, text: "Got all my components delivered within 24 hours. Everything was perfectly packaged. Top-notch service!", avatar: "RA", color: "bg-blue-500" },
     { id: 2, name: "Tasnia Farin", role: "Content Creator", rating: 5, text: "Bought the A7 IV bundle. Genuine product and the lowest price in the market. Highly recommended!", avatar: "TF", color: "bg-purple-500" },
     { id: 3, name: "Imran Khan", role: "Gamer", rating: 5, text: "My PS5 arrived safely. Customer support was very responsive when I asked about warranty details.", avatar: "IK", color: "bg-orange-500" },
-    { id: 4, name: "Nusrat Jahan", role: "Software Engineer", rating: 5, text: "Upgraded my WFH setup with a new monitor from Apple Face BD. Great delivery experience!", avatar: "NJ", color: "bg-brand-primary" },
+    { id: 4, name: "Nusrat Jahan", role: "Software Engineer", rating: 5, text: "Upgraded my WFH setup with a new monitor from Apple Face. Great delivery experience!", avatar: "NJ", color: "bg-brand-primary" },
     { id: 5, name: "Sakib Hasan", role: "Smartphone Buyer", rating: 5, text: "Pre-ordered the new iPhone, got it on release day. Seamless from start to finish.", avatar: "SH", color: "bg-red-500" },
     { id: 6, name: "Maliha Rahman", role: "Audiophile", rating: 5, text: "The Sony headphones are 100% authentic. Great sound, fast delivery.", avatar: "MR", color: "bg-indigo-500" },
   ];
@@ -23,7 +23,7 @@ export default function Testimonials() {
           eyebrow="Testimonials"
           title="Trusted by"
           highlight="Thousands"
-          subtitle="What our customers say about shopping with Apple Face BD."
+          subtitle="What our customers say about shopping with Apple Face."
           className="mb-0"
         />
         <div className="bg-card-bg p-5 rounded-lg border border-gray-200 flex items-center gap-4 shrink-0">

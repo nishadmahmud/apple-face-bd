@@ -46,7 +46,7 @@ export default function ProfileSidebar({
                     </div>
                     <div className="p-4 bg-[#0a0a0a] hidden lg:block shrink-0">
                         <Link href="/" className="flex items-center">
-                            <span className="text-lg font-extrabold text-white">Apple Face BD</span>
+                            <span className="text-lg font-extrabold text-white">Apple Face</span>
                         </Link>
                     </div>
                     <nav className="p-3 flex-1 overflow-y-auto pb-20 lg:pb-4 bg-card-bg">

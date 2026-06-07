@@ -13,7 +13,7 @@ const TRUST_ITEMS = [
 const PREVIEW_BLOCKS = [
   {
     title: "Authentic Mobile Phones, Laptops, Gadgets in Bangladesh",
-    body: "Looking for real mobile phones, laptops, and gadgets in Bangladesh? Choose Apple Face BD for trusted tech products. We offer official and unofficial smartphones, including the latest iPhones, Samsung, Xiaomi, OnePlus, and more.",
+    body: "Looking for real mobile phones, laptops, and gadgets in Bangladesh? Choose Apple Face for trusted tech products. We offer official and unofficial smartphones, including the latest iPhones, Samsung, Xiaomi, OnePlus, and more.",
   },
   {
     title: "Best Mobile Phone Shop in Bangladesh",
@@ -23,7 +23,7 @@ const PREVIEW_BLOCKS = [
 
 const MORE_BLOCKS = [
   {
-    title: "Why Choose Apple Face BD in Bangladesh?",
+    title: "Why Choose Apple Face in Bangladesh?",
     list: [
       "A large collection of laptops from HP, Dell, Lenovo, Asus, Acer, and MacBook.",
       "Official Apple products including iPhones, MacBooks, and accessories.",
@@ -32,14 +32,14 @@ const MORE_BLOCKS = [
   },
   {
     title: "Popular Gaming Phone & Laptop Shop",
-    body: "Apple Face BD is a trusted store for laptops, Apple products, iPhones, MacBooks, and premium tech gadgets at competitive prices.",
+    body: "Apple Face is a trusted store for laptops, Apple products, iPhones, MacBooks, and premium tech gadgets at competitive prices.",
   },
   {
     title: "Best Laptop & MacBook Shop",
     body: "Huge collection for freelancers, office workers, students, and gamers—from HP, Dell, Apple, Asus, Acer, Lenovo, MSI, and more.",
   },
   {
-    title: "Why Buy From Apple Face BD?",
+    title: "Why Buy From Apple Face?",
     list: [
       "Genuine products with official warranties.",
       "Competitive pricing with frequent promotions.",
@@ -55,7 +55,7 @@ export default function HomeSEOContent() {
   return (
     <SectionShell variant="muted" tight border>
       <h2 className="text-lg md:text-xl font-extrabold text-gray-900 mb-4">
-        About <span className="text-brand-primary">Apple Face BD</span>
+        About <span className="text-brand-primary">Apple Face</span>
       </h2>
 
       <div className="grid grid-cols-3 gap-3 mb-6">
