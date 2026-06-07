@@ -276,7 +276,7 @@ export default function HomeHero({ slides = [], banners = [] }) {
 
   return (
     <section
-      className="border-b border-gray-200/80 pt-0 md:pt-4 pb-5 md:pb-8"
+      className="border-b border-gray-200/80 pt-3 sm:pt-4 md:pt-4 pb-5 md:pb-8"
       aria-label="Home hero"
     >
       <div className={`max-w-site mx-auto w-full ${SITE_GUTTER}`}>
